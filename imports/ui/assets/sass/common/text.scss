@@ -1,0 +1,115 @@
+/**********
+  큰 제목
+**********/
+
+h1.component,
+h2.component,
+h3.component,
+h4.component,
+h5.component,
+h6.component {
+  display: flex;
+  align-items: center;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 2.8rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 2.4rem;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+h5 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+h6 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+h1.light-gray,
+h2.light-gray,
+h3.light-gray,
+h4.light-gray,
+h5.light-gray,
+h6.light-gray {
+  color: #999999;
+}
+
+h1.thin,
+h2.thin,
+h3.thin,
+h4.thin,
+h5.thin,
+h6.thin {
+  font-weight: 100;
+}
+
+/**********
+ 아이콘 텍스트
+**********/
+
+.notice {
+  font-weight: 400;
+  font-size: 1.2rem;
+  color: #666666;
+  display: block;
+  word-break: break-all;
+  padding: 10px 0 10px 25px;
+  background: url("");
+  background-size: 18px;
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+
+.description {
+  display: block;
+  font-size: 1.2rem;
+  color: #666666;
+  padding: .5rem 0;
+  text-align: left;
+  width: 100%;
+}
+
+/**********
+   etc
+**********/
+
+.text-underline {
+  padding-bottom: 1px;
+  border-bottom: 1px solid #cccccc;
+  color: #333;
+  line-height: 1.7;
+}
+
+.dot {
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: #666666;
+  display: block;
+  word-break: break-all;
+  padding: .5rem 0 .5rem 1.3rem;
+  &::before {
+    display: inline-block;
+    content: '·';
+    width: .2rem;
+    height: .2rem;
+    padding-right: 1rem;
+    margin-left: -1.3rem;
+  }
+}

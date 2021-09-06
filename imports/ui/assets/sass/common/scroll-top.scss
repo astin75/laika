@@ -1,0 +1,18 @@
+.scroll-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 4rem;
+  height: 4rem;
+  z-index: 9;
+  border-radius: 50%;
+  background: #666666;
+  border: .1rem solid #666666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  i {
+    border: solid #ffffff !important;
+    border-width: 0 .2rem .2rem 0 !important;
+  }
+}

@@ -1,0 +1,35 @@
+.float-nav {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.4rem;
+  height: 12rem;
+  right: 2rem;
+  top: 50%;
+  transform: translate(0, -50%) !important;
+
+  ul {
+    li {
+      width: 2rem;
+      height: 2rem;
+      margin-top: 1rem;
+    }
+  }
+
+  .bg {
+    background-size: 1.8rem;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+
+  .link-first {
+    background-image: url("../../images/github-logo.png");
+  }
+  .link-second {
+    background-image: url("../../images/medium-logo.png");
+  }
+  .link-third {
+    background-image: url("../../images/patreon-logo.png");
+  }
+}

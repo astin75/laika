@@ -1,0 +1,13 @@
+/**********
+   안내
+**********/
+
+.info {
+  display: block;
+  padding: 1rem 0;
+  &.info-gray {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #999999;
+  }
+}

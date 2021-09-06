@@ -1,0 +1,137 @@
+/**********
+  버튼 스타일
+**********/
+
+.btn {
+  display: inline-block;
+  border-radius: .1rem;
+  user-select: none;
+  background-color: transparent;
+  margin-bottom: 0;
+  font-size: 1.3rem;
+  font-weight: normal;
+  color: #333333;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: .4rem .7rem;
+}
+
+button:disabled,
+button[disabled]{
+  background-color: #cccccc !important;
+  border: .1rem solid #cccccc !important;
+}
+
+.btn-blur {
+  -webkit-box-shadow: 0rem 0rem .4rem 0rem rgba(0,0,0,0.35);
+  -moz-box-shadow: 0rem 0rem .4rem 0rem rgba(0,0,0,0.35);
+  box-shadow: 0rem 0rem .4rem 0rem rgba(0,0,0,0.35);
+}
+
+.btn-purple {
+  background-color: #8878FB;
+  border: .1rem solid #8878FB;
+  color: #FFFFFF;
+}
+
+.btn-blue {
+  background-color: #2285c8;
+  border: .1rem solid #2285c8;
+  color: #FFFFFF;
+}
+
+.btn-light-gray {
+  background-color: #D8D8D8;
+  border: .1rem solid #D8D8D8;
+  color: #ffffff;
+}
+
+.btn-dark-gray {
+  background-color: #333333;
+  border: .1rem solid #333333;
+  color: #ffffff;
+}
+
+.btn-gray {
+  background-color: #666666;
+  border: .1rem solid #666666;
+  color: #ffffff;
+}
+
+.btn-red {
+  background-color: #C00000;
+  border: .1rem solid #C00000;
+  color: #FFFFFF;
+}
+
+.btn-default {
+  padding: .4rem 2.4rem;
+  border: .2rem solid #333333;
+}
+
+.btn-sm {
+  padding: .2rem .7rem;
+}
+
+.btn-md {
+  padding: 1.5rem 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.btn-lg {
+  padding: 1.5rem 3.8rem;
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.btn-background-none {
+  background: none;
+}
+
+.btn-border-white {
+  padding: 1rem 3rem;
+  border-radius: 0;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+.btn-border-gray {
+  padding: 1rem 3rem;
+  border-radius: 0;
+  border: 1px solid #a2a2a2;
+  color: #747474;
+}
+
+/**********
+  개별 버튼
+**********/
+
+.btn-start {
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
+}
+
+.btn-editor-header {
+  border-radius: .3rem;
+  &:hover,
+  &.active {
+    background-color: #ffffff;
+  }
+}
+
+.btn-git {
+  width: 2rem;
+  height: 2rem;
+}
+
+.btn-delete {
+  width: 2rem;
+  height: 2rem;
+}

@@ -19,7 +19,7 @@ class Gnb extends Component {
     return(
       <React.Fragment>
         <div className="gnb">
-          <div className="gnb-branding"><i className="icon-make-sense"></i>Make Sense</div>
+          <div className="gnb-branding"><i className="icon-laika"></i>Laika</div>
           <div className="gnb-snb">
             <ul>
               <li>

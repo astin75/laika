@@ -14,7 +14,8 @@ import DefaultLayout from '../layout/DefaultLayout'
 *************/
 
 import Home from '../component/home/Index'
-import SubPage from '../component/home/SubPage'
+import SubPage from "../component/home/OptionPage/LabelingPage/SubPage";
+import {OptionPage} from "../component/home/OptionPage/DataManagement/OptionPage";
 
 /*************
      404
@@ -33,12 +34,14 @@ const Routes = ({ auth }) => {
         <Route exact path={[
           '/',
           '/subPage',
+          '/optionPage',
         ]}>
 
           <DefaultLayout>
             <Switch>
               <Route exact path='/' component={Home} />
               <Route exact path='/subPage' component={SubPage} />
+              <Route exact path='/optionPage' component={OptionPage} />
             </Switch>
           </DefaultLayout>
         </Route>

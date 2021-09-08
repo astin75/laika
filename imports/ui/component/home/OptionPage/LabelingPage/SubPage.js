@@ -4,6 +4,7 @@ import FileList from "./FileList/FileList";
 import Center from "./Center/Center";
 import LabelList from "./LabelList/LabelList";
 
+
 class SubPage extends Component {
 
   constructor(props) {
@@ -28,8 +29,6 @@ class SubPage extends Component {
             <FileList/>
             <Center/>
             <LabelList/>
-
-
           </div>
         </main>
       </React.Fragment>

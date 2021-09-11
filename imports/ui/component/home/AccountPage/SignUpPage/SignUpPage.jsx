@@ -1,26 +1,49 @@
 import React, { useState } from "react";
+import { Accounts } from 'meteor/accounts-base';
 import styles from "./SignUpPage.module.css";
 
 export default function SignUpPage({
-  setSignUpId,
-  setSignUpPW,
   setIsThereAccount,
 }) {
   const [userID, setUserID] = useState("");
   const [userPW, setUserPW] = useState("");
+  const [userPWCHK, setUserPWCHK] = useState("");
+  const signUpProcess = () =>{
+        let loginFlag = false;
+        let passwordFlag = false;
+        if (userID.length > 4)
+        {
+            loginFlag = true
+        }
+        else{
+            alert('ID는 5자 이상으로 만들어 주세요..');
+        }
+        if (userPW.length > 4)
+        {
+            if (userPW !== userPWCHK){
+                alert('password 가 일치하지 않습니다..');
+            }
+            else{
+                passwordFlag = true
+            }
+        }
+        else{
+            alert('password는 5자 이상으로 만들어 주세요..');
+        }
 
-  const setID = (e) => {
-    setUserID(e);
-  };
-  const setPW = (e) => {
-    setUserPW(e);
-  };
-
-  const signUpProcess = (ID, PW) => {
-    setSignUpId(ID);
-    setSignUpPW(PW);
-    setIsThereAccount(true);
-  };
+        if (loginFlag && passwordFlag){
+            alert('good');
+            setIsThereAccount(true);
+            Accounts.createUser(
+                {
+                    userID,
+                    userPW,
+                })
+        }
+        else{
+            props.mode('signUp')
+        }
+    }
 
   return (
     <div className={styles.main}>
@@ -28,22 +51,27 @@ export default function SignUpPage({
       <input
         placeholder="Email Address"
         onChange={(e) => {
-          setID(e.target.value);
+          setUserID(e.target.value);
         }}
         className={styles.inputValue}
       ></input>
       <input
         placeholder="password"
         onChange={(e) => {
-          setPW(e.target.value);
+          setUserPW(e.target.value);
         }}
         className={styles.inputValue}
       ></input>
+        <input
+            placeholder="password"
+            onChange={(e) => {
+                setUserPWCHK(e.target.value);
+            }}
+            className={styles.inputValue}
+        ></input>
       <div
         className={styles.command}
-        onClick={() => {
-          signUpProcess(userID, userPW);
-        }}
+        onClick={signUpProcess}
       >
         Sign Up
       </div>

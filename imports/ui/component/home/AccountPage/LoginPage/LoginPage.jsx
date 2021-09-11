@@ -1,29 +1,24 @@
 import React, { useEffect, useState } from "react";
+import { Meteor } from 'meteor/meteor';
 import styles from "./LoginPage.module.css";
 
 export default function LoginPage({
-  setLoginID,
-  setLoginPW,
   setIsThereAccount,
 }) {
   const [userID, setUserID] = useState("");
   const [userPW, setUserPW] = useState("");
 
-  const setID = (e) => {
-    setUserID(e);
+  const loginProcess = () => {
+      const handleError = (err) => {
+          if (err) {
+              alert(err.message);
+          }
+          else{
+              setIsThereAccount(true)
+          }
+      };
+      Meteor.loginWithPassword(userID, userPW, handleError);
   };
-  const setPW = (e) => {
-    setUserPW(e);
-  };
-
-  const loginProcess = (ID, PW) => {
-    setLoginID(ID);
-    setLoginPW(PW);
-  };
-
-  //   useEffect(() => {
-  //     console.log(userID, userPW);
-  //   }, [userID, userPW]);
 
   return (
     <div className={styles.main}>
@@ -31,14 +26,14 @@ export default function LoginPage({
       <input
         placeholder="Email Address"
         onChange={(e) => {
-          setID(e.target.value);
+            setUserID(e.target.value);
         }}
         className={styles.inputValue}
       ></input>
       <input
         placeholder="password"
         onChange={(e) => {
-          setPW(e.target.value);
+            setUserPW(e.target.value);
         }}
         className={styles.inputValue}
       ></input>
@@ -51,9 +46,7 @@ export default function LoginPage({
           Sign Up
         </div>
         <div
-          onClick={() => {
-            loginProcess(userID, userPW);
-          }}
+          onClick={loginProcess}
         >
           Login
         </div>

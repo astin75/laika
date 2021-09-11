@@ -1,21 +1,18 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import FloatNav from './FloatNav'
-
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import FloatNav from "./FloatNav";
 
 class Index extends Component {
-
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       //
-    }
+    };
   }
 
   render() {
-
-    return(
+    return (
       <React.Fragment>
         <main>
           <div className="branding"></div>
@@ -33,7 +30,8 @@ class Index extends Component {
                 </li>
                 <li className="labels bg">
                   <div className="text-box">
-                    Support multiple label types - rects, lines, points and polygons
+                    Support multiple label types - rects, lines, points and
+                    polygons
                   </div>
                 </li>
                 <li className="online bg">
@@ -43,12 +41,14 @@ class Index extends Component {
                 </li>
                 <li className="file bg">
                   <div className="text-box">
-                    Support output file formats like YOLO, VOC XML, VGG JSON, CSV
+                    Support output file formats like YOLO, VOC XML, VGG JSON,
+                    CSV
                   </div>
                 </li>
                 <li className="private bg">
                   <div className="text-box">
-                    We don't store your images, because we don't send them anywhere
+                    We don't store your images, because we don't send them
+                    anywhere
                   </div>
                 </li>
                 <li className="robot bg">
@@ -62,13 +62,13 @@ class Index extends Component {
 
           <FloatNav />
 
-          <Link to="/subPage" className="btn btn-default btn-start">
+          <Link to="/accountPage" className="btn btn-default btn-start">
             Get Started
           </Link>
         </main>
       </React.Fragment>
-    )
+    );
   }
 }
 
-export default Index
+export default Index;

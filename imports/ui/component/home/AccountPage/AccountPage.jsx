@@ -15,6 +15,7 @@ export default function AccountPage() {
     console.log(loginID, loginPW);
 
     // 로그인 성공 여부에 따라 Project Page로 Redirect !
+    // 로그인 실패시 값을 초기화 할것임 !
   }, [loginID, loginPW]); //  login시 확인 로직
 
   useEffect(() => {

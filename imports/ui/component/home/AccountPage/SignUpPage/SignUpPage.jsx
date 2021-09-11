@@ -22,10 +22,6 @@ export default function SignUpPage({
     setIsThereAccount(true);
   };
 
-  //   useEffect(() => {
-  //     console.log(userID, userPW);
-  //   }, [userID, userPW]);
-
   return (
     <div className={styles.main}>
       <div className={styles.title}>Sign up</div>
@@ -34,12 +30,14 @@ export default function SignUpPage({
         onChange={(e) => {
           setID(e.target.value);
         }}
+        className={styles.inputValue}
       ></input>
       <input
         placeholder="password"
         onChange={(e) => {
           setPW(e.target.value);
         }}
+        className={styles.inputValue}
       ></input>
       <div
         className={styles.command}

@@ -33,12 +33,14 @@ export default function LoginPage({
         onChange={(e) => {
           setID(e.target.value);
         }}
+        className={styles.inputValue}
       ></input>
       <input
         placeholder="password"
         onChange={(e) => {
           setPW(e.target.value);
         }}
+        className={styles.inputValue}
       ></input>
       <div className={styles.command}>
         <div

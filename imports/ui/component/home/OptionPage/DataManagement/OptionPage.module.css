@@ -1,5 +1,5 @@
 .main{
-    background-color: #4c4e5a;
+    background-color: whitesmoke;
     display: flex;
     flex-direction: column;
 }
@@ -13,7 +13,7 @@
 }
 .body{
     margin: 50px 50px;
-    background: #4c4e5a;
+
     height: 300px;
     display: flex;
     flex-direction: row;

@@ -10,7 +10,7 @@ export default function AddState (props) {
             action2.current.value.length > 0)
         {
 
-            props.stateAdd(stateName, action1, action2)
+            props.stateAdd(stateName.current.value, action1.current.value, action2.current.value)
         }
         else{
             alert("값을 채워 주세요.")

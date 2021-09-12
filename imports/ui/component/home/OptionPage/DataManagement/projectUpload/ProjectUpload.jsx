@@ -11,6 +11,7 @@ export default function ProjectUpload () {
     const stateAdd = (stateName, action1, action2) => {
 
         if (ObjectStateBox.stateList.length === 0)        {
+            console.log(stateName, action1, action2, "first")
             let stateList = [{id: Date.now(), stateName: stateName, action1:action1, action2:action2}]
             setObjectStateBox({stateList})
         }

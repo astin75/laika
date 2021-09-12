@@ -1,7 +1,13 @@
 import React from 'react';
 import styles from './OptionPage.module.css'
+import {useTracker} from "meteor/react-meteor-data";
+import {Meteor} from 'meteor/meteor';
+
+
 
 export const OptionPage = () => {
+    const user = useTracker(() => Meteor.user());
+    //console.log(user.profile['rank'])
     return (
 
         <main className={styles.main}>
@@ -81,9 +87,14 @@ export const OptionPage = () => {
                         </tbody>
                     </table>
                 </div>
-                <div className={styles.right}>
-                    <a><img src={"lockDataManagement.png"}/></a>
-                </div>
+                {user.profile['rank'] === 'admin' ? (<h1>hi</h1>
+
+                    ) :
+                    (
+                        <div className={styles.right}>
+                            <a><img src={"lockDataManagement.png"}/></a>
+                        </div>)}
+
 
             </div>
             <div className={styles.footer}>푸터</div>

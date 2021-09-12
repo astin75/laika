@@ -16,7 +16,10 @@ export default function AccountPage() {
 
   return (
     <div className={styles.main}>
-      {user ? (<button onClick={logout} className="btn btn-success">Sucess</button>):
+      {user ? (<div>
+            <button onClick={logout} className="btn btn-success">Sucess</button>
+            <a href="/optionPage"><button className="btn btn-success">optionPage</button></a>
+          </div>):
           (<div>
             {isThereAccount ? (
                 <LoginPage setIsThereAccount={setIsThereAccount}/>

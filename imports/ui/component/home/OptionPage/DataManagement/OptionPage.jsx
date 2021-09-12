@@ -16,10 +16,7 @@ export const OptionPage = () => {
             if (user.profile['rank'] === 'admin') {
                 setIsThereAdmin(true)
             }
-
-
         }
-
     }, [user])
 
     return (
@@ -104,10 +101,8 @@ export const OptionPage = () => {
                 <div className={styles.right}>
                     {IsThereAdmin ? (
                             <ProjectUpload/>
-
                         ) :
                         (
-
                             <a><img src={"lockDataManagement.png"}/></a>
                         )}
                 </div>

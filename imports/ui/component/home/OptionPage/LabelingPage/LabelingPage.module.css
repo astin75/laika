@@ -1,0 +1,15 @@
+.main {
+  width: 100%;
+  height: 100vh;
+  /* display: flex; */
+  /* background-color: #000000; */
+}
+
+.contents {
+  width: 100%;
+  height: calc(100% - 50px);
+
+  display: flex;
+
+  /* background-color: #682d2d; */
+}

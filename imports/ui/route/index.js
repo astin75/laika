@@ -14,7 +14,7 @@ import DefaultLayout from "../layout/DefaultLayout";
 *************/
 
 import Home from "../component/home/Index";
-import SubPage from "../component/home/OptionPage/LabelingPage/SubPage";
+import LabelingPage from "../component/home/OptionPage/LabelingPage/LabelingPage";
 import { OptionPage } from "../component/home/OptionPage/DataManagement/OptionPage";
 import AccountPage from "../component/home/AccountPage/AccountPage";
 
@@ -29,11 +29,14 @@ const Routes = ({ auth }) => {
     <Router history={history}>
       <ScrollToTop />
       <Switch>
-        <Route exact path={["/", "/subPage", "/optionPage", "/accountPage"]}>
+        <Route
+          exact
+          path={["/", "/labelingPage", "/optionPage", "/accountPage"]}
+        >
           <DefaultLayout>
             <Switch>
               <Route exact path="/" component={Home} />
-              <Route exact path="/subPage" component={SubPage} />
+              <Route exact path="/labelingPage" component={LabelingPage} />
               <Route exact path="/optionPage" component={OptionPage} />
               <Route exact path="/accountPage" component={AccountPage} />
             </Switch>

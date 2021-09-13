@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import AddState from "./addState/AddState";
 import AddImages from "./addImages/AddImages";
 import StateList from "./StateList/StateList";
+import BoundingBoxConfig from "./BoundingBoxConfig/BoundingBoxConfig";
+import KeypointConfig from "./KeypointConfig/KeypointConfig";
 import styles from './ProjectUpload.module.css'
 
 export default function ProjectUpload() {
@@ -13,7 +15,12 @@ export default function ProjectUpload() {
         if (ObjectStateBox.stateList.length === 0) {
             let stateList = [{id: Date.now(), stateName: stateName, action1: action1, action2: action2}]
             setObjectStateBox({stateList})
-        } else {
+        }
+        else if (ObjectStateBox.stateList.length > 1){
+            alert("최대 2개 추가 가능합니다.")
+
+        }
+        else {
             let stateList = [...ObjectStateBox.stateList,
                 {id: Date.now(), stateName: stateName, action1: action1, action2: action2}]
             setObjectStateBox({stateList})
@@ -32,9 +39,7 @@ export default function ProjectUpload() {
 
     }
 
-    const bboxInfo = (e) => {
-        console.log(e.target.value)
-    }
+
 
     return (
         <div>
@@ -44,23 +49,11 @@ export default function ProjectUpload() {
                     <input className="form-control" placeholder=""/>
                     <small className="form-text text-muted">프로젝트이름을 입력해주세요.</small>
                 </div>
+                <BoundingBoxConfig/>
+                <KeypointConfig/>
 
 
                 <div className="form-row">
-                    <div className="form-group col-md-3">
-                        <label>Bounding Box</label>
-                        <select defaultValue="false" id="inputState" className="form-control" onChange={bboxInfo}>
-                            <option>true</option>
-                            <option>false</option>
-                        </select>
-                    </div>
-                    <div className="form-group col-md-3">
-                        <label>Key Point</label>
-                        <select defaultValue="false" id="inputState" className="form-control">
-                            <option>true</option>
-                            <option>false</option>
-                        </select>
-                    </div>
                     <div className="form-group col-md-3">
                         <label>Polygon</label>
                         <select defaultValue="false" className="form-control">
@@ -75,7 +68,6 @@ export default function ProjectUpload() {
                             <option>false</option>
                         </select>
                     </div>
-
 
                 </div>
                 {ObjectStateBox.stateList.length > 0 ? (

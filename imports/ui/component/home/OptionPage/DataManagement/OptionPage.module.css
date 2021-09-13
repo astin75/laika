@@ -13,8 +13,7 @@
 }
 .body{
     margin: 50px 50px;
-
-    height: 300px;
+    height: 500px;
     display: flex;
     flex-direction: row;
 }
@@ -25,7 +24,11 @@
 }
 
 .left{
+    margin-right: 50px;
     width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .right{
@@ -33,5 +36,5 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50%;
+    width: 45%;
 }

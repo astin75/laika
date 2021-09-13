@@ -1,6 +1,6 @@
 import React, {createRef} from 'react';
 export default function StateList (props) {
-
+    let stateName = createRef()
     let action1 = createRef()
     let action2 = createRef()
     const onAdd = (e) => {
@@ -23,7 +23,7 @@ export default function StateList (props) {
                 <div className="form-row">
                     <div className="form-group col-md-3">
                         <label>상태 이름</label>
-                        <input  className="form-control" placeholder={x.stateName}/>
+                        <input ref={stateName}   className="form-control" placeholder={x.stateName}/>
 
                     </div>
                     <div className="form-group col-md-3">

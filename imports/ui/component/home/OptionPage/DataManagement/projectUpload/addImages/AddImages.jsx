@@ -12,6 +12,7 @@ export default function AddImages () {
                 </div>
                 <div className="form-group col-md-3">
                     <br/>
+                    <br/>
                     <button type="submit" className="btn btn-secondary"> 폴더 열기</button>
                 </div>
             </div>

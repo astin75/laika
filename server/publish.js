@@ -1,5 +1,5 @@
-import { Meteor } from 'meteor/meteor';
-import { tasksCollection } from '../imports/db/collections';
+import { Meteor } from "meteor/meteor";
+import { tasksCollection } from "../imports/db/collections";
 
 tasksCollection.allow({
   insert(userId, doc) {
@@ -13,9 +13,11 @@ tasksCollection.allow({
   },
 });
 
-Meteor.publish('tasksCollection', function publishTasks() {
+Meteor.publish("tasksCollection", function publishTasks() {
   // for testing
   const wakeUpTime = Date.now() + 1000;
   while (Date.now() < wakeUpTime) {}
   return tasksCollection.find({ userId: this.userId }, { limit: 5 });
 });
+
+//

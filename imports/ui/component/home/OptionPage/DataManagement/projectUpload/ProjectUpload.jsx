@@ -1,24 +1,21 @@
-import React,{useState} from 'react';
+import React, {useState} from 'react';
 import AddState from "./addState/AddState";
 import AddImages from "./addImages/AddImages";
 import StateList from "./StateList/StateList";
 import styles from './ProjectUpload.module.css'
 
-export default function ProjectUpload () {
-    const [ObjectStateBox, setObjectStateBox] = useState({stateList :[]})
+export default function ProjectUpload() {
+    const [ObjectStateBox, setObjectStateBox] = useState({stateList: []})
 
 
     const stateAdd = (stateName, action1, action2) => {
 
-        if (ObjectStateBox.stateList.length === 0)        {
-            console.log(stateName, action1, action2, "first")
-            let stateList = [{id: Date.now(), stateName: stateName, action1:action1, action2:action2}]
+        if (ObjectStateBox.stateList.length === 0) {
+            let stateList = [{id: Date.now(), stateName: stateName, action1: action1, action2: action2}]
             setObjectStateBox({stateList})
-        }
-        else{
-            console.log("?", ObjectStateBox)
+        } else {
             let stateList = [...ObjectStateBox.stateList,
-                {id: Date.now(), stateName: stateName, action1:action1, action2:action2}]
+                {id: Date.now(), stateName: stateName, action1: action1, action2: action2}]
             setObjectStateBox({stateList})
         }
 
@@ -35,52 +32,55 @@ export default function ProjectUpload () {
 
     }
 
-    const bboxInfo = (e)=>{
+    const bboxInfo = (e) => {
         console.log(e.target.value)
     }
 
     return (
         <div>
             <form>
-
                 <div className="form-group">
                     <label>Project Name</label>
-                    <input  className="form-control" placeholder=""/>
-                        <small className="form-text text-muted">프로젝트이름을 입력해주세요.</small>
+                    <input className="form-control" placeholder=""/>
+                    <small className="form-text text-muted">프로젝트이름을 입력해주세요.</small>
                 </div>
 
 
                 <div className="form-row">
                     <div className="form-group col-md-3">
                         <label>Bounding Box</label>
-                        <select id="inputState" className="form-control" onChange={bboxInfo}>
+                        <select defaultValue="false" id="inputState" className="form-control" onChange={bboxInfo}>
                             <option>true</option>
-                            <option selected="selected">false</option>
+                            <option>false</option>
                         </select>
                     </div>
                     <div className="form-group col-md-3">
                         <label>Key Point</label>
-                        <input  className="form-control" placeholder="0"/>
+                        <select defaultValue="false" id="inputState" className="form-control">
+                            <option>true</option>
+                            <option>false</option>
+                        </select>
                     </div>
                     <div className="form-group col-md-3">
                         <label>Polygon</label>
-                        <select  className="form-control" >
+                        <select defaultValue="false" className="form-control">
                             <option>true</option>
-                            <option selected="selected">false</option>
+                            <option>false</option>
                         </select>
                     </div>
                     <div className="form-group col-md-3">
                         <label>Object ID</label>
-                        <select  className="form-control" >
+                        <select defaultValue="false" className="form-control">
                             <option>true</option>
-                            <option selected="selected">false</option>
+                            <option>false</option>
                         </select>
                     </div>
 
+
                 </div>
                 {ObjectStateBox.stateList.length > 0 ? (
-                    <StateList stateEdit={stateEdit} ObjectStateBox={ObjectStateBox}/>) :
-                (<div></div>)}
+                        <StateList stateEdit={stateEdit} ObjectStateBox={ObjectStateBox}/>) :
+                    (<div></div>)}
 
                 <AddImages/>
 
@@ -92,7 +92,7 @@ export default function ProjectUpload () {
             </form>
             <AddState stateAdd={stateAdd}/>
 
-            
+
         </div>
     );
 };

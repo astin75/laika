@@ -19,7 +19,7 @@ export default function StateList (props) {
     return (
         <div>
         {props.ObjectStateBox.stateList.map(x => (
-            <form>
+            <div>
                 <div className="form-row">
                     <div className="form-group col-md-3">
                         <label>상태 이름</label>
@@ -42,7 +42,7 @@ export default function StateList (props) {
                 <small className="text-muted">객체 상태를 추가할 수 있습니다. </small>
 
 
-            </form>))}
+            </div>))}
         </div>
 
     );

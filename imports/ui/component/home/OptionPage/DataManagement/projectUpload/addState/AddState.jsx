@@ -7,7 +7,7 @@ export default function AddState (props) {
         e.preventDefault()
         if (stateName.current.value.length > 0 &&
             action1.current.value.length > 0 &&
-            action2.current.value.length > 0)
+            action2.current.value.lengthg > 0)
         {
 
             props.stateAdd(stateName.current.value, action1.current.value, action2.current.value)
@@ -16,8 +16,6 @@ export default function AddState (props) {
             alert("값을 채워 주세요.")
         }
     }
-
-
     return (
         <form>
 

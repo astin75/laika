@@ -1,0 +1,90 @@
+.pageWrap {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  /* background-color: #000000; */
+}
+
+.addObjectWrap {
+  width: 21px;
+  height: 21px;
+  background-color: #1948a0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.addObjectBarVertical {
+  width: 50%;
+  height: 2px;
+  background-color: #ffffff;
+  transform: rotate(90deg);
+  position: absolute;
+  /* left: 7px;
+  top: 7px; */
+}
+
+.addObjectBarHorizontal {
+  width: 50%;
+  height: 2px;
+  background-color: #ffffff;
+  position: absolute;
+  /* left: 7px;
+  top: 7px; */
+}
+
+.cancleObjectWrap {
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background-color: #ca7d7d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.cancleObjectWrap > div {
+  width: 50%;
+  height: 2px;
+  background-color: #ffffff;
+  position: absolute;
+}
+
+.cancleObjectLeft {
+  transform: rotate(45deg);
+}
+.cancleObjectRight {
+  transform: rotate(-45deg);
+}
+
+.confirmObjectWrap {
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background-color: #77bd69;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.confirmObjectWrap > div {
+  width: 40%;
+  height: 2px;
+  position: absolute;
+  background-color: #ffffff;
+}
+
+.confirmObjectLeft {
+  transform: rotate(45deg);
+  left: 4px;
+}
+
+.confirmObjectRight {
+  transform: rotate(-45deg);
+  right: 4px;
+}

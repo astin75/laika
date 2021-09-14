@@ -1,8 +1,9 @@
 import React, {createRef, useEffect, useState} from 'react';
 
-export default function BoundingBoxConfig() {
+export default function BoundingBoxConfig(props) {
     const [BoxModeState, setBoxModeState] = useState(false)
-    const [BoxClassList, setBoxClassList] = useState({List: []})
+
+
     let className = createRef()
     const bboxInfo = (e) => {
         e.preventDefault()
@@ -17,19 +18,21 @@ export default function BoundingBoxConfig() {
         {
             alert("빈칸을 채워주세요.")
         }
+
         else {
-            if (BoxClassList.List.length === 0) {
+            if (props.BoxClassList.List === undefined) {
 
                 let List = [{id: Date.now(), className: tempClassName}]
-                setBoxClassList({List})
+                console.log(props.BoxClassList)
+                props.setBoxClassList({List})
 
 
-            } else if (BoxClassList.List.length > 4) {
+            } else if (props.BoxClassList.List.length > 4) {
                 alert("최대 5개 추가 가능합니다.")
             } else {
-                let List = [...BoxClassList.List,
+                let List = [...props.BoxClassList.List,
                     {id: Date.now(), className: tempClassName}]
-                setBoxClassList({List})
+                props.setBoxClassList({List})
             }
         }
 
@@ -60,7 +63,10 @@ export default function BoundingBoxConfig() {
                     <div>
                         <label>클래스 목록</label>
                         <select defaultValue="false" id="inputState" className="form-control">
-                            {BoxClassList.List.map(x =>( <option>{x.className}</option>))}
+                            {props.BoxClassList.List.map(x =>( <option>{x.className}</option>))}
+                            {/*{props.BoxClassList.List !== undefined ?*/}
+                            {/*    (props.BoxClassList.List.map(x =>( <option>{x.className}</option>)))*/}
+                            {/*    : (<></>)}*/}
                         </select>
 
                     </div>

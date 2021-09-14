@@ -1,8 +1,8 @@
 import React, {createRef, useEffect, useState} from 'react';
 
-export default function KeypointConfig() {
+export default function KeypointConfig(props) {
     const [KeyPointModeState, setKeyPointModeState] = useState(false)
-    const [KeyPointClassList, setKeyPointClassList] = useState({List: []})
+
     let className = createRef()
     const keyPointInfo = (e) => {
         e.preventDefault()
@@ -18,17 +18,17 @@ export default function KeypointConfig() {
             alert("빈칸을 채워주세요.")
         }
         else {
-            if (KeyPointClassList.List.length === 0) {
+            if (props.KeyPointClassList.List.length === 0) {
 
                 let List = [{id: Date.now(), className: tempClassName}]
-                setKeyPointClassList({List})
+                props.setKeyPointClassList({List})
 
             } else if (KeyPointClassList.List.length > 19) {
                 alert("최대 20개 추가 가능합니다.")
             } else {
-                let List = [...KeyPointClassList.List,
+                let List = [...props.KeyPointClassList.List,
                     {id: Date.now(), className: tempClassName}]
-                setKeyPointClassList({List})
+                props.setKeyPointClassList({List})
             }
         }
     }
@@ -57,7 +57,7 @@ export default function KeypointConfig() {
                     <div>
                         <label>클래스 목록</label>
                         <select defaultValue="false" id="inputState" className="form-control">
-                            {KeyPointClassList.List.map(x =>( <option>{x.className}</option>))}
+                            {props.KeyPointClassList.List.map(x =>( <option>{x.className}</option>))}
                         </select>
 
                     </div>

@@ -12,6 +12,29 @@ function CurrentObjectOptions() {
 }
 
 function CurrentObjectInfor({ currentObject }) {
+  const [state1, setState1] = useState("");
+  const [state2, setState2] = useState("");
+  const [objectTrakingValue, setObjectTrakingValue] = useState(0);
+  const [currentObjectTrakingValue, setCurrentObjectTrakingValue] = useState(0);
+
+  const state1Options = ["car", "person", "cat"];
+  const state2Options = ["run", "sit", "stop"];
+
+  const selectState1 = (e) => {
+    setState1(e.target.value);
+  };
+  const selectState2 = (e) => {
+    setState2(e.target.value);
+  };
+
+  const selectObjectTrakingValue = (e) => {
+    setObjectTrakingValue(e.target.value);
+  };
+
+  const selectCurrentObjectTrakingValue = () => {
+    setCurrentObjectTrakingValue(objectTrakingValue);
+  };
+
   return (
     <div className={styles.currentObjectInforWrap}>
       <div>
@@ -35,9 +58,37 @@ function CurrentObjectInfor({ currentObject }) {
           </span>
         ))}{" "}
       </div>
-      <div>state1 : {currentObject.state1} </div>
-      <div>state2 : {currentObject.state2} </div>
-      <div>object tracking : {currentObject.objectTracking}</div>
+      <div className={styles.selectStateWrap}>
+        <div>state1 : {state1}</div>
+        <div>
+          <select className="w150" onChange={selectState1} value={state1}>
+            {state1Options.map((option) => (
+              <option value={option} key={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className={styles.selectStateWrap}>
+        <div>state2 : {state2}</div>
+        <div>
+          <select className="w150" onChange={selectState2} value={state2}>
+            {state2Options.map((option) => (
+              <option value={option} key={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className={styles.selectObjectTrackingWrap}>
+        <div>object tracking : {currentObjectTrakingValue}</div>
+        <div className={styles.selectObjectTrackingValue}>
+          <input onChange={selectObjectTrakingValue} />
+          <div onClick={selectCurrentObjectTrakingValue}>입력</div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -45,7 +96,10 @@ function CurrentObjectInfor({ currentObject }) {
 export default function CurrentObject({ currentObject }) {
   return (
     <div className={styles.pageWrap}>
-      <div className={styles.selectedObject}>Selected Object</div>
+      <div className={styles.selectedObject}>
+        Selected Object
+        {currentObject ? `[Object ${currentObject.objectNo}]` : ""}
+      </div>
       <CurrentObjectOptions />
       {currentObject ? (
         <CurrentObjectInfor currentObject={currentObject} />

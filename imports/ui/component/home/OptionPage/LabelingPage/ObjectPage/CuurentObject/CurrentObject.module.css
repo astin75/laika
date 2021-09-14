@@ -36,3 +36,35 @@
   font-size: 13px;
   gap: 5px;
 }
+
+.selectStateWrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.selectObjectTrackingWrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.selectObjectTrackingValue {
+  display: flex;
+  width: 40%;
+  height: 100%;
+  gap: 10px;
+}
+
+.selectObjectTrackingValue > input {
+  width: 50%;
+  height: 100%;
+}
+
+.selectObjectTrackingValue > div {
+  width: 50%;
+  height: 100%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

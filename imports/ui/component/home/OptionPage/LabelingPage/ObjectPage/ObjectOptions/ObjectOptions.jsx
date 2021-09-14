@@ -1,14 +1,39 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ObjectOptions.module.css";
 
-function AddObject() {
+import objectForm from "../ObjectPage";
 
+function AddObject({ setObjects }) {
+  const [objectNo, setObjectNo] = useState(0);
+  const addObjectFunc = () => {
+    setObjects((pre) => [
+      ...pre,
+      {
+        bBox: [0, 0, 0, 0], // xmin, ymin, w, h
+        keyPoint: [
+          [0, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0],
+        ], // [x,y,v]
+        polygon: [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0],
+        ], // [x,y],[x,y],[x,y] ...
+        state1: "",
+        state2: "",
+        objectTracking: 0,
+        objectNo: objectNo,
+      },
+    ]);
+    setObjectNo((pre) => pre + 1);
+  };
 
-
-
-  
   return (
-    <div className={styles.addObjectWrap} onClick = {}>
+    <div className={styles.addObjectWrap} onClick={addObjectFunc}>
       <div className={styles.addObjectBarVertical}></div>
       <div className={styles.addObjectBarHorizontal}></div>
     </div>
@@ -33,10 +58,10 @@ function CancleObject() {
   );
 }
 
-export default function ObjectOptions() {
+export default function ObjectOptions({ setObjects }) {
   return (
     <div className={styles.pageWrap}>
-      <AddObject />
+      <AddObject setObjects={setObjects} />
       <div style={{ display: "flex", gap: "10px" }}>
         <ConfirmObject />
         <CancleObject />

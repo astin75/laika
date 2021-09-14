@@ -48,11 +48,11 @@ export default function Objects({ setCurrentObject, objects }) {
     <div className={styles.pageWrap}>
       {objects.map((name, value) => (
         <div
-          key={name.objectTracking}
+          key={name.objectNo}
           className={styles.object}
           onClick={() => setCurrentObject(name)}
         >
-          object {name.objectTracking}
+          object {name.objectNo}
         </div>
       ))}
     </div>

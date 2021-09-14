@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import styles from "./ObjectOptions.module.css";
 
 function AddObject() {
+
+
+
+
+  
   return (
-    <div className={styles.addObjectWrap}>
+    <div className={styles.addObjectWrap} onClick = {}>
       <div className={styles.addObjectBarVertical}></div>
       <div className={styles.addObjectBarHorizontal}></div>
     </div>

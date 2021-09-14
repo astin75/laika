@@ -17,7 +17,7 @@ export default function AddState (props) {
         }
     }
     return (
-        <form>
+        <div>
 
             <div className="form-row">
                 <div className="form-group col-md-3">
@@ -38,6 +38,6 @@ export default function AddState (props) {
                 </div>
             </div>
             <small className="text-muted">객체 상태를 추가할 수 있습니다. </small>
-        </form>
+        </div>
     );
 };

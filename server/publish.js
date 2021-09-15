@@ -1,6 +1,34 @@
-import { Meteor } from 'meteor/meteor';
-import { tasksCollection } from '../imports/db/collections';
+import {Meteor} from 'meteor/meteor';
+import {tasksCollection} from '../imports/db/collections';
+import {imageInfoCollection} from "../imports/db/collections";
+import {gtInfoCollection} from "../imports/db/collections";
+import {projectCollection} from "../imports/db/collections";
+import Images from "../imports/db/files";
 
+
+imageInfoCollection.allow({insert(){return true}})
+gtInfoCollection.allow({insert(){return true}})
+projectCollection.allow({insert(){return true}})
+
+
+Meteor.publish('imageInfoCollection', function () {
+  return imageInfoCollection.find().cursor;})
+Meteor.publish('gtInfoCollection', function () {
+  return gtInfoCollection.find().cursor;})
+Meteor.publish('projectCollection', function () {
+  return projectCollection.find();})
+
+Meteor.publish('files.images.all', function () {
+  return Images.find().cursor;})
+
+
+
+
+
+
+
+
+// test---------------------------------------------------------------------------
 tasksCollection.allow({
   insert(userId, doc) {
     return userId && doc.userId === userId;

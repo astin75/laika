@@ -5,15 +5,31 @@ import StateList from "./StateList/StateList";
 import BoundingBoxConfig from "./BoundingBoxConfig/BoundingBoxConfig";
 import KeypointConfig from "./KeypointConfig/KeypointConfig";
 import styles from './ProjectUpload.module.css'
+import {useTracker} from "meteor/react-meteor-data";
+
+import {imageInfoCollection} from "../../../../../../db/collections";
+import {gtInfoCollection} from "../../../../../../db/collections";
+import {projectCollection} from "../../../../../../db/collections";
+import Images from "../../../../../../db/files";
+
 
 export default function ProjectUpload() {
     const [BoxClassList, setBoxClassList] = useState({List: []})
     const [KeyPointClassList, setKeyPointClassList] = useState({List: []})
     const [ObjectStateBox, setObjectStateBox] = useState({stateList: []})
 
+    const [ImgFileInfo, setImgFileInfo] = useState({fileName:[], fileId:[],projectID:[],confirmFlag:[]})
+    const [RawImgList, setRawImgList] = useState({rawFile:[]})
+    const [GroundTruthJson, setGroundTruthJson] = useState({List: []})
+    const [FileCount, setFileCount] = useState({count:[]})
+
+
+
+
     let ProjectNameRef = createRef()
     let PolygonFlag = createRef()
     let ObjectIdFlag = createRef()
+
 
 
     const stateAdd = (stateName, action1, action2) => {
@@ -46,6 +62,8 @@ export default function ProjectUpload() {
 
     const onRegister = (e) => {
         e.preventDefault()
+        let RandValue = new Uint32Array(1);
+        window.crypto.getRandomValues(RandValue)
 
         let projectName = ProjectNameRef.current.value
         let bbox = BoxClassList
@@ -55,14 +73,63 @@ export default function ProjectUpload() {
         let objectId = ObjectIdFlag.current.value
 
         if (projectName.length < 4){ alert("프로젝트 이름은 4자 이상으로 해주세요.")}
+        let count =0
+        let upload;
+        console.log(ImgFileInfo)
+        console.log(RawImgList)
+        console.log(GroundTruthJson)
+        let tempImgFileInfo = ImgFileInfo
+        let tempGroundTruthJson = GroundTruthJson
+        let tempProjectInfo = {
+            projectName: projectName,
+            projectId: RandValue[0],
+            bbox: bbox,
+            keypoint: keypoint,
+            stateList: stateList,
+            polygon: polygon,
+            objectId: objectId,
+            rawImgFile: true,
+        }
 
-        console.log({projectName:projectName,
-            bbox:bbox,
-            keypoint:keypoint,
-            stateList:stateList,
-            polygon:polygon,
-            objectId:objectId,
-            rawImgFile:true,})
+        for (count = 0; count < FileCount; count++){
+            upload = Images.insert({
+                file:RawImgList[count],
+                chunkSize: 'dynamic'
+            },false)
+            upload.on('start', function () {
+                console.log('Starting');
+            });
+
+            upload.on('end', function (error, fileObj) {
+                console.log('On end File Object: ', fileObj);
+            })
+
+            upload.on('uploaded', function (error, fileObj) {
+                console.log('uploaded: ', fileObj);})
+
+            upload.start()
+            if (tempGroundTruthJson[count].List === false) {
+                tempGroundTruthJson[count].List =
+                    {
+                        projectName: projectName,
+                        projectId: RandValue[0],
+                        bbox: [],
+                        keypoint: [],
+                        stateList: [],
+                        polygon: [],
+                        objectId: [],
+                        ImgFileId: tempImgFileInfo[count].fileId,
+                        ImgFileName: tempImgFileInfo[count].name
+                    }
+
+            }
+            tempImgFileInfo[count].projectID = RandValue[0]
+
+        }
+        imageInfoCollection.insert(tempImgFileInfo)
+        gtInfoCollection.insert(tempGroundTruthJson)
+        projectCollection.insert(tempProjectInfo)
+
     }
 
     useEffect(() => {
@@ -104,7 +171,10 @@ export default function ProjectUpload() {
                         <StateList stateEdit={stateEdit} ObjectStateBox={ObjectStateBox}/>) :
                     (<div></div>)}
 
-                <AddImages/>
+                <AddImages ImgFileInfo={ImgFileInfo} setImgFileInfo={setImgFileInfo}
+                           RawImgList={RawImgList} setRawImgList={setRawImgList}
+                           GroundTruthJson={GroundTruthJson} setGroundTruthJson={setGroundTruthJson}
+                           FileCount={FileCount} setFileCount={setFileCount}/>
 
                 <div className="form-group">
                     <button onClick={onRegister} type="submit" className="btn btn-primary btn-block"> Register</button>

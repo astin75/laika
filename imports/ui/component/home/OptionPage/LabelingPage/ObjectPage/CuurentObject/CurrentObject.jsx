@@ -1,12 +1,49 @@
 import React, { useEffect, useState } from "react";
 import styles from "./CurrentObject.module.css";
+import { Icon } from "@iconify/react";
 
 function CurrentObjectOptions() {
+  const [currentDrawOption, setCurrentDrawOption] = useState("");
+
+  // useEffect(() => {
+  //   console.log(currentDrawOption);
+  // }, [currentDrawOption]);
+
   return (
     <div className={styles.currentObjectOptionsWrap}>
-      <div></div>
-      <div></div>
-      <div></div>
+      <Icon
+        icon="akar-icons:square"
+        style={{
+          width: "20px",
+          height: "20px",
+          color: currentDrawOption === "bBox" ? "#000000" : "#ffffff",
+        }}
+        onClick={() => {
+          setCurrentDrawOption("bBox");
+        }}
+      />
+      <Icon
+        icon="akar-icons:dot-grid"
+        style={{
+          width: "20px",
+          height: "20px",
+          color: currentDrawOption === "ketPoint" ? "#000000" : "#ffffff",
+        }}
+        onClick={() => {
+          setCurrentDrawOption("ketPoint");
+        }}
+      />
+      <Icon
+        icon="bx:bx-shape-polygon"
+        style={{
+          width: "20px",
+          height: "20px",
+          color: currentDrawOption === "polygon" ? "#000000" : "#ffffff",
+        }}
+        onClick={() => {
+          setCurrentDrawOption("polygon");
+        }}
+      />
     </div>
   );
 }

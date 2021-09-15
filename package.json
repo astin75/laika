@@ -37,5 +37,8 @@
     "missingClassIgnoreList": [
       "$$typeof"
     ]
+  },
+  "devDependencies": {
+    "@iconify/react": "^3.0.1"
   }
 }

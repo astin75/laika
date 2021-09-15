@@ -6,15 +6,24 @@ import {projectCollection} from "../imports/db/collections";
 import Images from "../imports/db/files";
 
 
-imageInfoCollection.allow({insert(){return true}})
-gtInfoCollection.allow({insert(){return true}})
-projectCollection.allow({insert(){return true}})
+imageInfoCollection.allow(
+    {insert(){return true}},
+        {update(){return true}},
+        {remove(){return true}})
+gtInfoCollection.allow(
+    {insert(){return true}},
+    {update(){return true}},
+    {remove(){return true}})
+projectCollection.allow(
+    {insert(){return true}},
+    {update(){return true}},
+    {remove(){return true}})
 
 
 Meteor.publish('imageInfoCollection', function () {
-  return imageInfoCollection.find().cursor;})
+  return imageInfoCollection.find();})
 Meteor.publish('gtInfoCollection', function () {
-  return gtInfoCollection.find().cursor;})
+  return gtInfoCollection.find();})
 Meteor.publish('projectCollection', function () {
   return projectCollection.find();})
 

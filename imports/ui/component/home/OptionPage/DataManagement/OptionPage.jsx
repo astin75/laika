@@ -9,13 +9,19 @@ import {projectCollection} from "../../../../../db/collections";
 
 
 export const OptionPage = () => {
-    const projectsSub = Meteor.subscribe('projectCollection');
+
     const user = useTracker(() => Meteor.user());
     const projectList = useTracker(() => projectCollection.find({}).fetch())
     const [IsThereAdmin, setIsThereAdmin] = useState(false);
 
 
-    //console.log(user.profile['rank'])
+    const onDelete = () => {
+
+    }
+
+    const onMove = () => {
+
+    }
 
     useEffect(() => {
         if (user !== undefined){
@@ -48,66 +54,17 @@ export const OptionPage = () => {
                                     <th scope="row"></th>
                                     <td>{x.projectName}</td>
                                     <td>{x.totalUnConfirmSize} / {x.totalFileSize}</td>
-                                    <td>Column content</td>
+                                    <td>
+                                        <button type="submit" className="btn btn-primary" onClick={onMove}>이동하기</button>
+                                        {IsThereAdmin ? (
+                                            <button type="submit" className="btn btn-danger" onClick={onDelete}>삭제하기</button>
+                                        ) : (<></>)}
+                                    </td>
                                 </tr>
                             ))
 
                         ): (<></>)}
 
-                        {/*<tr>*/}
-                        {/*    <th scope="row">Default</th>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*</tr>*/}
-                        {/*<tr className="table-primary">*/}
-                        {/*    <th scope="row">Primary</th>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*</tr>*/}
-                        {/*<tr className="table-secondary">*/}
-                        {/*    <th scope="row">Secondary</th>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*</tr>*/}
-                        {/*<tr className="table-success">*/}
-                        {/*    <th scope="row">Success</th>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*</tr>*/}
-                        {/*<tr className="table-danger">*/}
-                        {/*    <th scope="row">Danger</th>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*</tr>*/}
-                        {/*<tr className="table-warning">*/}
-                        {/*    <th scope="row">Warning</th>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*</tr>*/}
-                        {/*<tr className="table-info">*/}
-                        {/*    <th scope="row">Info</th>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*</tr>*/}
-                        {/*<tr className="table-light">*/}
-                        {/*    <th scope="row">Light</th>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*</tr>*/}
-                        {/*<tr className="table-dark">*/}
-                        {/*    <th scope="row">Dark</th>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*    <td>Column content</td>*/}
-                        {/*</tr>*/}
                         </tbody>
                     </table>
                 </div>

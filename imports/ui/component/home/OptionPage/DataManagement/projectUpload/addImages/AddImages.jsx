@@ -18,13 +18,33 @@ export default function AddImages (pros) {
                 tempImgFileInfo.projectID.push(false)
                 tempImgFileInfo.confirmFlag.push(false)
                 tempRawImgList.rawFile.push(e.target.files[count])
-                tempGroundTruthJson.List.push(false)
+                tempGroundTruthJson.List.push(               {
+                    projectName: false,
+                    projectId: false,
+                    bbox: [],
+                    keypoint: [],
+                    stateList: [],
+                    polygon: [],
+                    objectId: false,
+                    ImgFileId: RandValue[count],
+                    ImgFileName: e.target.files[count].name
+                })
             }
 
         }
         else {
             for (count = 0; count < e.target.files.length; count++){
-                tempGroundTruthJson.push({List:[]})
+                tempGroundTruthJson.List.push(               {
+                    projectName: false,
+                    projectId: false,
+                    bbox: [],
+                    keypoint: [],
+                    stateList: [],
+                    polygon: [],
+                    objectId: false,
+                    ImgFileId: RandValue[count],
+                    ImgFileName: e.target.files[count].name
+                })
             }
 
         }

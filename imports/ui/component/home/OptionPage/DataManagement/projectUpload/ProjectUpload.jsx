@@ -79,50 +79,32 @@ export default function ProjectUpload() {
         // console.log(RawImgList)
         // console.log(GroundTruthJson)
         let tempImgFileInfo = ImgFileInfo
-        let tempGroundTruthJson = GroundTruthJson
+        let tempGroundTruthJson = [...GroundTruthJson.List]
         let unConfirmed = 0;
         let count =0;
 
 
-        for (count = 0; count < FileCount; count++){
+        for (count = 0; count < FileCount.count; count++) {
+            tempGroundTruthJson[count].projectID = RandValue[0]
+            tempGroundTruthJson[count].projectName = projectName
+
             upload = Images.insert({
-                file:RawImgList[count],
+                file: RawImgList.rawFile[count],
                 chunkSize: 'dynamic'
-            },false)
+            }, false)
             upload.on('start', function () {
-                console.log('Starting');
+                //console.log('Starting');
             });
 
             upload.on('end', function (error, fileObj) {
-                console.log('On end File Object: ', fileObj);
+                //console.log('On end File Object: ', fileObj);
             })
 
             upload.on('uploaded', function (error, fileObj) {
-                console.log('uploaded: ', fileObj);})
+                //console.log('uploaded: ', fileObj);})
 
-            upload.start()
-
-            console.log(tempGroundTruthJson[count].List)
-            if (tempGroundTruthJson[count].List === false) {
-                unConfirmed+=1;
-                tempGroundTruthJson[count].List =
-                    {
-                        projectName: projectName,
-                        projectId: RandValue[0],
-                        bbox: [],
-                        keypoint: [],
-                        stateList: [],
-                        polygon: [],
-                        objectId: [],
-                        ImgFileId: tempImgFileInfo[count].fileId,
-                        ImgFileName: tempImgFileInfo[count].name
-                    }
-            }
-        else{
-
-            }
-            tempImgFileInfo[count].projectID = RandValue[0]
-
+                upload.start()
+            })
         }
 
         let tempProjectInfo = {

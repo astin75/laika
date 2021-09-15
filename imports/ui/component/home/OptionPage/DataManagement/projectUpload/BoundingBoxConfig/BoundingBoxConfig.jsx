@@ -23,7 +23,7 @@ export default function BoundingBoxConfig(props) {
             if (props.BoxClassList.List === undefined) {
 
                 let List = [{id: Date.now(), className: tempClassName}]
-                console.log(props.BoxClassList)
+
                 props.setBoxClassList({List})
 
 

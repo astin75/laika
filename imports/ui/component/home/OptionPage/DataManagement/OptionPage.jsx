@@ -9,9 +9,12 @@ import {projectCollection} from "../../../../../db/collections";
 
 
 export const OptionPage = () => {
+    const projectsSub = Meteor.subscribe('projectCollection');
     const user = useTracker(() => Meteor.user());
-    const projectList = useTracker(() => projectCollection.find().fetch())
+    const projectList = useTracker(() => projectCollection.find({}).fetch())
     const [IsThereAdmin, setIsThereAdmin] = useState(false);
+
+
     //console.log(user.profile['rank'])
 
     useEffect(() => {
@@ -21,8 +24,7 @@ export const OptionPage = () => {
             }
         }
     }, [user])
-    console.log(projectList)
-    console.log(user)
+
 
     return (
 
@@ -34,19 +36,22 @@ export const OptionPage = () => {
                         <thead>
                         <tr>
                             <th scope="col">Type</th>
-                            <th scope="col">Column heading</th>
+                            <th scope="col">프로젝트 이름</th>
                             <th scope="col">Column heading</th>
                             <th scope="col">Column heading</th>
                         </tr>
                         </thead>
                         <tbody>
                         {projectList !== undefined ? (
-                            <tr className="table-active">
-                                <th scope="row">Active</th>
-                                <td>Column content</td>
-                                <td>Column content</td>
-                                <td>Column content</td>
-                            </tr>
+                            projectList.map( x => (
+                                <tr className="table-active">
+                                    <th scope="row"></th>
+                                    <td>{x.projectName}</td>
+                                    <td>{x.totalUnConfirmSize} / {x.totalFileSize}</td>
+                                    <td>Column content</td>
+                                </tr>
+                            ))
+
                         ): (<></>)}
 
                         {/*<tr>*/}

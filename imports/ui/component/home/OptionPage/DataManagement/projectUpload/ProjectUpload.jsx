@@ -73,23 +73,16 @@ export default function ProjectUpload() {
         let objectId = ObjectIdFlag.current.value
 
         if (projectName.length < 4){ alert("프로젝트 이름은 4자 이상으로 해주세요.")}
-        let count =0
+
         let upload;
-        console.log(ImgFileInfo)
-        console.log(RawImgList)
-        console.log(GroundTruthJson)
+        // console.log(ImgFileInfo)
+        // console.log(RawImgList)
+        // console.log(GroundTruthJson)
         let tempImgFileInfo = ImgFileInfo
         let tempGroundTruthJson = GroundTruthJson
-        let tempProjectInfo = {
-            projectName: projectName,
-            projectId: RandValue[0],
-            bbox: bbox,
-            keypoint: keypoint,
-            stateList: stateList,
-            polygon: polygon,
-            objectId: objectId,
-            rawImgFile: true,
-        }
+        let unConfirmed = 0;
+        let count =0;
+
 
         for (count = 0; count < FileCount; count++){
             upload = Images.insert({
@@ -108,7 +101,10 @@ export default function ProjectUpload() {
                 console.log('uploaded: ', fileObj);})
 
             upload.start()
+
+            console.log(tempGroundTruthJson[count].List)
             if (tempGroundTruthJson[count].List === false) {
+                unConfirmed+=1;
                 tempGroundTruthJson[count].List =
                     {
                         projectName: projectName,
@@ -121,14 +117,30 @@ export default function ProjectUpload() {
                         ImgFileId: tempImgFileInfo[count].fileId,
                         ImgFileName: tempImgFileInfo[count].name
                     }
+            }
+        else{
 
             }
             tempImgFileInfo[count].projectID = RandValue[0]
 
         }
+
+        let tempProjectInfo = {
+            projectName: projectName,
+            projectId: RandValue[0],
+            bbox: bbox,
+            keypoint: keypoint,
+            stateList: stateList,
+            polygon: polygon,
+            objectId: objectId,
+            totalFileSize: FileCount.count,
+            totalUnConfirmSize: unConfirmed,
+        }
+
         imageInfoCollection.insert(tempImgFileInfo)
         gtInfoCollection.insert(tempGroundTruthJson)
         projectCollection.insert(tempProjectInfo)
+
 
     }
 

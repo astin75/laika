@@ -28,6 +28,7 @@ Meteor.publish('files.images.all', function () {
 
 
 
+
 // test---------------------------------------------------------------------------
 tasksCollection.allow({
   insert(userId, doc) {

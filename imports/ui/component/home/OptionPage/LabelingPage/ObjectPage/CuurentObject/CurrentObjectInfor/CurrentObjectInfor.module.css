@@ -1,0 +1,51 @@
+.currentObjectInforWrap {
+  width: 100%;
+  height: calc(100% - 60px);
+  /* background-color: #16142b; */
+  background-color: #babdc9;
+
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  box-sizing: border-box;
+  /* color: #ffffff; */
+  font-size: 13px;
+  gap: 5px;
+}
+
+.bBoxWrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.selectStateWrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.selectObjectTrackingWrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.selectObjectTrackingValue {
+  display: flex;
+  width: 40%;
+  height: 100%;
+  gap: 10px;
+}
+
+.selectObjectTrackingValue > input {
+  width: 50%;
+  height: 100%;
+}
+
+.selectObjectTrackingValue > div {
+  width: 50%;
+  height: 100%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

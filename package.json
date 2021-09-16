@@ -14,6 +14,7 @@
     "@mantine/hooks": "^2.4.3",
     "@types/meteor": "^1.4.69",
     "bcrypt": "^5.0.1",
+    "lodash": "^4.17.21",
     "meteor-node-stubs": "^1.0.1",
     "moment": "^2.29.1",
     "postcss": "^8.3.6",
@@ -21,7 +22,8 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-jss": "^10.7.1",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "recoil": "^0.4.1"
   },
   "meteor": {
     "mainModule": {

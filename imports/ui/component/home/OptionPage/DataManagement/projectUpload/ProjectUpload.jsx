@@ -24,8 +24,6 @@ export default function ProjectUpload() {
     const [FileCount, setFileCount] = useState({count:[]})
 
 
-
-
     let ProjectNameRef = createRef()
     let PolygonFlag = createRef()
     let ObjectIdFlag = createRef()

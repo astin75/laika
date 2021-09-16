@@ -48,7 +48,6 @@ export default function ProjectUpload() {
 
 
     }
-  };
 
   const stateEdit = (stateName, action1, action2) => {
     let stateList = [...ObjectStateBox.stateList];

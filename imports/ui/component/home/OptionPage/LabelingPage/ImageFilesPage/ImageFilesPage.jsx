@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ImageFilesPage.module.css";
 
-export default function ImageFilesPage() {
+export default function ImageFilesPage({ currentProjectInfo }) {
   const images = [
     ["Image1", "0"],
     ["Image2", "1"],
@@ -27,6 +27,7 @@ export default function ImageFilesPage() {
     ["Image23", "1"],
   ];
 
+  console.log(currentProjectInfo);
   // Error, Done, Have to work
   const imageState = ["#dd7171", "#61c46e", "#cccccc"];
 

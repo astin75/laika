@@ -10,13 +10,6 @@ export default function ProjectListPage() {
     ["Project3", "False", "False", "False", "False", "False", "", ""],
     ["Project4", "False", "False", "False", "False", "False", "", ""],
     ["Project4", "False", "False", "False", "False", "False", "", ""],
-    ["Project4", "False", "False", "False", "False", "False", "", ""],
-    ["Project4", "False", "False", "False", "False", "False", "", ""],
-    ["Project4", "False", "False", "False", "False", "False", "", ""],
-    ["Project4", "False", "False", "False", "False", "False", "", ""],
-    ["Project4", "False", "False", "False", "False", "False", "", ""],
-    ["Project4", "False", "False", "False", "False", "False", "", ""],
-    ["Project4", "False", "False", "False", "False", "False", "", ""],
   ];
 
   return (

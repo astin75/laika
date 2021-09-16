@@ -26,32 +26,35 @@
         background-size: 6rem;
         background-repeat: no-repeat;
         background-position: center top;
-        filter: invert(100%);
-        -webkit-filter: invert(100%);
+
+
       }
 
-      &.open-source {
-        background-image: url("open-source.png");
+      &.deep_logo{
+        background-position: center 1em;
+        background-image: url("deep_logo.png");
       }
 
-      &.online {
-        background-image: url("online.png");
+      &.labels{
+        background-image: url("horse-polygon.png");
+        background-size: 9rem;
       }
 
-      &.private {
-        background-image: url("private.png");
+      &.chrome-logo  {
+        background-image: url("chrome.png");
       }
 
-      &.labels {
-        background-image: url("labels.png");
+      &.meteor_logo {
+        background-image: url("meteor.png");
+        background-size: 11rem;
       }
 
-      &.file {
-        background-image: url("file.png");
+      &.react-logo {
+        background-image: url("react-icon.png");
       }
 
-      &.robot {
-        background-image: url("robot.png");
+      &.laika-dog {
+        background-image: url("laika.png");
       }
     }
   }

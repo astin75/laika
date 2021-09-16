@@ -5,4 +5,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image: url("stacked-peaks-haikei.svg");
 }

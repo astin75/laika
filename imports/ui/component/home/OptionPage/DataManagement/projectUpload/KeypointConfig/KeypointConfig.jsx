@@ -23,7 +23,7 @@ export default function KeypointConfig(props) {
                 let List = [{id: Date.now(), className: tempClassName}]
                 props.setKeyPointClassList({List})
 
-            } else if (KeyPointClassList.List.length > 19) {
+            } else if (props.KeyPointClassList.List.length > 19) {
                 alert("최대 20개 추가 가능합니다.")
             } else {
                 let List = [...props.KeyPointClassList.List,

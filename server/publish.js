@@ -6,18 +6,18 @@ import {projectCollection} from "../imports/db/collections";
 import Images from "../imports/db/files";
 
 
-imageInfoCollection.allow(
-    {insert(){return true}},
-        {update(){return true}},
-        {remove(){return true}})
-gtInfoCollection.allow(
-    {insert(){return true}},
-    {update(){return true}},
-    {remove(){return true}})
-projectCollection.allow(
-    {insert(){return true}},
-    {update(){return true}},
-    {remove(){return true}})
+imageInfoCollection.allow({
+  insert(){return true},
+  update(){return true},
+  remove(){return true}})
+gtInfoCollection.allow({
+  insert(){return true},
+  update(){return true},
+  remove(){return true}})
+projectCollection.allow({
+    insert(){return true},
+    update(){return true},
+    remove(){return true}})
 
 
 Meteor.publish('imageInfoCollection', function () {

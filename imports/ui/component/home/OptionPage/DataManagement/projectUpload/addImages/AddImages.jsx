@@ -4,7 +4,7 @@ export default function AddImages (pros) {
 
     let WithGroundTruthFlag = createRef()
     const onChange = e => {
-        let tempImgFileInfo = {fileName:[], fileId:[],projectID:[],confirmFlag:[]}
+        let tempImgFileInfo = {imgInfo:[]}
         let tempRawImgList = {rawFile:[]}
         let tempGroundTruthJson = {List:[]}
         let count =0
@@ -13,10 +13,14 @@ export default function AddImages (pros) {
         if (WithGroundTruthFlag){
 
             for (count = 0; count < e.target.files.length; count++){
-                tempImgFileInfo.fileName.push(e.target.files[count].name)
-                tempImgFileInfo.fileId.push(RandValue[count])
-                tempImgFileInfo.projectID.push(false)
-                tempImgFileInfo.confirmFlag.push(false)
+                tempImgFileInfo.imgInfo.push({
+                    fileName:e.target.files[count].name,
+                    fileId : RandValue[count],
+                    projectName : false,
+                    projectID : false,
+                    confirmFlag : false
+                })
+
                 tempRawImgList.rawFile.push(e.target.files[count])
                 tempGroundTruthJson.List.push(               {
                     projectName: false,

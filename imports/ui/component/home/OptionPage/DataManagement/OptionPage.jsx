@@ -16,10 +16,14 @@ export const OptionPage = () => {
 
 
     const onDelete = () => {
+        let oops = projectCollection.find({projectName:"343g"}).fetch();
+        console.log(oops[0]._id)
+        let deletevalue = projectCollection.remove(oops[0]._id)
 
     }
 
     const onMove = () => {
+        console.log(22222)
 
     }
 
@@ -52,7 +56,7 @@ export const OptionPage = () => {
                             projectList.map( x => (
                                 <tr className="table-active">
                                     <th scope="row"></th>
-                                    <td>{x.projectName}</td>
+                                    <td>{x.projectName}</td>  {/*이값을*/}
                                     <td>{x.totalUnConfirmSize} / {x.totalFileSize}</td>
                                     <td>
                                         <button type="submit" className="btn btn-primary" onClick={onMove}>이동하기</button>

@@ -17,12 +17,7 @@ export default function ProjectUpload() {
   const [KeyPointClassList, setKeyPointClassList] = useState({ List: [] });
   const [ObjectStateBox, setObjectStateBox] = useState({ stateList: [] });
 
-  const [ImgFileInfo, setImgFileInfo] = useState({
-    fileName: [],
-    fileId: [],
-    projectID: [],
-    confirmFlag: [],
-  });
+  const [ImgFileInfo, setImgFileInfo] = useState({ imgInfo: [] });
   const [RawImgList, setRawImgList] = useState({ rawFile: [] });
   const [GroundTruthJson, setGroundTruthJson] = useState({ List: [] });
   const [FileCount, setFileCount] = useState({ count: [] });
@@ -85,8 +80,8 @@ export default function ProjectUpload() {
     let upload;
     // console.log(ImgFileInfo)
     // console.log(RawImgList)
-    // console.log(GroundTruthJson)
-    let tempImgFileInfo = ImgFileInfo;
+    // [...ImgFileInfo.fileName, ...ImgFileInfo.fileId,...ImgFileInfo.projectID,...ImgFileInfo.confirmFlag]
+    let tempImgFileInfo = [...ImgFileInfo.imgInfo];
     let tempGroundTruthJson = [...GroundTruthJson.List];
     let unConfirmed = 0;
     let count = 0;
@@ -94,6 +89,10 @@ export default function ProjectUpload() {
     for (count = 0; count < FileCount.count; count++) {
       tempGroundTruthJson[count].projectID = RandValue[0];
       tempGroundTruthJson[count].projectName = projectName;
+      tempImgFileInfo[count].projectID = RandValue[0];
+      tempImgFileInfo[count].projectName = projectName;
+      imageInfoCollection.insert(tempImgFileInfo[count]);
+      gtInfoCollection.insert(tempImgFileInfo[count]);
 
       upload = Images.insert(
         {
@@ -129,8 +128,6 @@ export default function ProjectUpload() {
       totalUnConfirmSize: unConfirmed,
     };
 
-    imageInfoCollection.insert(tempImgFileInfo);
-    gtInfoCollection.insert(tempGroundTruthJson);
     projectCollection.insert(tempProjectInfo);
   };
 

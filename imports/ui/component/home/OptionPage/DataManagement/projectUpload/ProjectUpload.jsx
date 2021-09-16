@@ -89,6 +89,9 @@ export default function ProjectUpload() {
             tempGroundTruthJson[count].projectName = projectName
             tempImgFileInfo[count].projectID =  RandValue[0]
             tempImgFileInfo[count].projectName = projectName
+            imageInfoCollection.insert(tempImgFileInfo[count])
+            gtInfoCollection.insert(tempImgFileInfo[count])
+
 
 
 
@@ -123,8 +126,7 @@ export default function ProjectUpload() {
             totalUnConfirmSize: unConfirmed,
         }
 
-        imageInfoCollection.insert(tempImgFileInfo)
-        gtInfoCollection.insert(tempGroundTruthJson)
+
         projectCollection.insert(tempProjectInfo)
 
 

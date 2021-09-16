@@ -13,43 +13,40 @@ import { projectCollection } from "../../../../../../db/collections";
 import Images from "../../../../../../db/files";
 
 export default function ProjectUpload() {
-  const [BoxClassList, setBoxClassList] = useState({ List: [] });
-  const [KeyPointClassList, setKeyPointClassList] = useState({ List: [] });
-  const [ObjectStateBox, setObjectStateBox] = useState({ stateList: [] });
 
-  const [ImgFileInfo, setImgFileInfo] = useState({ imgInfo: [] });
-  const [RawImgList, setRawImgList] = useState({ rawFile: [] });
-  const [GroundTruthJson, setGroundTruthJson] = useState({ List: [] });
-  const [FileCount, setFileCount] = useState({ count: [] });
+    const [BoxClassList, setBoxClassList] = useState({List: []})
+    const [KeyPointClassList, setKeyPointClassList] = useState({List: []})
+    const [ObjectStateBox, setObjectStateBox] = useState({stateList: []})
 
-  let ProjectNameRef = createRef();
-  let PolygonFlag = createRef();
-  let ObjectIdFlag = createRef();
+    const [ImgFileInfo, setImgFileInfo] = useState({imgInfo:[]})
+    const [RawImgList, setRawImgList] = useState({rawFile:[]})
+    const [GroundTruthJson, setGroundTruthJson] = useState({List: []})
+    const [FileCount, setFileCount] = useState({count:[]})
 
-  const stateAdd = (stateName, action1, action2) => {
-    if (ObjectStateBox.stateList.length === 0) {
-      let stateList = [
-        {
-          id: Date.now(),
-          stateName: stateName,
-          action1: action1,
-          action2: action2,
-        },
-      ];
-      setObjectStateBox({ stateList });
-    } else if (ObjectStateBox.stateList.length > 1) {
-      alert("최대 2개 추가 가능합니다.");
-    } else {
-      let stateList = [
-        ...ObjectStateBox.stateList,
-        {
-          id: Date.now(),
-          stateName: stateName,
-          action1: action1,
-          action2: action2,
-        },
-      ];
-      setObjectStateBox({ stateList });
+
+    let ProjectNameRef = createRef()
+    let PolygonFlag = createRef()
+    let ObjectIdFlag = createRef()
+
+
+
+    const stateAdd = (stateName, action1, action2) => {
+
+        if (ObjectStateBox.stateList.length === 0) {
+            let stateList = [{id: Date.now(), stateName: stateName, action1: action1, action2: action2}]
+            setObjectStateBox({stateList})
+        }
+        else if (ObjectStateBox.stateList.length > 1){
+            alert("최대 2개 추가 가능합니다.")
+
+        }
+        else {
+            let stateList = [...ObjectStateBox.stateList,
+                {id: Date.now(), stateName: stateName, action1: action1, action2: action2}]
+            setObjectStateBox({stateList})
+        }
+
+
     }
   };
 

@@ -10,9 +10,9 @@
   "dependencies": {
     "@babel/runtime": "^7.14.0",
     "@fortawesome/fontawesome-free": "^5.15.3",
-    "@mantine/core": "^2.4.3",
-    "@mantine/hooks": "^2.4.3",
-    "@mantine/notifications": "^2.4.3",
+    "@mantine/core": "^2.5.0",
+    "@mantine/hooks": "^2.5.0",
+    "@mantine/notifications": "^2.5.0",
     "@types/meteor": "^1.4.69",
     "bcrypt": "^5.0.1",
     "meteor-node-stubs": "^1.0.1",

@@ -13,10 +13,17 @@ export const OptionPage = () => {
   const projectList = useTracker(() => projectCollection.find({}).fetch());
   const [IsThereAdmin, setIsThereAdmin] = useState(false);
 
-  //   console.log(projectList);
-  const onDelete = (project) => {};
+  const onDelete = (project) => {
+    let oops = projectCollection
+      .find({ projectName: project.projectName })
+      .fetch();
+    console.log(oops[0]._id);
+    projectCollection.remove(oops[0]._id);
+  };
 
-  const onMove = () => {};
+  const onMove = () => {
+    console.log(22222);
+  };
 
   useEffect(() => {
     if (user !== undefined) {
@@ -45,18 +52,11 @@ export const OptionPage = () => {
                 projectList.map((x) => (
                   <tr className="table-active">
                     <th scope="row"></th>
-                    <td>{x.projectName}</td>
+                    <td>{x.projectName}</td> {/*이값을*/}
                     <td>
                       {x.totalUnConfirmSize} / {x.totalFileSize}
                     </td>
                     <td>
-                      {/* <button
-                        type="submit"
-                        className="btn btn-primary"
-                        onClick={() => onMove(x)}
-                      >
-                        이동하기
-                      </button> */}
                       <Link
                         to={{
                           pathname: "/labelingPage",

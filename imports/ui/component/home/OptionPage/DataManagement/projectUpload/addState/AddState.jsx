@@ -1,42 +1,63 @@
-import React, {createRef, useRef} from 'react';
-export default function AddState (props) {
-    let stateName = createRef()
-    let action1 = createRef()
-    let action2 = createRef()
+import React, {createRef, useRef, useState} from 'react';
+import {Button, Grid, Col, TextInput, } from "@mantine/core";
+import { useNotifications } from '@mantine/notifications';
+
+export default function AddState(props) {
+    const [stateName, setStateName] = useState(false);
+    const [action1, setAction1] = useState(false);
+    const [action2, setAction2] = useState(false);
+    const notifications = useNotifications();
+    const showNotification = () => notifications.showNotification({
+        title: '에러!',
+        message: '상태 값을 채워 주세요.! 🤥',
+        color: 'red'
+    });
+
+
     const onAdd = (e) => {
         e.preventDefault()
-        if (stateName.current.value.length > 0 &&
-            action1.current.value.length > 0 &&
-            action2.current.value.length > 0)
-        {
+        if (stateName !== false &&
+            action1 !== false &&
+            action2 !== false) {
 
-            props.stateAdd(stateName.current.value, action1.current.value, action2.current.value)
-        }
-        else{
-            alert("값을 채워 주세요.")
+            props.stateAdd(stateName, action1, action2)
+            setStateName(false)
+            setAction1(false)
+            setAction2(false)
+        } else {
+
+            showNotification()
+
         }
     }
     return (
         <div>
 
-            <div className="form-row">
-                <div className="form-group col-md-3">
-                    <label>상태 이름</label>
-                    <input ref={stateName}  className="form-control" placeholder=""/>
-                </div>
-                <div className="form-group col-md-3">
-                    <label>Action1</label>
-                    <input ref={action1}  className="form-control" placeholder=""/>
-                </div>
-                <div className="form-group col-md-3">
-                    <label>Action2</label>
-                    <input ref={action2}  className="form-control" placeholder=""/>
-                </div>
-                <div className="form-group">
+            <Grid>
+                <Col span={3}>
+                    <TextInput onChange={(e) => {
+                        setStateName(e.target.value);
+                    }} description="상태" placeholder=""></TextInput>
+                </Col>
+                <Col span={3}>
+                    <TextInput
+                        onChange={(e) => {
+                            setAction1(e.target.value);
+                        }}
+                        description="Action1" placeholder=""></TextInput>
+                </Col>
+                <Col span={3}>
+                    <TextInput
+                        onChange={(e) => {
+                            setAction2(e.target.value);
+                        }}
+                        description="Action2" placeholder=""></TextInput>
+                </Col>
+                <Col span={3}>
                     <br/>
-                    <button type="submit" className="btn btn-success" onClick={onAdd}> 추가하기</button>
-                </div>
-            </div>
+                    <Button color="green" onClick={onAdd}> 추가하기</Button>
+                </Col>
+            </Grid>
             <small className="text-muted">객체 상태를 추가할 수 있습니다. </small>
         </div>
     );

@@ -22,17 +22,6 @@
     flex-direction: column;
 }
 
-
-input, textarea, button {
-    -webkit-appearance: none;
-    -webkit-font-smoothing: antialiased;
-    resize: none;
-}
-
-input[type="radio"]{
-    -webkit-appearance: radio;
-}
-
 .topMenu {
     display: flex;
     justify-content: right;
@@ -40,11 +29,4 @@ input[type="radio"]{
 .topMenuButton{
     margin-right: 1em;
     margin-bottom: 1em;
-}
-
-.switchStyles {
-font: bold;
-
-
-
 }

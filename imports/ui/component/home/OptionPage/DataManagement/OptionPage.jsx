@@ -20,24 +20,16 @@ export const OptionPage = () => {
 
   return (
     <main className={styles.main}>
-      <div className={styles.header}>헤더</div>
-      <div className={styles.body}>
-        <div className={styles.left}>
-          <ProjectList2/>
-          <></>
 
-        </div>
-        <div className={styles.right}>
-          {IsThereAdmin ? (
-            <ProjectUpload />
-          ) : (
-            <a>
-              <img src={"lockDataManagement.png"} />
-            </a>
-          )}
-        </div>
-      </div>
-      <div className={styles.footer}>푸터</div>
+      {IsThereAdmin ? (
+          <ProjectUpload />
+      ) : (
+          <a>
+            <img src={"lockDataManagement.png"} />
+          </a>
+      )}
+
+
     </main>
   );
 };

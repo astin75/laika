@@ -1,7 +1,11 @@
 import React, {createRef, useEffect, useState} from 'react';
+import {Button, Grid, Col, TextInput, Switch,} from "@mantine/core";
 
 export default function BoundingBoxConfig(props) {
     const [BoxModeState, setBoxModeState] = useState(false)
+    const switchStyles = {
+        label: {fontSize: 13},
+    }
 
 
     let className = createRef()
@@ -42,25 +46,29 @@ export default function BoundingBoxConfig(props) {
 
     }, )
     return (
-        <div className="form-row">
-            <div className="form-group col-md-4">
-                <label>Bounding Box</label>
-                <select defaultValue="false" id="inputState" className="form-control" onChange={bboxInfo}>
-                    <option>true</option>
-                    <option>false</option>
-                </select>
-            </div>
+        <Grid >
+
+            <Col span={12} >
+
+                <Switch
+                    label="Bounding Box"
+                    styles={switchStyles}
+                    checked={BoxModeState}
+                    onChange={(event) => setBoxModeState(event.currentTarget.checked)}
+                >
+                </Switch >
+            </Col>
             {BoxModeState ? (
                 <>
-                    <div className="form-group col-md-3">
+                    <Col span={3}>
                         <label>클래스 이름</label>
                         <input ref={className} className="form-control" placeholder=""/>
-                    </div>
-                    <div className="form-group col-md-3">
+                    </Col>
+                    <Col span={3}>
                         <br/>
                         <button type="submit" className="btn btn-success" onClick={BoxClassAdd}>추가하기</button>
-                    </div>
-                    <div>
+                    </Col>
+                    <Col span={3}>
                         <label>클래스 목록</label>
                         <select defaultValue="false" id="inputState" className="form-control">
                             {props.BoxClassList.List.map(x =>( <option>{x.className}</option>))}
@@ -69,11 +77,11 @@ export default function BoundingBoxConfig(props) {
                             {/*    : (<></>)}*/}
                         </select>
 
-                    </div>
+                    </Col>
                 </>
             ) : (<></>)}
 
 
-        </div>
+        </Grid>
     );
 };

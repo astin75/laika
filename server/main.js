@@ -1,9 +1,9 @@
-import { Meteor } from 'meteor/meteor';
-import { tasksCollection } from '../imports/db/collections';
-import './publish.js';
+import { Meteor } from 'meteor/meteor'
+import { tasksCollection } from '../imports/db/collections'
+import './publish.js'
 
 function insertLink({ title, url }) {
-  LinksCollection.insert({ title, url, createdAt: new Date() });
+  LinksCollection.insert({ title, url, createdAt: new Date() })
 }
 
 Meteor.startup(() => {
@@ -14,6 +14,6 @@ Meteor.startup(() => {
       owner: 'My',
       completed: false,
       createdAt: new Date(),
-    });
+    })
   }
-});
+})

@@ -1,32 +1,31 @@
-import React from "react";
-import { Router, Route, Switch } from "react-router-dom";
-import history from "./history";
-import ScrollToTop from "./ScrollToTop";
+import React from 'react'
+import { Router, Route, Switch } from 'react-router-dom'
+import history from './history'
+import ScrollToTop from './ScrollToTop'
 
 /*************
     LayOut
 *************/
 
-import DefaultLayout from "../layout/DefaultLayout";
+import DefaultLayout from '../layout/DefaultLayout'
 
 /*************
      Home
 *************/
 
-import Home from "../component/home/Index";
-import LabelingPage from "../component/home/OptionPage/LabelingPage/LabelingPage";
-import { OptionPage } from "../component/home/OptionPage/DataManagement/OptionPage";
+import Home from '../component/home/Index'
+import LabelingPage from '../component/home/OptionPage/LabelingPage/LabelingPage'
+import { OptionPage } from '../component/home/OptionPage/DataManagement/OptionPage'
 // import OptionPage from "../component/home/OptionPage/DataManagement_new/OptionPage";
-import AccountPage from "../component/home/AccountPage/AccountPage";
-import ProjectList2 from "../component/home/OptionPage/DataManagement/projectList2/ProjectList2";
-import ProjectUpload from "../component/home/OptionPage/DataManagement/projectUpload/ProjectUpload";
-
+import AccountPage from '../component/home/AccountPage/AccountPage'
+import ProjectList2 from '../component/home/OptionPage/DataManagement/projectList2/ProjectList2'
+import ProjectUpload from '../component/home/OptionPage/DataManagement/projectUpload/ProjectUpload'
 
 /*************
      404
 *************/
 
-import NotFound from "../component/home/NotFound";
+import NotFound from '../component/home/NotFound'
 
 const Routes = ({ auth }) => {
   return (
@@ -35,8 +34,14 @@ const Routes = ({ auth }) => {
       <Switch>
         <Route
           exact
-          path={["/", "/labelingPage", "/optionPage", "/accountPage",
-            "/projectListPage", "/projectManagementPage"]}
+          path={[
+            '/',
+            '/labelingPage',
+            '/optionPage',
+            '/accountPage',
+            '/projectListPage',
+            '/projectManagementPage',
+          ]}
         >
           <DefaultLayout>
             <Switch>
@@ -57,7 +62,7 @@ const Routes = ({ auth }) => {
         <Route path="*" component={NotFound} />
       </Switch>
     </Router>
-  );
-};
+  )
+}
 
-export default Routes;
+export default Routes

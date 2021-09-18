@@ -4,11 +4,11 @@ import ScrollTop from '../module/scroll-top/index.js'
 import Header from './default/Header'
 import Footer from './default/Footer'
 
-const DefaultLayout = ({children}) => {
+const DefaultLayout = ({ children }) => {
   return (
     <React.Fragment>
-			<Header />
-        {children}
+      <Header />
+      {children}
       <ScrollTop />
       <Footer />
     </React.Fragment>

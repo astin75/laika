@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react'
 
-import styles from "./OptionPage.module.css";
+import styles from './OptionPage.module.css'
 
-import ProjectListPage from "./ProjectListPage/ProjectListPage";
-import ProjectEditPage from "./ProjectEditPage/ProjectEditPage";
+import ProjectListPage from './ProjectListPage/ProjectListPage'
+import ProjectEditPage from './ProjectEditPage/ProjectEditPage'
 
 export default function OptionPage() {
   return (
@@ -15,5 +15,5 @@ export default function OptionPage() {
       </div>
       <div className={styles.footer}></div>
     </div>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import styles from "./ImageFilesPage.module.css";
+import React, { useEffect, useState } from 'react'
+import styles from './ImageFilesPage.module.css'
 
 export default function ImageFilesPage({ currentImageInfo }) {
   // Error, Done, Have to work
-  const imageState = ["#dd7171", "#61c46e", "#cccccc"];
+  const imageState = ['#dd7171', '#61c46e', '#cccccc']
 
   return (
     <div className={styles.pageWrap}>
@@ -19,9 +19,9 @@ export default function ImageFilesPage({ currentImageInfo }) {
                   {e.fileName}
                 </div>
               ))
-            : ""}
+            : ''}
         </div>
       </div>
     </div>
-  );
+  )
 }

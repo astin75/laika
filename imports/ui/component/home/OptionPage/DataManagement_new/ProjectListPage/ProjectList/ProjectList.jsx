@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./ProjectList.module.css";
+import React from 'react'
+import styles from './ProjectList.module.css'
 
 export default function ProjectList({ project }) {
   return (
@@ -8,5 +8,5 @@ export default function ProjectList({ project }) {
         <div className={styles.projectList}>{contents}</div>
       ))}
     </div>
-  );
+  )
 }

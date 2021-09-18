@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import styles from "./Objects.module.css";
+import React, { useEffect, useState } from 'react'
+import styles from './Objects.module.css'
 
 export default function Objects({ setCurrentObject, objects }) {
   // const objects = [
@@ -47,14 +47,10 @@ export default function Objects({ setCurrentObject, objects }) {
   return (
     <div className={styles.pageWrap}>
       {objects.map((name, value) => (
-        <div
-          key={name.objectNo}
-          className={styles.object}
-          onClick={() => setCurrentObject(name)}
-        >
+        <div key={name.objectNo} className={styles.object} onClick={() => setCurrentObject(name)}>
           object {name.objectNo}
         </div>
       ))}
     </div>
-  );
+  )
 }

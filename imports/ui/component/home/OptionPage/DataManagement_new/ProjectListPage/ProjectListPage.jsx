@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react'
 
-import styles from "./ProjectListPage.module.css";
-import ProjectList from "./ProjectList/ProjectList";
+import styles from './ProjectListPage.module.css'
+import ProjectList from './ProjectList/ProjectList'
 
 export default function ProjectListPage() {
   const projectList = [
-    ["Project1", "False", "False", "False", "False", "False", "", ""],
-    ["Project2", "False", "False", "False", "False", "False", "", ""],
-    ["Project3", "False", "False", "False", "False", "False", "", ""],
-    ["Project4", "False", "False", "False", "False", "False", "", ""],
-    ["Project4", "False", "False", "False", "False", "False", "", ""],
-  ];
+    ['Project1', 'False', 'False', 'False', 'False', 'False', '', ''],
+    ['Project2', 'False', 'False', 'False', 'False', 'False', '', ''],
+    ['Project3', 'False', 'False', 'False', 'False', 'False', '', ''],
+    ['Project4', 'False', 'False', 'False', 'False', 'False', '', ''],
+    ['Project4', 'False', 'False', 'False', 'False', 'False', '', ''],
+  ]
 
   return (
     <div className={styles.pageWrap}>
@@ -30,5 +30,5 @@ export default function ProjectListPage() {
         ))}
       </div>
     </div>
-  );
+  )
 }

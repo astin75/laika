@@ -1,13 +1,23 @@
+.addBox{
+    display: flex;
+}
+
 .bboxRaw{
     margin-top: 50px;
-
-
 }
 
 .bboxSwitch{
-    width: 250px;
+    display: flex;
+    height: 40px;
 }
 
 .textInput{
+    flex:1;
+}
+.bboxAddButton{
+    display:flex;
+    justify-content:center;
+
     width: 100px;
+    margin-left: 10px;
 }

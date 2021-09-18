@@ -17,25 +17,15 @@ const App = () => {
   return (
     <NotificationsProvider>
       <Switch>
-        <Route
-          exact
-          path={[
-            '/',
-            '/labelingPage',
-            '/optionPage',
-            '/accountPage',
-            '/projectListPage',
-            '/projectManagementPage',
-          ]}
-        >
+        <Route>
           <DefaultLayout>
             <Switch>
               <Route exact path="/" component={IndexPage} />
-              <Route exact path="/labelingPage" component={LabelingPage} />
-              <Route exact path="/optionPage" component={OptionPage} />
-              <Route exact path="/accountPage" component={AccountPage} />
-              <Route exact path="/projectListPage" component={ProjectList2} />
-              <Route exact path="/projectManagementPage" component={ProjectUpload} />
+              <Route path="/labelingPage" component={LabelingPage} />
+              <Route path="/optionPage" component={OptionPage} />
+              <Route path="/accountPage" component={AccountPage} />
+              <Route path="/projectListPage" component={ProjectList2} />
+              <Route path="/projectManagementPage" component={ProjectUpload} />
             </Switch>
           </DefaultLayout>
         </Route>
@@ -46,8 +36,6 @@ const App = () => {
 
         <Route path="*" component={NotFound} />
       </Switch>
-
-      <Route />
     </NotificationsProvider>
   )
 }

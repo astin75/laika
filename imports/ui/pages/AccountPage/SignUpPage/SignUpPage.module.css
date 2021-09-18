@@ -24,8 +24,9 @@ input {
   font-size: 36px;
 }
 
-.textForm{
 
+.signUpLink{
+  cursor: pointer;
 }
 
 .signUpLink:hover{
@@ -36,7 +37,6 @@ input {
 
 }
 .command {
-  background-color: #000000;
   color: #ffffff;
   display: flex;
   justify-content: center;

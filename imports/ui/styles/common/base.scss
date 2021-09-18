@@ -173,12 +173,11 @@ main {
     position: absolute;
     left: 2rem;
     top: 2rem;
-    width: 16rem;
-    height: 20rem;
-    background: url("Laika-main.png");
-    background-size: 16rem;
-    background-repeat: no-repeat;
+    
     z-index: 9;
+    img{
+      width: 16rem;
+    }
   }
 
   .content {

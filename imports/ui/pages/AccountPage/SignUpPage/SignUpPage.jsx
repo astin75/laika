@@ -67,13 +67,9 @@ export default function SignUpPage({ setIsThereAccount }) {
           onClick={() => {
             setIsThereAccount(true)
           }}
-          size="xs"
+          size="sm"
         >
-          {' '}
-          로그인
-        </Text>
-        <Text size="xs" align="right">
-          페이지지로 돌아가기.
+          로그인 페이지지로 돌아가기
         </Text>
       </div>
       <TextInput

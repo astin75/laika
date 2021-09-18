@@ -1,93 +1,82 @@
 import React, { createRef, useEffect, useRef, useState } from 'react'
 import styles from './BoundingBoxConfig.module.css'
-import { Button, Grid, Col, TextInput, Switch, MultiSelect } from '@mantine/core'
+import { Button, Grid, Col, TextInput, Switch, Badge, ActionIcon } from '@mantine/core'
 
-export default function BoundingBoxConfig(props) {
+export default function BoundingBoxConfig({ boxClassList, setBoxClassList }) {
   const [BoxModeState, setBoxModeState] = useState(false)
-  const [className, setClassName] = useState('')
+  const [labelName, setLabelName] = useState('')
   const [errClass, setErrClass] = useState('')
-  const [data, setData] = useState([])
-  const [defaultData, setDefaultData] = useState(['pp'])
 
-  const ref = useRef(null)
-
-  const switchStyles = {
-    label: { fontSize: 13 },
-  }
-
-  const BoxClassAdd = (e) => {
-    let tempData = [...data]
-    let defaultList = []
-    let tempDefaultData = defaultData
-
-    e.preventDefault()
-    let tempClassName = className
-    if (tempClassName.length < 1) {
+  const addLabelName = () => {
+    if (labelName.length < 1) {
       setErrClass('객체 이름을 넣어주세요.')
-    } else {
-      if (props.BoxClassList.List === undefined) {
-        let List = [{ id: Date.now(), className: tempClassName }]
-        props.setBoxClassList({ List })
-        tempData[tempData.length] = { value: tempClassName, label: tempClassName }
-
-        setData(tempData)
-        defaultList.push(tempClassName)
-        setDefaultData(defaultList)
-        setErrClass('')
-      } else if (props.BoxClassList.List.length > 4) {
-        setErrClass('최대 5개까지 추가 됩니다.')
-      } else {
-        let List = [...props.BoxClassList.List, { id: Date.now(), className: tempClassName }]
-        props.setBoxClassList({ List })
-        tempData[tempData.length] = { value: tempClassName, label: tempClassName }
-        setData(tempData)
-        defaultList.push('op')
-        setDefaultData({ defaultList })
-        console.log(defaultList)
-        setErrClass('')
-      }
+      return
     }
+
+    if (boxClassList.length > 4) {
+      setErrClass('최대 5개까지 추가 됩니다.')
+      return
+    }
+
+    setBoxClassList([...boxClassList, labelName])
+    setLabelName('')
+    setErrClass('')
   }
-  useEffect(() => {}, [data, defaultData])
+
+  const removeLabelName = (idx) => {
+    const list = boxClassList.filter((dsf, index) => index !== idx)
+    setBoxClassList(list)
+  }
+
   return (
-    <Grid style={{ marginTop: 10 }}>
-      <Col span={3}>
-        <Switch
-          className={styles.bboxSwitch}
-          label="Bounding Box"
-          styles={switchStyles}
-          checked={BoxModeState}
-          onChange={(event) => setBoxModeState(event.currentTarget.checked)}
-        ></Switch>
-      </Col>
-      {BoxModeState ? (
-        <>
-          <Col span={3}>
+    <>
+      <Grid style={{ margin: '14px 0' }}>
+        <Col span={3}>
+          <Switch
+            className={styles.bboxSwitch}
+            label="Bounding Box"
+            checked={BoxModeState}
+            onChange={(event) => setBoxModeState(event.currentTarget.checked)}
+          />
+        </Col>
+        {BoxModeState && (
+          <Col span={9} className={styles.addBox}>
             <TextInput
               onChange={(e) => {
-                setClassName(e.target.value)
+                setLabelName(e.target.value)
               }}
               placeholder=""
               error={errClass}
+              value={labelName}
               className={styles.textInput}
             ></TextInput>
+            <Button onClick={addLabelName} className={styles.bboxAddButton}>
+              추가하기
+            </Button>
           </Col>
-          <Col span={3}>
-            <Button onClick={BoxClassAdd}>추가하기</Button>
-          </Col>
-          <Col span={3}>
-            <MultiSelect
-              data={data}
-              defaultValue={defaultData}
-              elementRef={ref}
-              label="Your favorite frameworks/libraries"
-              placeholder="Pick all that you like"
-            />
-          </Col>
-        </>
-      ) : (
-        <></>
+        )}
+      </Grid>
+      {boxClassList.length > 0 && (
+        <Grid span={3} style={{ margin: '20px 0' }}>
+          {boxClassList.map((data, idx) => (
+            <Badge
+              key={idx}
+              variant="outline"
+              style={{ paddingRight: 3, marginRight: 6 }}
+              rightSection={removeButton}
+              onClick={() => removeLabelName(idx)}
+            >
+              {data}
+            </Badge>
+          ))}
+        </Grid>
       )}
-    </Grid>
+    </>
   )
 }
+
+const removeButton = (
+  <ActionIcon size="xs" color="blue" radius="xl" variant="transparent">
+    x
+  </ActionIcon>
+)

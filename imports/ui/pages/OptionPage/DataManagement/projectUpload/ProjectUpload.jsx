@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom'
 
 export default function ProjectUpload() {
   const [ProjectName, setProjectName] = useState({ List: [] })
-  const [BoxClassList, setBoxClassList] = useState({ List: [] })
+  const [boxClassList, setBoxClassList] = useState([])
   const [KeyPointClassList, setKeyPointClassList] = useState({ List: [] })
   const [ObjectStateBox, setObjectStateBox] = useState({ stateList: [] })
 
@@ -161,7 +161,7 @@ export default function ProjectUpload() {
         <div>
           <ProjectTile setProjectName={setProjectName} ProjectName={ProjectName} />
 
-          <BoundingBoxConfig BoxClassList={BoxClassList} setBoxClassList={setBoxClassList} />
+          <BoundingBoxConfig boxClassList={boxClassList} setBoxClassList={setBoxClassList} />
 
           <Grid>
             <KeypointConfig

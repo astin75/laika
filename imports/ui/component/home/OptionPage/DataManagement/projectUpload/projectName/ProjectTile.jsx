@@ -35,6 +35,7 @@ export default function ProjectTile(props) {
             setErrName("")
             let List = [{masterProjectName: tempMasterName, projectName: projtName}]
             props.setProjectName(List)
+
         }
     }
 
@@ -42,7 +43,6 @@ export default function ProjectTile(props) {
 
         let masterProjectList = []
 
-        console.log(projectList,"hi")
         if (projectList !== undefined && DBFlag){
             projectList.map((x) => {
                 masterProjectList.push({value:x.projectName,label:x.projectName})

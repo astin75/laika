@@ -6,6 +6,7 @@ import BoundingBoxConfig from "./BoundingBoxConfig/BoundingBoxConfig";
 import KeypointConfig from "./KeypointConfig/KeypointConfig";
 import ProjectTile from "./projectName/ProjectTile";
 import styles from "./ProjectUpload.module.css";
+import { useNotifications } from '@mantine/notifications';
 import {useTracker} from "meteor/react-meteor-data";
 
 import {imageInfoCollection} from "../../../../../../db/collections";
@@ -33,9 +34,11 @@ export default function ProjectUpload() {
     const [checkedPolygon, setCheckedPolygon] = useState(false);
     const [checkedObjectIdFlag, setCheckedObjectIdFlag] = useState(false);
 
-
-    let PolygonFlag = createRef()
-    let ObjectIdFlag = createRef()
+    const notifications = useNotifications();
+    const showNotification = () => notifications.showNotification({
+        title: '',
+        message: '프로젝트가 등록 되었습니다.! 🤥',
+    });
 
     const switchStyles = {
         label: {fontSize: 13},
@@ -90,9 +93,9 @@ export default function ProjectUpload() {
 
         for (count = 0; count < FileCount.count; count++) {
             tempGroundTruthJson[count].projectID = RandValue[0];
-            tempGroundTruthJson[count].projectName = ProjectName.projectName;
+            tempGroundTruthJson[count].projectName = ProjectName[0].projectName;
             tempImgFileInfo[count].projectID = RandValue[0];
-            tempImgFileInfo[count].projectName = ProjectName.projectName;
+            tempImgFileInfo[count].projectName = ProjectName[0].projectName;
             imageInfoCollection.insert(tempImgFileInfo[count]);
             gtInfoCollection.insert(tempImgFileInfo[count]);
 
@@ -117,9 +120,10 @@ export default function ProjectUpload() {
                 upload.start();
             });
         }
+        console.log(ProjectName)
 
         let tempProjectInfo = {
-            projectName: ProjectName.projectName,
+            projectName: ProjectName[0].projectName,
             projectId: RandValue[0],
             bbox: bbox,
             keypoint: keypoint,
@@ -131,6 +135,7 @@ export default function ProjectUpload() {
         };
 
         projectCollection.insert(tempProjectInfo);
+        showNotification()
     };
 
     useEffect(() => {

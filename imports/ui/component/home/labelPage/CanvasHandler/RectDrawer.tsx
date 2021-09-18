@@ -3,17 +3,17 @@ import {
   IPoint,
   transformCanvasPointToImagePoint,
 } from '../../../../../canvasTools/IPoint';
-import { makeRectRegion } from '../../../../../canvasTools/IRect';
+import {makeRectRegion} from '../../../../../canvasTools/IRect';
 import Canvas from '../Canvas';
 import {
   annotationDispatcherState,
   currentAnnotations,
 } from '../../../../../recoil/annotation';
-import { canvasView } from '../../../../../recoil/canvas';
+import {canvasView} from '../../../../../recoil/canvas';
 import _ from 'lodash';
-import React, { useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { ICanvasHandlerProps } from './ICanvasHandler';
+import React, {useRef, useState} from 'react';
+import {useRecoilValue} from 'recoil';
+import {ICanvasHandlerProps} from './ICanvasHandler';
 
 type HandlerState =
   | 'idle'
@@ -22,9 +22,9 @@ type HandlerState =
   | 'draw'; // Drawing State
 
 // React Region 생성 Handler
-export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
+export default function RectDrawer({frame, onWheel}: ICanvasHandlerProps) {
   const [state, setState] = useState<HandlerState>('idle');
-  const [startPoint, setStartPoint] = useState<IPoint>({ x: 0, y: 0 });
+  const [startPoint, setStartPoint] = useState<IPoint>({x: 0, y: 0});
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const annotations = useRecoilValue(currentAnnotations);
   const lastCount = useRef<number>(annotations.length);
@@ -67,6 +67,7 @@ export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
       case 'holding': {
         if (!(getNormOfPoint(movementOffset) > 0)) break;
         annotationDispatcher?.insert(makeRectRegion(pointA, pointB));
+        console.log(annotationDispatcher);
         setState('pending');
         break;
       }

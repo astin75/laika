@@ -1,6 +1,6 @@
 // @ts-ignore
-import React, { useEffect, useRef } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import React, {useEffect, useRef} from 'react';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {
   CanvasViewDispatcher,
   canvasViewDispatcherState,
@@ -14,7 +14,7 @@ interface IEditorProps {
   image: HTMLImageElement | undefined;
 }
 
-export default function Editor({ image }: IEditorProps) {
+export default function Editor({image}: IEditorProps) {
   const containerRef = useRef<HTMLElement>(null);
 
   // canvas dispatcher
@@ -56,7 +56,7 @@ export default function Editor({ image }: IEditorProps) {
   let editorMode = 'drawRect';
   switch (editorMode) {
     case 'drawRect':
-      canvasHandler = <RectDrawer frame={image} onWheel={handleWheel} />;
+      canvasHandler = <RectDrawer frame={image} onWheel={handleWheel}/>;
       break;
     default:
       // canvasHandler = <CanvasSelector frame={image} onWheel={handleWheel} />;

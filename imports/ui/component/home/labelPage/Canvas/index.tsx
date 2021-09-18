@@ -6,8 +6,10 @@ import { canvasView } from '../../../../../recoil/canvas';
 //   categoryDispatcherState,
 //   createCategoryDispatcher,
 // } from '@src/recoil/category';
+// @ts-ignore
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import {getRandomHexColor} from '../../../../../common/utils';
 
 interface ICanvasProps {
   frame: HTMLImageElement | undefined;
@@ -59,14 +61,11 @@ export default function Canvas({
       context.restore();
 
       // annotation draw
-      // annotations.forEach(async (annot) => {
-      //   if (!annot.region || !annot.region.visible) return;
-      //   let color = await categoryDispatcher?.findCategoryColor(
-      //     annot.className
-      //   );
-      //   if (!color) color = '#000000';
-      //   drawRegionOnCanvas(annot.region, context, view, color);
-      // });
+      annotations.forEach(async (annot) => {
+        if (!annot.region || !annot.region.visible) return;
+        const color = getRandomHexColor();
+        drawRegionOnCanvas(annot.region, context, view, color);
+      });
     }
   };
 

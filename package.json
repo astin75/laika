@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.14.0",
-    "@fortawesome/fontawesome-free": "^5.15.3",
+    "@fortawesome/fontawesome-free": "^5.15.4",
     "@mantine/core": "^2.5.0",
     "@mantine/hooks": "^2.5.0",
     "@mantine/notifications": "^2.5.0",

@@ -35,7 +35,7 @@ export default function AccountPage() {
     <div className={styles.main}>
       {user ? (<div>
             <button onClick={logout} className="btn btn-success">Sucess</button>
-            <Link  to="/optionPage" className="btn btn-success">optionPage</Link >
+            <Link  to="/projectListPage" className="btn btn-success">optionPage</Link >
           </div>):
           (<div>
             {isThereAccount ? (

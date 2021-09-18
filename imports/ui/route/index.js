@@ -18,6 +18,9 @@ import LabelingPage from "../component/home/OptionPage/LabelingPage/LabelingPage
 import { OptionPage } from "../component/home/OptionPage/DataManagement/OptionPage";
 // import OptionPage from "../component/home/OptionPage/DataManagement_new/OptionPage";
 import AccountPage from "../component/home/AccountPage/AccountPage";
+import ProjectList2 from "../component/home/OptionPage/DataManagement/projectList2/ProjectList2";
+import ProjectUpload from "../component/home/OptionPage/DataManagement/projectUpload/ProjectUpload";
+
 
 /*************
      404
@@ -32,7 +35,8 @@ const Routes = ({ auth }) => {
       <Switch>
         <Route
           exact
-          path={["/", "/labelingPage", "/optionPage", "/accountPage"]}
+          path={["/", "/labelingPage", "/optionPage", "/accountPage",
+            "/projectListPage", "/projectManagementPage"]}
         >
           <DefaultLayout>
             <Switch>
@@ -40,6 +44,8 @@ const Routes = ({ auth }) => {
               <Route exact path="/labelingPage" component={LabelingPage} />
               <Route exact path="/optionPage" component={OptionPage} />
               <Route exact path="/accountPage" component={AccountPage} />
+              <Route exact path="/projectListPage" component={ProjectList2} />
+              <Route exact path="/projectManagementPage" component={ProjectUpload} />
             </Switch>
           </DefaultLayout>
         </Route>

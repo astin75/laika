@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import FloatNav from '../component/FloatNav'
+import FloatNav from 'imports/ui/components/FloatNav'
 
 export default function Index() {
   return (

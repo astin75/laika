@@ -4,6 +4,7 @@ import AddImages from "./addImages/AddImages";
 import StateList from "./StateList/StateList";
 import BoundingBoxConfig from "./BoundingBoxConfig/BoundingBoxConfig";
 import KeypointConfig from "./KeypointConfig/KeypointConfig";
+import ProjectTile from "./projectName/ProjectTile";
 import styles from "./ProjectUpload.module.css";
 import {useTracker} from "meteor/react-meteor-data";
 
@@ -13,13 +14,16 @@ import {projectCollection} from "../../../../../../db/collections";
 import Images from "../../../../../../db/files";
 import {Button, Switch,Grid, Col } from "@mantine/core";
 
+
 import {Link} from "react-router-dom";
 
 export default function ProjectUpload() {
 
+    const [ProjectName, setProjectName] = useState({List: []})
     const [BoxClassList, setBoxClassList] = useState({List: []})
     const [KeyPointClassList, setKeyPointClassList] = useState({List: []})
     const [ObjectStateBox, setObjectStateBox] = useState({stateList: []})
+
 
     const [ImgFileInfo, setImgFileInfo] = useState({imgInfo: []})
     const [RawImgList, setRawImgList] = useState({rawFile: []})
@@ -28,7 +32,8 @@ export default function ProjectUpload() {
 
     const [checkedPolygon, setCheckedPolygon] = useState(false);
     const [checkedObjectIdFlag, setCheckedObjectIdFlag] = useState(false);
-    let ProjectNameRef = createRef()
+
+
     let PolygonFlag = createRef()
     let ObjectIdFlag = createRef()
 
@@ -67,16 +72,12 @@ export default function ProjectUpload() {
         let RandValue = new Uint32Array(1);
         window.crypto.getRandomValues(RandValue);
 
-        let projectName = ProjectNameRef.current.value;
         let bbox = BoxClassList;
         let keypoint = KeyPointClassList;
         let stateList = ObjectStateBox;
         let polygon = checkedPolygon;
         let objectId = checkedObjectIdFlag;
 
-        if (projectName.length < 4) {
-            alert("프로젝트 이름은 4자 이상으로 해주세요.");
-        }
 
         let upload;
         // console.log(ImgFileInfo)
@@ -89,9 +90,9 @@ export default function ProjectUpload() {
 
         for (count = 0; count < FileCount.count; count++) {
             tempGroundTruthJson[count].projectID = RandValue[0];
-            tempGroundTruthJson[count].projectName = projectName;
+            tempGroundTruthJson[count].projectName = ProjectName.projectName;
             tempImgFileInfo[count].projectID = RandValue[0];
-            tempImgFileInfo[count].projectName = projectName;
+            tempImgFileInfo[count].projectName = ProjectName.projectName;
             imageInfoCollection.insert(tempImgFileInfo[count]);
             gtInfoCollection.insert(tempImgFileInfo[count]);
 
@@ -118,7 +119,7 @@ export default function ProjectUpload() {
         }
 
         let tempProjectInfo = {
-            projectName: projectName,
+            projectName: ProjectName.projectName,
             projectId: RandValue[0],
             bbox: bbox,
             keypoint: keypoint,
@@ -147,20 +148,18 @@ export default function ProjectUpload() {
                     >계정 관리</Button >
                 </div>
 
-                <form>
-                    <Grid  className="form-group">
-                        <label>Project Name</label>
-                        <input ref={ProjectNameRef} className="form-control" placeholder=""/>
-                        <small className="form-text text-muted">
-                            프로젝트이름을 입력해주세요.
-                        </small>
-                    </Grid >
-                    <Grid>
+                <div>
+                    <ProjectTile
+                        setProjectName={setProjectName}
+                        ProjectName={ProjectName}
+                    />
+
+
                     <BoundingBoxConfig
                         BoxClassList={BoxClassList}
                         setBoxClassList={setBoxClassList}
                     />
-                    </Grid>
+
                     <Grid>
                     <KeypointConfig
                         KeyPointClassList={KeyPointClassList}
@@ -217,8 +216,7 @@ export default function ProjectUpload() {
                             프로젝트 등록하기
                         </Button>
                     </div>
-                    <br/>
-                </form>
+                </div>
                 <AddState stateAdd={stateAdd}/>
             </div>
         </main>

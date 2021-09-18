@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, createRef } from 'react'
 import { Button, Grid, Col, TextInput, Switch, Select } from '@mantine/core'
 import styles from './ProjectTile.module.css'
-import { projectCollection } from '../../../../../../../db/collections'
+import { projectCollection } from 'imports/db/collections'
 import { useTracker } from 'meteor/react-meteor-data'
 
 export default function ProjectTile(props) {

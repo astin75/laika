@@ -3,7 +3,7 @@ import styles from './OptionPage.module.css'
 import { useTracker } from 'meteor/react-meteor-data'
 import ProjectList2 from './projectList2/ProjectList2'
 import ProjectUpload from './projectUpload/ProjectUpload'
-import { projectCollection } from '../../../../../db/collections'
+import { projectCollection } from 'imports/db/collections'
 
 export const OptionPage = () => {
   const user = useTracker(() => Meteor.user())

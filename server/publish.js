@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor'
-import { tasksCollection } from '../imports/db/collections'
-import { imageInfoCollection } from '../imports/db/collections'
-import { gtInfoCollection } from '../imports/db/collections'
-import { projectCollection } from '../imports/db/collections'
-import Images from '../imports/db/files'
+import { tasksCollection } from 'imports/db/collections'
+import { imageInfoCollection } from 'imports/db/collections'
+import { gtInfoCollection } from 'imports/db/collections'
+import { projectCollection } from 'imports/db/collections'
+import Images from 'imports/db/files'
 
 imageInfoCollection.allow({
   insert() {

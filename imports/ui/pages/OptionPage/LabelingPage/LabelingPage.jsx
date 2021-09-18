@@ -9,10 +9,10 @@ import styles from './LabelingPage.module.css'
 
 import queryString from 'query-string'
 import { useTracker } from 'meteor/react-meteor-data'
-import { imageInfoCollection } from '../../../../../db/collections'
-import { gtInfoCollection } from '../../../../../db/collections'
+import { imageInfoCollection } from 'imports/db/collections'
+import { gtInfoCollection } from 'imports/db/collections'
 
-import { projectCollection } from '../../../../../db/collections'
+import { projectCollection } from 'imports/db/collections'
 
 export default function LabelingPage() {
   const query = queryString.parse(location.search)

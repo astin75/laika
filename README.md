@@ -41,7 +41,7 @@ sample-meteor-react
 
 ## Database
 
-### imports/db/collections.js
+### imports/db/collections/collections.js
 
 새 Collection을 생성하고 Client, Server측 코드에서 각각 import하여 접근 가능합니다.  
 실제 DB Collection은 Server에 생성이 되고, Client에서는 Memory 상에 존재하는 MiniMongo로 동작합니다.

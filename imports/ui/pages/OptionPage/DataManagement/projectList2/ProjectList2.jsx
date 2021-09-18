@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useTracker } from 'meteor/react-meteor-data'
 import styles from './ProjectList2.module.css'
 import { Meteor } from 'meteor/meteor'
-import { projectCollection } from '../../../../../../db/collections'
+import { projectCollection } from 'imports/db/collections'
 
 import { TextInput, Button, PasswordInput, Image, Text, Highlight } from '@mantine/core'
 

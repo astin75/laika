@@ -3,15 +3,15 @@ import { NotificationsProvider } from '@mantine/notifications'
 import './styles/style.scss'
 import { Switch, Route } from 'react-router-dom'
 import DefaultLayout from 'imports/ui/layout/DefaultLayout'
-import Home from 'imports/ui/component/home/Index'
-import LabelingPage from 'imports/ui/component/home/OptionPage/LabelingPage/LabelingPage'
-import { OptionPage } from 'imports/ui/component/home/OptionPage/DataManagement/OptionPage'
-// import OptionPage from "imports/ui/component/home/OptionPage/DataManagement_new/OptionPage";
-import AccountPage from 'imports/ui/component/home/AccountPage/AccountPage'
-import ProjectList2 from 'imports/ui/component/home/OptionPage/DataManagement/projectList2/ProjectList2'
-import ProjectUpload from 'imports/ui/component/home/OptionPage/DataManagement/projectUpload/ProjectUpload'
+import IndexPage from 'imports/ui/pages/IndexPage'
+import LabelingPage from 'imports/ui/pages/OptionPage/LabelingPage/LabelingPage'
+import { OptionPage } from 'imports/ui/pages/OptionPage/DataManagement/OptionPage'
+// import OptionPage from "imports/ui/pages/OptionPage/DataManagement_new/OptionPage";
+import AccountPage from 'imports/ui/pages/AccountPage/AccountPage'
+import ProjectList2 from 'imports/ui/pages/OptionPage/DataManagement/projectList2/ProjectList2'
+import ProjectUpload from 'imports/ui/pages/OptionPage/DataManagement/projectUpload/ProjectUpload'
 
-import NotFound from 'imports/ui/component/home/NotFound'
+import NotFound from 'imports/ui/pages/NotFound'
 
 const App = () => {
   return (
@@ -30,7 +30,7 @@ const App = () => {
         >
           <DefaultLayout>
             <Switch>
-              <Route exact path="/" component={Home} />
+              <Route exact path="/" component={IndexPage} />
               <Route exact path="/labelingPage" component={LabelingPage} />
               <Route exact path="/optionPage" component={OptionPage} />
               <Route exact path="/accountPage" component={AccountPage} />

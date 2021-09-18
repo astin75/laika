@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import { tasksCollection } from '../imports/db/collections'
+import { tasksCollection } from 'imports/db/collections'
 import './publish.js'
 
 function insertLink({ title, url }) {

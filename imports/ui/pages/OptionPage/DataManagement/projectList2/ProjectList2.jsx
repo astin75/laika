@@ -19,12 +19,14 @@ export default function ProjectList2() {
   }
 
   useEffect(() => {
-    if (user !== undefined) {
+    if (user !== null) {
       if (user.profile['rank'] === 'admin') {
         setIsThereAdmin(true)
       }
     }
   }, [user])
+
+  // console.log(projectList)
   return (
     <main className={styles.main}>
       <div className={styles.container}>
@@ -49,7 +51,41 @@ export default function ProjectList2() {
           </Button>
         </div>
 
-        <table className="table table-hover">
+        <div className={styles.projectList}>
+          <div className={styles.listHead}>
+            <div>NO</div>
+            <div>PROJECT NAME</div>
+            <div>OPTION</div>
+          </div>
+          {projectList
+            ? projectList.map((e) => (
+                <div key={e.projectId} className={styles.listContents}>
+                  <div>{e.projectId}</div>
+                  <div>{e.projectName}</div>
+                  <div className={styles.contentOptions}>
+                    <Button
+                      variant="link"
+                      color="lime"
+                      component={Link}
+                      leftIcon={<i className="fas fa-sign-in-alt"></i>}
+                      to={{
+                        pathname: '/labelingPage',
+                        search: `?projectName=${e.projectName}`,
+                      }}
+                      size="lg"
+                    ></Button>
+                    <Button
+                      variant="link"
+                      color="teal"
+                      leftIcon={<i className="fas fa-info-circle"></i>}
+                      size="lg"
+                    ></Button>
+                  </div>
+                </div>
+              ))
+            : ''}
+        </div>
+        {/* <table className="table table-hover">
           <thead>
             <tr>
               <th scope="col">Type</th>
@@ -59,12 +95,11 @@ export default function ProjectList2() {
             </tr>
           </thead>
           <tbody>
-            {projectList !== undefined ? (
+            {projectList ? (
               projectList.map((x) => (
                 <tr className="table-active">
                   <th scope="row"></th>
                   <td>{x.projectName}</td>
-                  {/*이값을*/}
                   <td>
                     {x.totalUnConfirmSize} / {x.totalFileSize}
                   </td>
@@ -91,7 +126,7 @@ export default function ProjectList2() {
               <></>
             )}
           </tbody>
-        </table>
+        </table> */}
       </div>
       <NavigationBar />
     </main>

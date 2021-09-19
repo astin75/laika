@@ -1,15 +1,16 @@
-import { drawRegionOnCanvas } from '../../../../../canvasTools/IRegionData';
-import { currentAnnotations } from '../../../../../recoil/annotation';
-import { canvasView } from '../../../../../recoil/canvas';
+import {drawRegionOnCanvas} from '../../../../../canvasTools/IRegionData';
+import {currentAnnotations} from '../../../../../recoil/annotation';
+import {canvasView} from '../../../../../recoil/canvas';
 // import {
 //   categoryDispatcher,
 //   categoryDispatcherState,
 //   createCategoryDispatcher,
 // } from '@src/recoil/category';
 // @ts-ignore
-import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import React, {useEffect, useRef, useState} from 'react';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {getRandomHexColor} from '../../../../../common/utils';
+import {drawRectOnCanvas} from '../../../../../canvasTools/IRect';
 
 interface ICanvasProps {
   frame: HTMLImageElement | undefined;
@@ -23,14 +24,14 @@ interface ICanvasProps {
 
 // Mouse Event 연결 및 Region Draw 함수 호출 컴포넌트
 export default function Canvas({
-  frame,
-  onMouseDown,
-  onMouseMove,
-  onMouseUp,
-  onMouseOut,
-  onWheel,
-  style,
-}: ICanvasProps) {
+                                 frame,
+                                 onMouseDown,
+                                 onMouseMove,
+                                 onMouseUp,
+                                 onMouseOut,
+                                 onWheel,
+                                 style,
+                               }: ICanvasProps) {
   const view = useRecoilValue(canvasView);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>();
@@ -62,9 +63,8 @@ export default function Canvas({
 
       // annotation draw
       annotations.forEach(async (annot) => {
-        if (!annot.region || !annot.region.visible) return;
-        const color = getRandomHexColor();
-        drawRegionOnCanvas(annot.region, context, view, color);
+        if (annot.regions.rect)
+          drawRectOnCanvas(annot.regions.rect, context, view, annot.color);
       });
     }
   };

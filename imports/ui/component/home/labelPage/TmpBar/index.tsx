@@ -1,38 +1,64 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './TmpBar.module.css';
-import {useRecoilValue} from 'recoil';
-import {annotationDispatcherState, currentAnnotations} from '../../../../../recoil/annotation';
-import {makeRectRegion} from '../../../../../canvasTools/IRect';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {annotationDispatcherState, currentAnnotations, selectionIdx} from '../../../../../recoil/annotation';
+import {EditorMode} from '../Editor';
+import classNames from 'classnames';
 
 interface ITmpBar {
-  onModeClick: () => void;
+  mode: EditorMode,
+  onModeChange: (mode: EditorMode) => void;
 }
 
-export default function TmpBar({onModeClick}: ITmpBar) {
+export default function TmpBar({mode, onModeChange}: ITmpBar) {
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const annotations = useRecoilValue(currentAnnotations);
+
+  const [selection, setSelection] = useRecoilState(selectionIdx);
 
   const insertObject = () => {
     annotationDispatcher?.insert();
   };
 
-  const onBoxClick = (e: React.MouseEvent) => {
-    e.target.classList.toggle('active');
-  };
 
   return (<div className={styles.bar}>
     <section className={styles.buttons}>
-      <button className={styles.button} onClick={insertObject}>Add</button>
-      <button className={styles.button} onClick={onBoxClick}>Box</button>
-      <button className={styles.button}>Skel.</button>
-      <button className={styles.button}>Poly.</button>
+      <button onClick={insertObject}>Add</button>
+      <button className={classNames(mode === EditorMode.Rect ? styles.button_active : '')}
+              onClick={() => onModeChange(EditorMode.Rect)}>Box
+      </button>
+      <button className={classNames(mode === EditorMode.Skeleton ? styles.button_active : '')}
+              onClick={() => onModeChange(EditorMode.Skeleton)}>Skel.
+      </button>
+      <button className={classNames(mode === EditorMode.Polygon ? styles.button_active : '')}
+              onClick={() => onModeChange(EditorMode.Polygon)}>Polygon
+      </button>
     </section>
     <div className={styles.label_table}>
-      {annotations.map((annot) => {
-        return <p key={annot.key}>
+      {annotations.map((annot, idx) => {
+        return <div className={classNames(idx === selection ? styles.selected : '')} key={annot.key}
+                    onClick={() => setSelection(idx)}>
           {annot.className}
-        </p>;
+        </div>;
       })}
     </div>
+    {/*어노테이션 정보*/}
+    {selection !== undefined ?
+      <div>
+        <h3>Idx: {selection}</h3>
+        {annotations[selection].regions.rect ? <div>
+            <h4>area</h4>
+            <p>{annotations[selection].regions.rect.area}</p>
+            <h4>loc</h4>
+            <p> x: {annotations[selection].regions.rect.x}</p>
+            <p> y: {annotations[selection].regions.rect.y}</p>
+            <p> w: {annotations[selection].regions.rect.width}</p>
+            <p> h: {annotations[selection].regions.rect.height}</p>
+          </div> :
+          <></>}
+
+      </div> :
+      <></>
+    }
   </div>);
 };

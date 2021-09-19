@@ -8,11 +8,7 @@
   justify-content: space-between;
 }
 
-.button {
-  background-color: #3e97eb;
-}
-
-.button.active {
+.button_active {
   background-color: #8878FB;
 }
 
@@ -22,3 +18,7 @@
   font-size: 16px;
 }
 
+.selected{
+  font-weight: bold;
+  color: #8878FB;
+}

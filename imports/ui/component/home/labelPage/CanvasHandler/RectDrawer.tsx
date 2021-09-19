@@ -7,12 +7,12 @@ import {makeRectRegion} from '../../../../../canvasTools/IRect';
 import Canvas from '../Canvas';
 import {
   annotationDispatcherState,
-  currentAnnotations,
+  currentAnnotations, selectionIdx,
 } from '../../../../../recoil/annotation';
 import {canvasView} from '../../../../../recoil/canvas';
 import _ from 'lodash';
 import React, {useRef, useState} from 'react';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {ICanvasHandlerProps} from './ICanvasHandler';
 
 type HandlerState =
@@ -27,7 +27,8 @@ export default function RectDrawer({frame, onWheel}: ICanvasHandlerProps) {
   const [startPoint, setStartPoint] = useState<IPoint>({x: 0, y: 0});
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const annotations = useRecoilValue(currentAnnotations);
-  const lastCount = useRef<number>(annotations.length);
+  const [selection, setSelection] = useRecoilState(selectionIdx);
+
   const view = useRecoilValue(canvasView);
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -65,22 +66,15 @@ export default function RectDrawer({frame, onWheel}: ICanvasHandlerProps) {
 
     switch (state) {
       case 'holding': {
+        console.log(movementOffset)
         if (!(getNormOfPoint(movementOffset) > 0)) break;
-        annotationDispatcher?.insert(makeRectRegion(pointA, pointB));
-        setState('pending');
+        setState('draw');
         break;
       }
-      case 'pending':
-        if (lastCount.current !== annotations.length) {
-          setState('draw');
-          lastCount.current = annotations.length;
-        }
-        break;
       case 'draw': {
-        const idx = annotations.length - 1;
-        const updateAnnotation = _.cloneDeep(annotations[idx]);
-        updateAnnotation.region = makeRectRegion(pointA, pointB);
-        annotationDispatcher?.edit(idx, updateAnnotation, true);
+        const updateAnnotation = _.cloneDeep(annotations[selection]);
+        updateAnnotation.regions.rect = makeRectRegion(pointA, pointB);
+        annotationDispatcher?.edit(selection, updateAnnotation, true);
         break;
       }
       default:

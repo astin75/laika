@@ -5,7 +5,7 @@ import ObjectPage from './ObjectPage/ObjectPage';
 import HeaderPage from './HeaderPage/HeaderPage';
 
 import styles from './LabelingPage.module.css';
-import Editor from './Editor';
+import Editor, {EditorMode} from './Editor';
 import TmpBar from './TmpBar';
 import {useSetRecoilState} from 'recoil';
 import {
@@ -25,6 +25,9 @@ export default function LabelingPage() {
     };
   }, []);
 
+  // TODO: 옵션 바에서 모드 셀렉트 연결 해야 함
+  const [mode, setMode] = useState<EditorMode>(EditorMode.Idle);
+
   // Annotation Dispatcher
   const setAnnotationDispatcher = useSetRecoilState(annotationDispatcherState);
   const dispatcherRef = useRef<AnnotationDispatcher>(
@@ -40,7 +43,7 @@ export default function LabelingPage() {
       <div className={styles.contents}>
         <ImageFilesPage/>
         <Editor image={image}/>
-        <TmpBar/>
+        <TmpBar mode={mode} onModeChange={setMode}/>
         {/*<ObjectPage/>*/}
       </div>
     </div>

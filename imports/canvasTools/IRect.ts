@@ -1,4 +1,4 @@
-import { clamp } from '../common/utils';
+import {clamp, getRandomHexColor} from '../common/utils';
 import { ICanvasView } from '../recoil/canvas';
 import { drawRect } from './drawUtils';
 import {
@@ -73,6 +73,7 @@ export const makeRectRegion = (pointA: IPoint, pointB: IPoint): IRegionData => {
     visible: true,
     highlighted: false,
     selected: false,
+    color:getRandomHexColor()
   };
   region.area = getAreaOfRegion(region);
 

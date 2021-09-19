@@ -10,17 +10,20 @@ import styles from './editor.module.css';
 import {IPoint} from '../../../../../canvasTools/IPoint';
 import RectDrawer from '../CanvasHandler/RectDrawer';
 
+export enum EditorMode {
+  Idle = 'idle',
+  Rect = 'rect',
+  Skeleton = 'skeleton',
+  Polyline = 'polyline',
+  Polygon = 'polygon'
+}
+
 interface IEditorProps {
   image: HTMLImageElement | undefined;
+  mode: EditorMode;
 }
 
-export enum EditorModes{
-  Box = 'box',
-  Polygon = 'polygon',
-  Skeleton = 'skeleton'
-}
-
-export default function Editor({image}: IEditorProps) {
+export default function Editor({image, mode}: IEditorProps) {
   const containerRef = useRef<HTMLElement>(null);
 
   // canvas dispatcher
@@ -59,14 +62,14 @@ export default function Editor({image}: IEditorProps) {
   }, [image, containerRef]);
 
   let canvasHandler;
-  let editorMode = 'drawRect';
-  switch (editorMode) {
-    case 'drawRect':
+  switch (mode) {
+    case EditorMode.Rect:
+    default:
       canvasHandler = <RectDrawer frame={image} onWheel={handleWheel}/>;
       break;
-    default:
-      // canvasHandler = <CanvasSelector frame={image} onWheel={handleWheel} />;
-      break;
+    // default:
+    //   canvasHandler = <CanvasSelector frame={image} onWheel={handleWheel} />;
+    //   break;
   }
 
   return (

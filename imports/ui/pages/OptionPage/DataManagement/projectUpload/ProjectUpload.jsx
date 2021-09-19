@@ -32,8 +32,7 @@ export default function ProjectUpload() {
   const [checkedObjectIdFlag, setCheckedObjectIdFlag] = useState(false)
 
   // const [percent, setPercent] = useState(0)
-  const percent = useRef(0)
-  const [progress, setProgress] = useState(50)
+  const [progress, setProgress] = useState(0)
 
   const notifications = useNotifications()
   const showNotification = () =>
@@ -46,12 +45,35 @@ export default function ProjectUpload() {
     label: { fontSize: 13 },
   }
 
-  const onRegister = (e) => {
+  const insertImage = (file, count) => {
+    const upload = Images.insert(
+      {
+        file,
+        chunkSize: 'dynamic',
+      },
+      false
+    )
+
+    upload.on('start', async function (error, fileObj) {
+      await setProgress(Math.floor((count / fileCount) * 100))
+    })
+
+    upload.on('end', async function (error, fileObj) {
+      console.log('On end File Object: ', fileObj)
+    })
+
+    upload.on('uploaded', function (error, fileObj) {
+      console.log('uploaded: ', fileObj)
+    })
+
+    upload.start()
+  }
+
+  const onRegister = async (e) => {
     e.preventDefault()
     let RandValue = new Uint32Array(1)
     window.crypto.getRandomValues(RandValue)
 
-    let upload
     // console.log(ImgFileInfo)
     // console.log(RawImgList)
     // [...ImgFileInfo.fileName, ...ImgFileInfo.fileId,...ImgFileInfo.projectID,...ImgFileInfo.confirmFlag]
@@ -59,72 +81,56 @@ export default function ProjectUpload() {
     let tempGroundTruthJson = [...GroundTruthJson.List]
     let unConfirmed = 0
     let count = 0
+    try {
+      for (count = 0; count < fileCount; count++) {
+        tempGroundTruthJson[count].projectID = RandValue[0]
+        tempGroundTruthJson[count].projectName = projectName[0].projectName
+        tempGroundTruthJson[count].masterProjectName = projectName[0].masterProjectName
+        tempImgFileInfo[count].projectID = RandValue[0]
+        tempImgFileInfo[count].projectName = projectName[0].projectName
+        tempImgFileInfo[count].masterProjectName = projectName[0].masterProjectName
+        imageInfoCollection.insert(tempImgFileInfo[count])
+        gtInfoCollection.insert(tempImgFileInfo[count])
+        await insertImage(RawImgList.rawFile[count], count)
+      }
+      await setProgress(0)
 
-    for (count = 0; count < fileCount; count++) {
-      tempGroundTruthJson[count].projectID = RandValue[0]
-      tempGroundTruthJson[count].projectName = projectName[0].projectName
-      tempGroundTruthJson[count].masterProjectName = projectName[0].masterProjectName
-      tempImgFileInfo[count].projectID = RandValue[0]
-      tempImgFileInfo[count].projectName = projectName[0].projectName
-      tempImgFileInfo[count].masterProjectName = projectName[0].masterProjectName
-      imageInfoCollection.insert(tempImgFileInfo[count])
-      gtInfoCollection.insert(tempImgFileInfo[count])
+      let tempProjectInfo = {
+        projectName: projectName[0].projectName,
+        masterProjectName: projectName[0].masterProjectName,
+        startDate: '',
+        endDate: '',
+        workers: [],
+        projectId: RandValue[0],
+        bbox: boxClassList,
+        keypoint: keyPointClassList,
+        stateList: objectStateBox,
+        polygon: checkedPolygon,
+        objectId: checkedObjectIdFlag,
+        totalFileSize: fileCount,
+        totalUnConfirmSize: unConfirmed,
+      }
 
-      upload = Images.insert(
-        {
-          file: RawImgList.rawFile[count],
-          chunkSize: 'dynamic',
-        },
-        false
-      )
-      upload.on('start', function (error, fileObj) {
-        //console.log('Starting');
-        console.log('eee', error, fileObj)
-        percent.current = Math.floor((count / fileCount) * 100)
-        setProgress(Math.floor((count / fileCount) * 100))
-      })
-
-      upload.on('end', function (error, fileObj) {
-        //console.log('On end File Object: ', fileObj);
-      })
-
-      upload.on('uploaded', function (error, fileObj) {
-        //console.log('uploaded: ', fileObj);})
-      })
-
-      upload.start()
+      projectCollection.insert(tempProjectInfo)
+      showNotification()
+    } catch (e) {
+      //seterrclass로 알려주기
     }
-
-    let tempProjectInfo = {
-      projectName: projectName[0].projectName,
-      masterProjectName: projectName[0].masterProjectName,
-      startDate: '',
-      endDate: '',
-      workers: [],
-      projectId: RandValue[0],
-      bbox: boxClassList,
-      keypoint: keyPointClassList,
-      stateList: objectStateBox,
-      polygon: checkedPolygon,
-      objectId: checkedObjectIdFlag,
-      totalFileSize: fileCount,
-      totalUnConfirmSize: unConfirmed,
-    }
-
-    projectCollection.insert(tempProjectInfo)
-    showNotification()
   }
 
-  console.log('pp', progress)
+  console.log('progress', progress, progress > 0 && progress < 100)
 
   return (
     <>
-      {/* <div className="styles.overlay">
-        <Overlay opacity={0.5} color="#000" zIndex={5} />
-        <div className={styles.progress}>
-          <Progress value={50} size="lg" />
+      {progress > 0 && progress < 100 && (
+        <div className="styles.overlay">
+          <Overlay opacity={0.5} color="#000" zIndex={5} />
+          <div className={styles.progress}>
+            <Progress value={progress} size="lg" />
+          </div>
         </div>
-      </div> */}
+      )}
+
       <div className={styles.container}>
         <div className={styles.topMenu}>
           <Button

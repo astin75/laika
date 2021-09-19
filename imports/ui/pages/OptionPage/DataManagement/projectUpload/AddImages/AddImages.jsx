@@ -1,6 +1,8 @@
-import React, { createRef, useState } from 'react'
-import { Button, Grid, Col, TextInput, Switch } from '@mantine/core'
-import styles from '../BoundingBoxConfig/BoundingBoxConfig.module.css'
+import { Button, Col, Grid, Switch, TextInput } from '@mantine/core'
+import clsx from 'clsx'
+import React, { useState } from 'react'
+
+import styles from './AddImages.module.css'
 
 export default function AddImages(pros) {
   const [WithGroundTruthFlag, setWithGroundTruthFlag] = useState(false)
@@ -85,9 +87,9 @@ export default function AddImages(pros) {
           onChange={(event) => setWithGroundTruthFlag(event.currentTarget.checked)}
         ></Switch>
       </Col>
-      <Col span={3} className="form-group col-md-4">
+      <Col span={3} className={clsx(styles.fileUpload, 'form-group col-md-4')}>
         <input type="file" webkitdirectory="" className="custom-file-input" onChange={onChange} />
-        <label className="custom-file-label">
+        <label className={clsx(styles.fileLabel, 'custom-file-label')}>
           {pros.FileCount.count !== undefined ? <>파일 : {pros.FileCount.count} 개</> : <>{}</>}
         </label>
       </Col>

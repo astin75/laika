@@ -1,22 +1,22 @@
-import React, { createRef, useEffect, useState } from 'react'
-import AddState from './AddState/AddState'
-import AddImages from './AddImages/AddImages'
-import StateList from './StateList/StateList'
-import BoundingBoxConfig from './BoundingBoxConfig/BoundingBoxConfig'
-import KeypointConfig from './KeypointConfig/KeypointConfig'
-import ProjectTitle from './ProjectTitle/ProjectTitle'
-import styles from './ProjectUpload.module.css'
+import { Button, Col, Grid, Switch } from '@mantine/core'
 import { useNotifications } from '@mantine/notifications'
-import { useTracker } from 'meteor/react-meteor-data'
-
 import { imageInfoCollection } from 'imports/db/collections'
 import { gtInfoCollection } from 'imports/db/collections'
 import { projectCollection } from 'imports/db/collections'
 import Images from 'imports/db/files'
-import { Button, Switch, Grid, Col } from '@mantine/core'
-
+import { useTracker } from 'meteor/react-meteor-data'
+import React, { createRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+
 import NavigationBar from '../../../../components/NavigationBar/NavigationBar'
+import AddImages from './AddImages/AddImages'
+import AddState from './AddState/AddState'
+import BoundingBoxConfig from './BoundingBoxConfig/BoundingBoxConfig'
+import KeypointConfig from './KeypointConfig/KeypointConfig'
+import ProjectTitle from './ProjectTitle/ProjectTitle'
+// @ts-ignore
+import styles from './ProjectUpload.module.css'
+import StateList from './StateList/StateList'
 
 export default function ProjectUpload() {
   const [projectName, setProjectName] = useState([{ masterProjectName: true, projectName: '' }])

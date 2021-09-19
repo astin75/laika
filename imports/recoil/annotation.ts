@@ -6,7 +6,11 @@ import { RegionDataType } from './../canvasTools/IRegionData';
 
 export interface IAnnotation {
   className: string;
-  regions: { rect?: IRegionData; skeleton?: IRegionData };
+  regions: {
+    rect?: IRegionData;
+    skeleton?: IRegionData;
+    polygon?: IRegionData;
+  };
   color: string;
   key: string; // this value is for unique React Key Value
   meta?: any; // custom meta data

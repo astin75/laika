@@ -77,6 +77,7 @@ export default function TmpBar({ mode, onModeChange }: ITmpBar) {
           <h3>Idx: {selection}</h3>
           {annotations[selection].regions.rect ? (
             <div>
+              <h3>Rect</h3>
               <h4>area</h4>
               <p>{annotations[selection].regions.rect.area}</p>
               <h4>loc</h4>
@@ -84,6 +85,25 @@ export default function TmpBar({ mode, onModeChange }: ITmpBar) {
               <p> y: {annotations[selection].regions.rect.y}</p>
               <p> w: {annotations[selection].regions.rect.width}</p>
               <p> h: {annotations[selection].regions.rect.height}</p>
+            </div>
+          ) : (
+            <></>
+          )}
+          {annotations[selection].regions.polygon ? (
+            <div>
+              <h3>Polygon</h3>
+              <h4>area</h4>
+              <p>{annotations[selection].regions.polygon.area}</p>
+              <h4>loc</h4>
+              {annotations[selection].regions.polygon.points.map(
+                (point, idx) => {
+                  return (
+                    <p key={`${annotations[selection].key}_${idx}`}>
+                      x: {point.x}, y:{point.y}
+                    </p>
+                  );
+                }
+              )}
             </div>
           ) : (
             <></>

@@ -3,27 +3,25 @@ import {
   IPoint,
   transformCanvasPointToImagePoint,
 } from '../../../../../canvasTools/IPoint';
-import {makeRectRegion} from '../../../../../canvasTools/IRect';
+import { makeRectRegion } from '../../../../../canvasTools/IRect';
 import Canvas from '../Canvas';
 import {
   annotationDispatcherState,
-  currentAnnotations, selectionIdx,
+  currentAnnotations,
+  IAnnotation,
+  selectionIdx,
 } from '../../../../../recoil/annotation';
-import {canvasView} from '../../../../../recoil/canvas';
+import { canvasView } from '../../../../../recoil/canvas';
 import _ from 'lodash';
-import React, {useRef, useState} from 'react';
-import {useRecoilState, useRecoilValue} from 'recoil';
-import {ICanvasHandlerProps} from './ICanvasHandler';
+import React, { useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { ICanvasHandlerProps } from './ICanvasHandler';
+import { appendPointToPolygon } from '../../../../../canvasTools/IPolygon';
 
-type HandlerState =
-  | 'idle'
-  | 'holding' // Mouse Down
-  | 'pending' // Pending update for recoil data
-  | 'draw'; // Drawing State
+type HandlerState = 'idle' | 'onPoint';
 
-export default function PolygonDrawer({frame, onWheel}: ICanvasHandlerProps) {
+export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
   const [state, setState] = useState<HandlerState>('idle');
-  const [startPoint, setStartPoint] = useState<IPoint>({x: 0, y: 0});
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const annotations = useRecoilValue(currentAnnotations);
   const [selection, setSelection] = useRecoilState(selectionIdx);
@@ -36,12 +34,22 @@ export default function PolygonDrawer({frame, onWheel}: ICanvasHandlerProps) {
       x: e.nativeEvent.offsetX,
       y: e.nativeEvent.offsetY,
     };
+    const [transformed] = transformCanvasPointToImagePoint(view, mousePoint);
 
     switch (state) {
-      case 'idle':
-        setStartPoint(mousePoint);
-        setState('holding');
+      case 'idle': {
+        const updateAnnotation: IAnnotation = _.cloneDeep(
+          annotations[selection]
+        );
+        updateAnnotation.regions.polygon = appendPointToPolygon(
+          updateAnnotation.regions.polygon,
+          transformed
+        );
+        annotationDispatcher?.edit(selection, updateAnnotation, true);
+        console.log(updateAnnotation);
         break;
+      }
+
       default:
         break;
     }
@@ -57,25 +65,8 @@ export default function PolygonDrawer({frame, onWheel}: ICanvasHandlerProps) {
       x: e.movementX,
       y: e.movementY,
     };
-    const [pointA, pointB] = transformCanvasPointToImagePoint(
-      view,
-      startPoint,
-      mousePoint
-    );
 
     switch (state) {
-      case 'holding': {
-        console.log(movementOffset);
-        if (!(getNormOfPoint(movementOffset) > 0)) break;
-        setState('draw');
-        break;
-      }
-      case 'draw': {
-        const updateAnnotation = _.cloneDeep(annotations[selection]);
-        updateAnnotation.regions.rect = makeRectRegion(pointA, pointB);
-        annotationDispatcher?.edit(selection, updateAnnotation, true);
-        break;
-      }
       default:
         break;
     }

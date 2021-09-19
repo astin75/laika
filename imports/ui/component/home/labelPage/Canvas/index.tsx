@@ -1,16 +1,17 @@
-import {drawRegionOnCanvas} from '../../../../../canvasTools/IRegionData';
-import {currentAnnotations} from '../../../../../recoil/annotation';
-import {canvasView} from '../../../../../recoil/canvas';
+import { drawRegionOnCanvas } from '../../../../../canvasTools/IRegionData';
+import { currentAnnotations } from '../../../../../recoil/annotation';
+import { canvasView } from '../../../../../recoil/canvas';
 // import {
 //   categoryDispatcher,
 //   categoryDispatcherState,
 //   createCategoryDispatcher,
 // } from '@src/recoil/category';
 // @ts-ignore
-import React, {useEffect, useRef, useState} from 'react';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
-import {getRandomHexColor} from '../../../../../common/utils';
-import {drawRectOnCanvas} from '../../../../../canvasTools/IRect';
+import React, { useEffect, useRef, useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { getRandomHexColor } from '../../../../../common/utils';
+import { drawRectOnCanvas } from '../../../../../canvasTools/IRect';
+import { drawPolygonOnCanvas } from '../../../../../canvasTools/IPolygon';
 
 interface ICanvasProps {
   frame: HTMLImageElement | undefined;
@@ -24,14 +25,14 @@ interface ICanvasProps {
 
 // Mouse Event 연결 및 Region Draw 함수 호출 컴포넌트
 export default function Canvas({
-                                 frame,
-                                 onMouseDown,
-                                 onMouseMove,
-                                 onMouseUp,
-                                 onMouseOut,
-                                 onWheel,
-                                 style,
-                               }: ICanvasProps) {
+  frame,
+  onMouseDown,
+  onMouseMove,
+  onMouseUp,
+  onMouseOut,
+  onWheel,
+  style,
+}: ICanvasProps) {
   const view = useRecoilValue(canvasView);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>();
@@ -65,6 +66,14 @@ export default function Canvas({
       annotations.forEach(async (annot) => {
         if (annot.regions.rect)
           drawRectOnCanvas(annot.regions.rect, context, view, annot.color);
+
+        if (annot.regions.polygon)
+          drawPolygonOnCanvas(
+            annot.regions.polygon,
+            context,
+            view,
+            annot.color
+          );
       });
     }
   };

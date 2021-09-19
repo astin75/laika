@@ -64,7 +64,7 @@ export const makeRectRegion = (pointA: IPoint, pointB: IPoint): IRegionData => {
   const width = botRight.x - topLeft.x;
   const height = botRight.y - topLeft.y;
 
-  const region = {
+  const region: IRegionData = {
     x: topLeft.x,
     y: topLeft.y,
     width,
@@ -80,7 +80,6 @@ export const makeRectRegion = (pointA: IPoint, pointB: IPoint): IRegionData => {
     visible: true,
     highlighted: false,
     selected: false,
-    color: getRandomHexColor(),
   };
   region.area = getAreaOfRegion(region);
 

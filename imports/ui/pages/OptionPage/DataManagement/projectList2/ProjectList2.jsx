@@ -6,6 +6,7 @@ import { Meteor } from 'meteor/meteor'
 import { projectCollection } from 'imports/db/collections'
 
 import { TextInput, Button, PasswordInput, Image, Text, Highlight } from '@mantine/core'
+import NavigationBar from '../../../../components/NavigationBar/NavigationBar'
 
 export default function ProjectList2() {
   const user = useTracker(() => Meteor.user())
@@ -92,6 +93,7 @@ export default function ProjectList2() {
           </tbody>
         </table>
       </div>
+      <NavigationBar />
     </main>
   )
 }

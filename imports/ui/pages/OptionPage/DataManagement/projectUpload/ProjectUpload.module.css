@@ -10,9 +10,9 @@
 
 .container {
     width: 50%;
-    height: 50%;
+    height:auto;
     min-width: 350px;
-    min-height: 430px;
+    min-height: 600px;
     background-color: #ffffff;
     padding: 20px;
     box-sizing: border-box;
@@ -42,9 +42,12 @@ input[type="radio"]{
     margin-bottom: 1em;
 }
 
+
 .switchStyles {
-font: bold;
+    font: bold;
+}
 
-
-
+.registerButton {
+    display: flex;
+    justify-content: right;
 }

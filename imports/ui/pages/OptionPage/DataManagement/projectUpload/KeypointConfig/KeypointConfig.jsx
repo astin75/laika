@@ -1,71 +1,78 @@
-import React, { createRef, useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { ActionIcon, Badge, Button, Col, Grid, Switch, TextInput } from '@mantine/core'
+import styles from '../BoundingBoxConfig/BoundingBoxConfig.module.css'
 
-export default function KeypointConfig(props) {
-  const [KeyPointModeState, setKeyPointModeState] = useState(false)
+export default function KeypointConfig({ keyPointClassList, setKeyPointClassList }) {
+  const [keyPointModeState, setKeyPointModeState] = useState(false)
+  const [labelName, setLabelName] = useState('')
+  const [errClass, setErrClass] = useState('')
 
-  let className = createRef()
-  const keyPointInfo = (e) => {
-    e.preventDefault()
-    if (e.target.value === 'true') {
-      setKeyPointModeState(true)
+  const addLabelName = () => {
+    if (labelName.length < 1) {
+      setErrClass('객체 이름을 넣어주세요.')
+      return
     }
+
+    setKeyPointClassList([...keyPointClassList, labelName])
+    setLabelName('')
+    setErrClass('')
   }
-  const KeyPointClassAdd = (e) => {
-    e.preventDefault()
-    let tempClassName = className.current.value
-    if (tempClassName.length < 1) {
-      alert('빈칸을 채워주세요.')
-    } else {
-      if (props.KeyPointClassList.List.length === 0) {
-        let List = [{ id: Date.now(), className: tempClassName }]
-        props.setKeyPointClassList({ List })
-      } else if (props.KeyPointClassList.List.length > 19) {
-        alert('최대 20개 추가 가능합니다.')
-      } else {
-        let List = [...props.KeyPointClassList.List, { id: Date.now(), className: tempClassName }]
-        props.setKeyPointClassList({ List })
-      }
-    }
+
+  const removeLabelName = (idx) => {
+    const list = keyPointClassList.filter((dsf, index) => index !== idx)
+    setKeyPointClassList(list)
   }
-  useEffect(() => {})
+
   return (
-    <div className="form-row">
-      <div className="form-group col-md-4">
-        <label>Key Point</label>
-        <select
-          defaultValue="false"
-          id="inputState"
-          className="form-control"
-          onChange={keyPointInfo}
-        >
-          <option>true</option>
-          <option>false</option>
-        </select>
-      </div>
-      {KeyPointModeState ? (
-        <>
-          <div className="form-group col-md-3">
-            <label>클래스 이름</label>
-            <input ref={className} className="form-control" placeholder="" />
-          </div>
-          <div className="form-group col-md-3">
-            <br />
-            <button type="submit" className="btn btn-success" onClick={KeyPointClassAdd}>
+    <>
+      <Grid style={{ margin: '14px 0' }}>
+        <Col span={3}>
+          <Switch
+            className={styles.bboxSwitch}
+            label="Key Point"
+            checked={keyPointModeState}
+            onChange={(event) => setKeyPointModeState(event.currentTarget.checked)}
+          />
+        </Col>
+        {keyPointModeState && (
+          <Col span={9} className={styles.addBox}>
+            <TextInput
+              onChange={(e) => {
+                setLabelName(e.target.value)
+              }}
+              placeholder=""
+              error={errClass}
+              value={labelName}
+              className={styles.textInput}
+            ></TextInput>
+            <Button onClick={addLabelName} className={styles.bboxAddButton}>
               추가하기
-            </button>
-          </div>
-          <div>
-            <label>클래스 목록</label>
-            <select defaultValue="false" id="inputState" className="form-control">
-              {props.KeyPointClassList.List.map((x) => (
-                <option>{x.className}</option>
-              ))}
-            </select>
-          </div>
-        </>
-      ) : (
-        <></>
+            </Button>
+          </Col>
+        )}
+      </Grid>
+      {keyPointClassList.length > 0 && (
+        <Grid span={3} style={{ margin: '20px 0' }}>
+          {keyPointClassList.map((data, idx) => (
+            <Badge
+              color={'teal'}
+              key={idx}
+              variant="outline"
+              style={{ paddingRight: 3, marginRight: 6 }}
+              rightSection={removeButton}
+              onClick={() => removeLabelName(idx)}
+            >
+              {data}
+            </Badge>
+          ))}
+        </Grid>
       )}
-    </div>
+    </>
   )
 }
+
+const removeButton = (
+  <ActionIcon size="xs" color="blue" radius="xl" variant="transparent">
+    x
+  </ActionIcon>
+)

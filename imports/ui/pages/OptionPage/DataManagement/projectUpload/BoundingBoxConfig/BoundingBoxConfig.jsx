@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import styles from './BoundingBoxConfig.module.css'
 
 export default function BoundingBoxConfig({ boxClassList, setBoxClassList }) {
-  const [BoxModeState, setBoxModeState] = useState(false)
+  const [boxModeState, setBoxModeState] = useState(false)
   const [labelName, setLabelName] = useState('')
   const [errClass, setErrClass] = useState('')
 
@@ -37,11 +37,11 @@ export default function BoundingBoxConfig({ boxClassList, setBoxClassList }) {
           <Switch
             className={styles.bboxSwitch}
             label="Bounding Box"
-            checked={BoxModeState}
+            checked={boxModeState}
             onChange={(event) => setBoxModeState(event.currentTarget.checked)}
           />
         </Col>
-        {BoxModeState && (
+        {boxModeState && (
           <Col span={9} className={styles.addBox}>
             <TextInput
               onChange={(e) => {

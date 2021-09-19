@@ -25,10 +25,10 @@ export default function LabelingPage() {
     };
   }, []);
 
-  // TODO: 옵션 바에서 모드 셀렉트 연결 해야 함
+  // TODO: 우측? 상단? 에서 Rect, Polygon 버튼 누르면 변경되면 됨
   const [mode, setMode] = useState<EditorMode>(EditorMode.Idle);
 
-  // Annotation Dispatcher
+  // Annotation Dispatcher 초기화
   const setAnnotationDispatcher = useSetRecoilState(annotationDispatcherState);
   const dispatcherRef = useRef<AnnotationDispatcher>(
     createAnnotationDispatcher()
@@ -42,7 +42,9 @@ export default function LabelingPage() {
       <HeaderPage />
       <div className={styles.contents}>
         <ImageFilesPage />
+        {/* 라벨링 작업하는 중앙 캔버스 */}
         <Editor image={image} mode={mode} />
+        {/* 임시로 데이터 확인하려고 넣은 우측바 */}
         <TmpBar mode={mode} onModeChange={setMode} />
         {/*<ObjectPage/>*/}
       </div>

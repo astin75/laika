@@ -13,6 +13,7 @@ export interface IAnnotation {
   };
   color: string;
   key: string; // this value is for unique React Key Value
+  selected: boolean;
   meta?: any; // custom meta data
 }
 
@@ -37,6 +38,7 @@ export const createAnnotationDispatcher = () => {
       className: 'undefined',
       regions: {},
       color: getRandomHexColor(),
+      selected: false,
       key: makeRandomId(),
     };
     set(undoStack, (undoList) => {
@@ -115,7 +117,7 @@ export const createAnnotationDispatcher = () => {
     });
   });
 
-  const selectRect = useRecoilCallback<[number | undefined], void>(
+  const toggleSelectionAnnotation = useRecoilCallback<[number], void>(
     ({ set }) =>
       (idx) => {
         set(undoStack, (undoList) => {
@@ -124,11 +126,27 @@ export const createAnnotationDispatcher = () => {
             (annot, annotIdx) => {
               const newAnnot = { ...annot };
               if (annotIdx === idx) {
-                newAnnot.regions.rect.selected = true;
-              } else {
-                if (newAnnot.regions.rect) {
-                  newAnnot.regions.rect.selected = false;
-                }
+                newAnnot.selected = !newAnnot.selected;
+              }
+              return newAnnot;
+            }
+          );
+          updateList[updateList.length - 1] = lastList;
+          return updateList;
+        });
+      }
+  );
+
+  const setSelectionAnnotation = useRecoilCallback<[number, boolean], void>(
+    ({ set }) =>
+      (idx, val) => {
+        set(undoStack, (undoList) => {
+          const updateList: IAnnotation[][] = _.cloneDeep(undoList);
+          const lastList = updateList[updateList.length - 1].map(
+            (annot, annotIdx) => {
+              const newAnnot = { ...annot };
+              if (annotIdx === idx) {
+                newAnnot.selected = val;
               }
               return newAnnot;
             }
@@ -172,7 +190,7 @@ export const createAnnotationDispatcher = () => {
   const del = useRecoilCallback<[], void>(({ set, snapshot }) => async () => {
     const undoList = _.cloneDeep(await snapshot.getPromise(undoStack));
     const updatedAnnotations = undoList[undoList.length - 1].filter(
-      (annot) => !annot.region.selected
+      (annot) => !annot.selected
     );
     undoList.push(updatedAnnotations);
     set(undoStack, undoList);
@@ -195,7 +213,8 @@ export const createAnnotationDispatcher = () => {
     insert,
     edit,
     highlightRect,
-    selectRect,
+    toggleSelectionAnnotation,
+    setSelectionAnnotation,
     highlightPolygon,
     undo,
     redo,

@@ -65,14 +65,19 @@ export default function Editor({ image, mode }: IEditorProps) {
 
   let canvasHandler;
 
+  // 선택 모드에 따라 스위칭해서 다른 동작
   switch (mode) {
     case EditorMode.Rect:
+      // 박스 그리고 수정하는놈
       canvasHandler = <RectDrawer frame={image} onWheel={handleWheel} />;
       break;
     case EditorMode.Polygon:
+      // 폴리곤 찍는 놈
       canvasHandler = <PolygonDrawer frame={image} onWheel={handleWheel} />;
       break;
+    //TODO: 스켈레톤, 폴리라인 넣어야 함
     default:
+      // 드래그하면 캔버스 움직임
       canvasHandler = <CanvasMover frame={image} onWheel={handleWheel} />;
       break;
   }

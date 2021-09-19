@@ -6,6 +6,7 @@ import HeaderPage from './HeaderPage/HeaderPage';
 
 import styles from './LabelingPage.module.css';
 import Editor from './Editor';
+import TmpBar from './TmpBar';
 import {useSetRecoilState} from 'recoil';
 import {
   AnnotationDispatcher,
@@ -20,7 +21,6 @@ export default function LabelingPage() {
     const img = new Image();
     img.src = '/poster.jpg';
     img.onload = () => {
-      console.log('load');
       setImage(img);
     };
   }, []);
@@ -40,7 +40,8 @@ export default function LabelingPage() {
       <div className={styles.contents}>
         <ImageFilesPage/>
         <Editor image={image}/>
-        <ObjectPage/>
+        <TmpBar/>
+        {/*<ObjectPage/>*/}
       </div>
     </div>
   );

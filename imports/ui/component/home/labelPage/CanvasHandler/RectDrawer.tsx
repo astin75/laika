@@ -67,7 +67,6 @@ export default function RectDrawer({frame, onWheel}: ICanvasHandlerProps) {
       case 'holding': {
         if (!(getNormOfPoint(movementOffset) > 0)) break;
         annotationDispatcher?.insert(makeRectRegion(pointA, pointB));
-        console.log(annotationDispatcher);
         setState('pending');
         break;
       }

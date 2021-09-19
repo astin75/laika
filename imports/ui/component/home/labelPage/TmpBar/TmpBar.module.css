@@ -1,0 +1,24 @@
+.bar {
+  width: calc((100% - 1000px) / 2);
+  height: 100%;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  background-color: #3e97eb;
+}
+
+.button.active {
+  background-color: #8878FB;
+}
+
+.label_table {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+}
+

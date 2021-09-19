@@ -5,7 +5,7 @@ import { atom, selector, useRecoilCallback } from 'recoil';
 
 export interface IAnnotation {
   className: string;
-  region: IRegionData;
+  regions: IRegionData[];
   key: string; // this value is for unique React Key Value
 }
 export const undoStack = atom<IAnnotation[][]>({
@@ -19,12 +19,12 @@ const redoStack = atom<IAnnotation[][]>({
 });
 
 export const createAnnotationDispatcher = () => {
-  const insert = useRecoilCallback<[IRegionData], void>(
+  const insert = useRecoilCallback<[], void>(
     ({ set }) =>
-      (region: IRegionData) => {
+      () => {
         const newAnnotation: IAnnotation = {
           className: 'undefined',
-          region,
+          regions:[],
           key: makeRandomId(),
         };
         set(undoStack, (undoList) => {

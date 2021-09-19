@@ -14,6 +14,12 @@ interface IEditorProps {
   image: HTMLImageElement | undefined;
 }
 
+export enum EditorModes{
+  Box = 'box',
+  Polygon = 'polygon',
+  Skeleton = 'skeleton'
+}
+
 export default function Editor({image}: IEditorProps) {
   const containerRef = useRef<HTMLElement>(null);
 

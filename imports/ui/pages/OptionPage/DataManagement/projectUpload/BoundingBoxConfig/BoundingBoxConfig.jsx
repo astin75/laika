@@ -1,6 +1,8 @@
-import React, { createRef, useEffect, useRef, useState } from 'react'
+import { ActionIcon, Badge, Button, Col, Grid, Switch, TextInput } from '@mantine/core'
+import React, { useState } from 'react'
+
+// @ts-ignore
 import styles from './BoundingBoxConfig.module.css'
-import { Button, Grid, Col, TextInput, Switch, Badge, ActionIcon } from '@mantine/core'
 
 export default function BoundingBoxConfig({ boxClassList, setBoxClassList }) {
   const [BoxModeState, setBoxModeState] = useState(false)
@@ -57,7 +59,7 @@ export default function BoundingBoxConfig({ boxClassList, setBoxClassList }) {
         )}
       </Grid>
       {boxClassList.length > 0 && (
-        <Grid span={3} style={{ margin: '20px 0' }}>
+        <Grid style={{ margin: '20px 0' }}>
           {boxClassList.map((data, idx) => (
             <Badge
               key={idx}

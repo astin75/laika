@@ -1,8 +1,8 @@
 import React from 'react'
 
 import ScrollTop from '../module/scroll-top/index.js'
-import Header from 'imports/ui/components/Header'
-import Footer from 'imports/ui/components/Footer'
+import Header from 'ui/components/Header'
+import Footer from 'ui/components/Footer'
 
 const DefaultLayout = ({ children }) => {
   return (

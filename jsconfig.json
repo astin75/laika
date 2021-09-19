@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "imports/*": ["./imports/*"],
+        "ui/*":["./imports/ui/*"],
+        "db/*":["./imports/db/*"],
+        "api/*":["./imports/api/*"],
+      },
+      "checkJs": true,
+      "jsx": "preserve",
+  },
+}

@@ -2,11 +2,19 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
+  getNormOfPoint,
   IPoint,
   transformCanvasPointToImagePoint,
 } from '../../../../../canvasTools/IPoint';
-import { appendPointToPolygon } from '../../../../../canvasTools/IPolygon';
-import { findNearestPoint } from '../../../../../canvasTools/IRegionData';
+import {
+  appendPointToPolygon,
+  movePolygonVertex,
+} from '../../../../../canvasTools/IPolygon';
+import {
+  findNearestKeyPoint,
+  findNearestPoint,
+  IVertexInfo,
+} from '../../../../../canvasTools/IRegionData';
 import {
   annotationDispatcherState,
   currentAnnotations,
@@ -17,7 +25,7 @@ import { canvasView } from '../../../../../recoil/canvas';
 import Canvas from '../Canvas';
 import { ICanvasHandlerProps } from './ICanvasHandler';
 
-type HandlerState = 'idle' | 'onPoint';
+type HandlerState = 'idle' | 'onPoint' | 'holding' | 'movePoint';
 
 export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
   const [state, setState] = useState<HandlerState>('idle');
@@ -47,7 +55,10 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
         annotationDispatcher?.edit(selection, updateAnnotation, true);
         break;
       }
-
+      case 'onPoint': {
+        setState('holding');
+        break;
+      }
       default:
         break;
     }
@@ -65,9 +76,39 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
     };
 
     switch (state) {
-      default:
-        // findNearestPoint();
+      case 'holding':
+        if (!(getNormOfPoint(movementOffset) > 0)) break;
+        setState('movePoint');
         break;
+      case 'movePoint': {
+        const updatedAnnot: IAnnotation = _.cloneDeep(annotations[selection]);
+        updatedAnnot.regions.polygon = movePolygonVertex(
+          annotations[selection].regions.polygon,
+          annotations[selection].regions.polygon.highlightedVertex.idx,
+          mousePoint,
+          view
+        );
+        console.log(annotations[selection]);
+        annotationDispatcher.edit(selection, updatedAnnot, true);
+        break;
+      }
+      default: {
+        let vertex: IVertexInfo = undefined;
+        const region = annotations[selection]?.regions.polygon;
+        if (region === undefined) break;
+        const nearestPoint = findNearestPoint(mousePoint, region, view, 10);
+        if (nearestPoint !== undefined) {
+          setState('onPoint');
+          vertex = {
+            idx: nearestPoint,
+            type: 'boundingPoint',
+          };
+        } else {
+          setState('idle');
+        }
+        annotationDispatcher?.highlightPolygon(selection, vertex);
+        break;
+      }
     }
   };
 

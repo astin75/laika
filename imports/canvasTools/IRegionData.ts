@@ -171,6 +171,31 @@ export const findNearestPoint = (
   return nearestPointIdx;
 };
 
+export const findNearestKeyPoint = (
+  mousePosition: IPoint,
+  region: IRegionData,
+  view: ICanvasView,
+  margin = 5
+) => {
+  const [transformedPosition] = transformCanvasPointToImagePoint(
+    view,
+    mousePosition
+  );
+
+  let minDistance = margin;
+  let nearestPointIdx: number | undefined;
+  region.points?.forEach((point, pointIdx) => {
+    if (!point.visible) return;
+    const distance = getDistanceOfTwoPoints(point, transformedPosition);
+    if (distance < minDistance) {
+      minDistance = distance;
+      nearestPointIdx = pointIdx;
+    }
+  });
+
+  return nearestPointIdx;
+};
+
 export const findNearestBoundingPoint = (
   mousePosition: IPoint,
   region: IRegionData,
@@ -203,10 +228,10 @@ export const getAreaOfRegion = (region: IRegionData) => {
 
   let j = numPoints - 1;
   for (let i = 0; i < numPoints; i += 1) {
-    area += (points[j].x - points[i].x) * (points[j].y + points[i].y);
+    area += points[i].x * points[j].y - points[j].x * points[i].y;
     j = i;
   }
-  return area / 2;
+  return Math.abs(area) / 2;
 };
 
 export const getBoundingPointsOfRegion = (

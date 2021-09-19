@@ -54,10 +54,10 @@ export const getAreaOfPolygon = (region: IRegionData) => {
 
   let j = numPoints - 1;
   for (let i = 0; i < numPoints; i += 1) {
-    area += (points[j].x - points[i].x) * (points[j].y + points[i].y);
+    area += points[i].x * points[j].y - points[j].x * points[i].y;
     j = i;
   }
-  return area / 2;
+  return Math.abs(area) / 2;
 };
 
 export const drawPolygonOnCanvas = (

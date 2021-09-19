@@ -1,10 +1,12 @@
+import _ from 'lodash';
+import React, { useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
-  getNormOfPoint,
   IPoint,
   transformCanvasPointToImagePoint,
 } from '../../../../../canvasTools/IPoint';
-import { makeRectRegion } from '../../../../../canvasTools/IRect';
-import Canvas from '../Canvas';
+import { appendPointToPolygon } from '../../../../../canvasTools/IPolygon';
+import { findNearestPoint } from '../../../../../canvasTools/IRegionData';
 import {
   annotationDispatcherState,
   currentAnnotations,
@@ -12,11 +14,8 @@ import {
   selectionIdx,
 } from '../../../../../recoil/annotation';
 import { canvasView } from '../../../../../recoil/canvas';
-import _ from 'lodash';
-import React, { useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import Canvas from '../Canvas';
 import { ICanvasHandlerProps } from './ICanvasHandler';
-import { appendPointToPolygon } from '../../../../../canvasTools/IPolygon';
 
 type HandlerState = 'idle' | 'onPoint';
 
@@ -46,7 +45,6 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
           transformed
         );
         annotationDispatcher?.edit(selection, updateAnnotation, true);
-        console.log(updateAnnotation);
         break;
       }
 
@@ -68,6 +66,7 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
 
     switch (state) {
       default:
+        // findNearestPoint();
         break;
     }
   };

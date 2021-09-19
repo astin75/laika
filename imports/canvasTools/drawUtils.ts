@@ -1,3 +1,7 @@
+import { ICanvasView } from '../recoil/canvas';
+import { IPoint, transformImagePointToCanvasPoint } from './IPoint';
+import { IKeypoint } from './IRegionData';
+
 export const drawRect = (
   x: number,
   y: number,
@@ -6,7 +10,7 @@ export const drawRect = (
   context: CanvasRenderingContext2D,
   colorCode: string,
   fillAlpha = 0,
-  fill = false,
+  fill = false
 ) => {
   context.save();
   context.strokeStyle = colorCode;
@@ -26,7 +30,7 @@ export const drawCircle = (
   y: number,
   radius: number,
   context: CanvasRenderingContext2D,
-  colorCode: string,
+  colorCode: string
 ) => {
   context.save();
   context.beginPath();
@@ -44,7 +48,7 @@ export const drawLine = (
   x2: number,
   y2: number,
   context: CanvasRenderingContext2D,
-  colorCode: string,
+  colorCode: string
 ) => {
   context.save();
   context.strokeStyle = colorCode;
@@ -61,12 +65,41 @@ export const drawText = (
   text: string,
   context: CanvasRenderingContext2D,
   colorCode: string,
-  font = '16px Noto Sans KR',
+  font = '16px Noto Sans KR'
 ) => {
   context.save();
   context.font = font;
   context.strokeStyle = colorCode;
   context.fillStyle = colorCode;
   context.fillText(text, x, y);
+  context.restore();
+};
+
+export const drawPath = (
+  points: IPoint[],
+  context: CanvasRenderingContext2D,
+  colorCode: string,
+  view: ICanvasView
+) => {
+  context.save();
+  context.strokeStyle = colorCode;
+  context.fillStyle = colorCode;
+  context.beginPath();
+  const [p] = transformImagePointToCanvasPoint(view, {
+    x: points[0].x,
+    y: points[0].y,
+  });
+  context.moveTo(p.x, p.y);
+  for (let i = 1; i < points.length; i += 1) {
+    const [p] = transformImagePointToCanvasPoint(view, {
+      x: points[i].x,
+      y: points[i].y,
+    });
+    context.lineTo(p.x, p.y);
+  }
+  context.globalAlpha = 0.3;
+  context.fill();
+  context.globalAlpha = 1;
+  context.closePath();
   context.restore();
 };

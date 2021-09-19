@@ -1,13 +1,19 @@
+import { ICanvasView } from './../recoil/canvas';
 import _ from 'lodash';
 import { ICanvasView } from '../recoil/canvas';
-import { drawCircle, drawLine, drawText } from './drawUtils';
-import { IPoint, transformImagePointToCanvasPoint } from './IPoint';
+import { drawCircle, drawLine, drawPath, drawText } from './drawUtils';
+import {
+  IPoint,
+  transformCanvasPointToImagePoint,
+  transformImagePointToCanvasPoint,
+} from './IPoint';
 import {
   getBoundingPointsOfRegion,
   IKeypoint,
   IRegionData,
   RegionDataType,
 } from './IRegionData';
+
 export const appendPointToPolygon = (
   region: IRegionData | undefined,
   point: IPoint
@@ -46,6 +52,29 @@ export const appendPointToPolygon = (
   return newRegion;
 };
 
+export const movePolygonVertex = (
+  region: IRegionData,
+  pointIdx: number,
+  point: IPoint,
+  view: ICanvasView
+): IRegionData => {
+  const newRegion: IRegionData = _.cloneDeep(region);
+  const [transformed] = transformCanvasPointToImagePoint(view, point);
+  newRegion.points[pointIdx] = {
+    ...newRegion.points[pointIdx],
+    x: transformed.x,
+    y: transformed.y,
+  };
+  const xCoords = newRegion.points.map((point) => point.x);
+  const yCoords = newRegion.points.map((point) => point.x);
+  newRegion.x = Math.min(...xCoords);
+  newRegion.y = Math.min(...yCoords);
+  newRegion.width = Math.max(...xCoords) - newRegion.x;
+  newRegion.height = Math.max(...yCoords) - newRegion.y;
+  newRegion.area = getAreaOfPolygon(region);
+  return newRegion;
+};
+
 export const getAreaOfPolygon = (region: IRegionData) => {
   let area = 0;
   const { points } = region;
@@ -66,6 +95,7 @@ export const drawPolygonOnCanvas = (
   view: ICanvasView,
   colorCode: string
 ) => {
+  const highlightVertex = region.highlightedVertex;
   region.points.forEach((point, idx) => {
     const vertex: IPoint = { x: point.x, y: point.y };
     const nextIdx = idx === region.points.length - 1 ? 0 : idx + 1;
@@ -73,9 +103,12 @@ export const drawPolygonOnCanvas = (
       x: region.points[nextIdx].x,
       y: region.points[nextIdx].y,
     };
-    const [p1, p2] = transformImagePointToCanvasPoint(view, vertex, nextVertex);
+    const [p1] = transformImagePointToCanvasPoint(view, vertex);
     drawCircle(p1.x, p1.y, 3, context, colorCode);
-    drawLine(p1.x, p1.y, p2.x, p2.y, context, colorCode);
+    if (highlightVertex && highlightVertex.idx === idx) {
+      drawCircle(p1.x, p1.y, 6, context, colorCode);
+    }
     drawText(p1.x, p1.y - 5, String(idx), context, colorCode);
   });
+  drawPath(region.points, context, colorCode, view);
 };

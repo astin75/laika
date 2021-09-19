@@ -91,6 +91,30 @@ export const createAnnotationDispatcher = () => {
     });
   });
 
+  const highlightPolygon = useRecoilCallback<
+    [number | undefined, IVertexInfo | undefined],
+    void
+  >(({ set }) => (idx, vertex) => {
+    set(undoStack, (undoList) => {
+      const updateList: IAnnotation[][] = _.cloneDeep(undoList);
+      const lastList = updateList[updateList.length - 1].map(
+        (annot, annotIdx) => {
+          const newAnnot = { ...annot };
+          if (annotIdx === idx) {
+            newAnnot.regions.polygon.highlightedVertex = vertex;
+          } else {
+            if (newAnnot.regions.rect) {
+              newAnnot.regions.polygon.highlightedVertex = undefined;
+            }
+          }
+          return newAnnot;
+        }
+      );
+      updateList[updateList.length - 1] = lastList;
+      return updateList;
+    });
+  });
+
   const selectRect = useRecoilCallback<[number | undefined], void>(
     ({ set }) =>
       (idx) => {
@@ -172,6 +196,7 @@ export const createAnnotationDispatcher = () => {
     edit,
     highlightRect,
     selectRect,
+    highlightPolygon,
     undo,
     redo,
     del,

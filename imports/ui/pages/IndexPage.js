@@ -1,8 +1,10 @@
+import { useTracker } from 'meteor/react-meteor-data'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import FloatNav from 'ui/components/FloatNav'
 
 export default function Index() {
+  const user = useTracker(() => Meteor.user())
   return (
     <main>
       <div className="branding">
@@ -57,7 +59,10 @@ export default function Index() {
             </li>
           </ul>
 
-          <Link to="/accountPage" className="btn btn-default btn-start">
+          <Link
+            to={user ? '/projectListPage' : '/accountPage'}
+            className="btn btn-default btn-start"
+          >
             Get Started
           </Link>
         </div>

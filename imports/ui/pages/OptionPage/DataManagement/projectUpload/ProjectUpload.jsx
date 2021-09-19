@@ -4,9 +4,7 @@ import { imageInfoCollection } from 'imports/db/collections'
 import { gtInfoCollection } from 'imports/db/collections'
 import { projectCollection } from 'imports/db/collections'
 import Images from 'imports/db/files'
-import { OverlayContext } from 'imports/ui/App'
-import { useTracker } from 'meteor/react-meteor-data'
-import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import NavigationBar from '../../../../components/NavigationBar/NavigationBar'
@@ -79,9 +77,11 @@ export default function ProjectUpload() {
         },
         false
       )
-      upload.on('start', function () {
+      upload.on('start', function (error, fileObj) {
         //console.log('Starting');
+        console.log('eee', error, fileObj)
         percent.current = Math.floor((count / fileCount) * 100)
+        setProgress(Math.floor((count / fileCount) * 100))
       })
 
       upload.on('end', function (error, fileObj) {
@@ -115,23 +115,16 @@ export default function ProjectUpload() {
     showNotification()
   }
 
-  console.log('pp', percent)
-
-  useEffect(() => {
-    setProgress(percent.current)
-    console.log('progress', progress)
-    console.log('percent.current', percent.current)
-  }, [percent.current])
-
-  const isOverlay = useContext(OverlayContext)
+  console.log('pp', progress)
 
   return (
     <>
-      {isOverlay && (
-        <div style={{ position: 'absolute' }}>
-          <Progress value={50} />
+      {/* <div className="styles.overlay">
+        <Overlay opacity={0.5} color="#000" zIndex={5} />
+        <div className={styles.progress}>
+          <Progress value={50} size="lg" />
         </div>
-      )}
+      </div> */}
       <div className={styles.container}>
         <div className={styles.topMenu}>
           <Button

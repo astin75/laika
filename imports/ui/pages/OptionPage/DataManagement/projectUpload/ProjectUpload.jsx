@@ -55,10 +55,8 @@ export default function ProjectUpload() {
     let tempGroundTruthJson = [...GroundTruthJson.List]
     let unConfirmed = 0
     let count = 0
-    console.log(tempImgFileInfo, '22?')
 
     for (count = 0; count < FileCount.count; count++) {
-      console.log()
       tempGroundTruthJson[count].projectID = RandValue[0]
       tempGroundTruthJson[count].projectName = projectName[0].projectName
       tempGroundTruthJson[count].masterProjectName = projectName[0].masterProjectName

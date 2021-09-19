@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 
 import styles from './AddImages.module.css'
 
-export default function AddImages(pros) {
+export default function AddImages(props) {
   const [WithGroundTruthFlag, setWithGroundTruthFlag] = useState(false)
   const switchStyles = {
     label: { fontSize: 13 },
@@ -70,10 +70,10 @@ export default function AddImages(pros) {
         })
       }
     }
-    pros.setImgFileInfo(tempImgFileInfo)
-    pros.setRawImgList(tempRawImgList)
-    pros.setGroundTruthJson(tempGroundTruthJson)
-    pros.setFileCount({ count: [count] })
+    props.setImgFileInfo(tempImgFileInfo)
+    props.setRawImgList(tempRawImgList)
+    props.setGroundTruthJson(tempGroundTruthJson)
+    props.setFileCount(count)
   }
 
   return (
@@ -90,7 +90,7 @@ export default function AddImages(pros) {
       <Col span={3} className={clsx(styles.fileUpload, 'form-group col-md-4')}>
         <input type="file" webkitdirectory="" className="custom-file-input" onChange={onChange} />
         <label className={clsx(styles.fileLabel, 'custom-file-label')}>
-          {pros.FileCount.count !== undefined ? <>파일 : {pros.FileCount.count} 개</> : <>{}</>}
+          파일 : {props.fileCount} 개
         </label>
       </Col>
     </Grid>

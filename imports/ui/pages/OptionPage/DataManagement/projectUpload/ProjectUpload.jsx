@@ -1,11 +1,12 @@
-import { Button, Col, Grid, Switch } from '@mantine/core'
+import { Button, Col, Grid, Overlay, Progress, Switch } from '@mantine/core'
 import { useNotifications } from '@mantine/notifications'
 import { imageInfoCollection } from 'imports/db/collections'
 import { gtInfoCollection } from 'imports/db/collections'
 import { projectCollection } from 'imports/db/collections'
 import Images from 'imports/db/files'
+import { OverlayContext } from 'imports/ui/App'
 import { useTracker } from 'meteor/react-meteor-data'
-import React, { createRef, useEffect, useState } from 'react'
+import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import NavigationBar from '../../../../components/NavigationBar/NavigationBar'
@@ -27,10 +28,14 @@ export default function ProjectUpload() {
   const [ImgFileInfo, setImgFileInfo] = useState({ imgInfo: [] })
   const [RawImgList, setRawImgList] = useState({ rawFile: [] })
   const [GroundTruthJson, setGroundTruthJson] = useState({ List: [] })
-  const [FileCount, setFileCount] = useState({ count: [] })
+  const [fileCount, setFileCount] = useState(0)
 
   const [checkedPolygon, setCheckedPolygon] = useState(false)
   const [checkedObjectIdFlag, setCheckedObjectIdFlag] = useState(false)
+
+  // const [percent, setPercent] = useState(0)
+  const percent = useRef(0)
+  const [progress, setProgress] = useState(50)
 
   const notifications = useNotifications()
   const showNotification = () =>
@@ -57,7 +62,7 @@ export default function ProjectUpload() {
     let unConfirmed = 0
     let count = 0
 
-    for (count = 0; count < FileCount.count; count++) {
+    for (count = 0; count < fileCount; count++) {
       tempGroundTruthJson[count].projectID = RandValue[0]
       tempGroundTruthJson[count].projectName = projectName[0].projectName
       tempGroundTruthJson[count].masterProjectName = projectName[0].masterProjectName
@@ -76,6 +81,7 @@ export default function ProjectUpload() {
       )
       upload.on('start', function () {
         //console.log('Starting');
+        percent.current = Math.floor((count / fileCount) * 100)
       })
 
       upload.on('end', function (error, fileObj) {
@@ -84,9 +90,9 @@ export default function ProjectUpload() {
 
       upload.on('uploaded', function (error, fileObj) {
         //console.log('uploaded: ', fileObj);})
-
-        upload.start()
       })
+
+      upload.start()
     }
 
     let tempProjectInfo = {
@@ -101,7 +107,7 @@ export default function ProjectUpload() {
       stateList: objectStateBox,
       polygon: checkedPolygon,
       objectId: checkedObjectIdFlag,
-      totalFileSize: FileCount.count,
+      totalFileSize: fileCount,
       totalUnConfirmSize: unConfirmed,
     }
 
@@ -109,10 +115,23 @@ export default function ProjectUpload() {
     showNotification()
   }
 
-  useEffect(() => {}, [])
+  console.log('pp', percent)
+
+  useEffect(() => {
+    setProgress(percent.current)
+    console.log('progress', progress)
+    console.log('percent.current', percent.current)
+  }, [percent.current])
+
+  const isOverlay = useContext(OverlayContext)
 
   return (
-    <main className={styles.main}>
+    <>
+      {isOverlay && (
+        <div style={{ position: 'absolute' }}>
+          <Progress value={50} />
+        </div>
+      )}
       <div className={styles.container}>
         <div className={styles.topMenu}>
           <Button
@@ -170,7 +189,7 @@ export default function ProjectUpload() {
             setRawImgList={setRawImgList}
             GroundTruthJson={GroundTruthJson}
             setGroundTruthJson={setGroundTruthJson}
-            FileCount={FileCount}
+            fileCount={fileCount}
             setFileCount={setFileCount}
           />
 
@@ -181,13 +200,12 @@ export default function ProjectUpload() {
               type="submit"
               leftIcon={<i className="far fa-check-square"></i>}
             >
-              {' '}
               프로젝트 등록하기
             </Button>
           </div>
         </div>
       </div>
       <NavigationBar />
-    </main>
+    </>
   )
 }

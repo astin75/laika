@@ -25,7 +25,7 @@ export default function ProjectList2() {
   }, [user])
 
   return (
-    <main className={styles.main}>
+    <>
       <div className={styles.container}>
         <div className={styles.topMenu}>
           <Button
@@ -93,6 +93,6 @@ export default function ProjectList2() {
         </table>
       </div>
       <NavigationBar />
-    </main>
+    </>
   )
 }

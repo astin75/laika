@@ -1,9 +1,11 @@
 import './styles/style.scss'
 
-import { NotificationsProvider } from '@mantine/notifications'
-import React from 'react'
+import { Overlay } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks'
+import DefaultLayout from 'imports/ui/components/DefaultLayout/DefaultLayout'
+import MinScreen from 'imports/ui/pages/MinScreen'
+import React, { createContext, useContext } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import DefaultLayout from 'ui/components/DefaultLayout'
 // import OptionPage from "imports/ui/pages/OptionPage/DataManagement_new/OptionPage";
 import AccountPage from 'ui/pages/AccountPage/AccountPage'
 import IndexPage from 'ui/pages/IndexPage'
@@ -13,9 +15,16 @@ import ProjectList2 from 'ui/pages/OptionPage/DataManagement/projectList2/Projec
 import ProjectUpload from 'ui/pages/OptionPage/DataManagement/projectUpload/ProjectUpload'
 import LabelingPage from 'ui/pages/OptionPage/LabelingPage/LabelingPage'
 
+export const OverlayContext = createContext(true)
+
 const App = () => {
-  return (
-    <NotificationsProvider>
+  const underMinSize = useMediaQuery('(max-width: 1024px)')
+  const isOverlay = useContext(OverlayContext)
+  return underMinSize ? (
+    <MinScreen />
+  ) : (
+    <OverlayContext.Provider value={false}>
+      {isOverlay && <Overlay opacity={0.6} color="#000" zIndex={5} />}
       <Switch>
         <Route>
           <DefaultLayout>
@@ -29,14 +38,9 @@ const App = () => {
             </Switch>
           </DefaultLayout>
         </Route>
-
-        {/***********
-            404
-        ***********/}
-
         <Route path="*" component={NotFound} />
       </Switch>
-    </NotificationsProvider>
+    </OverlayContext.Provider>
   )
 }
 

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import styles from './OptionPage.module.css'
 import { useTracker } from 'meteor/react-meteor-data'
+import React, { useEffect, useState } from 'react'
+
 import ProjectUpload from './projectUpload/ProjectUpload'
 
 export const OptionPage = () => {
@@ -15,15 +15,11 @@ export const OptionPage = () => {
     }
   }, [user])
 
-  return (
-    <main className={styles.main}>
-      {IsThereAdmin ? (
-        <ProjectUpload />
-      ) : (
-        <a>
-          <img src={'lockDataManagement.png'} />
-        </a>
-      )}
-    </main>
+  return IsThereAdmin ? (
+    <ProjectUpload />
+  ) : (
+    <a>
+      <img src={'lockDataManagement.png'} />
+    </a>
   )
 }

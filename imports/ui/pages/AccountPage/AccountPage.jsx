@@ -7,9 +7,9 @@ import { Meteor } from 'meteor/meteor'
 import LoginPage from './LoginPage/LoginPage'
 import SignUpPage from './SignUpPage/SignUpPage'
 
-import { Button } from '@mantine/core'
 import { useNotifications } from '@mantine/notifications'
 import { Link } from 'react-router-dom'
+import NavigationBar from '../../components/NavigationBar/NavigationBar'
 
 export default function AccountPage() {
   const user = useTracker(() => Meteor.user())
@@ -48,6 +48,7 @@ export default function AccountPage() {
           )}
         </div>
       )}
+      <NavigationBar />
     </div>
   )
 }

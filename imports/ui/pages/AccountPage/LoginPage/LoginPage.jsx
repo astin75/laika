@@ -48,7 +48,13 @@ export default function LoginPage({ setIsThereAccount }) {
           className={styles.inputValue}
         ></PasswordInput>
 
-        <Button color="teal" className={styles.command} onClick={loginProcess}>
+        <Button
+          component={Link}
+          color="teal"
+          className={styles.command}
+          onClick={loginProcess}
+          to="/projectListPage"
+        >
           로그인
         </Button>
         <div className={styles.textForm}>

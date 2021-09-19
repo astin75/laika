@@ -16,6 +16,7 @@ import Images from 'imports/db/files'
 import { Button, Switch, Grid, Col } from '@mantine/core'
 
 import { Link } from 'react-router-dom'
+import NavigationBar from '../../../../components/NavigationBar/NavigationBar'
 
 export default function ProjectUpload() {
   const [projectName, setProjectName] = useState([{ masterProjectName: true, projectName: '' }])
@@ -186,6 +187,7 @@ export default function ProjectUpload() {
           </div>
         </div>
       </div>
+      <NavigationBar />
     </main>
   )
 }

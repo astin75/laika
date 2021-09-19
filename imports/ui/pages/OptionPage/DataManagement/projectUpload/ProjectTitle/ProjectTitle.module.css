@@ -1,0 +1,15 @@
+.textInput{
+    width: 180px;
+}
+
+.masterSwitch{
+    display: flex;
+
+    height: 80px;
+}
+
+.masterSelect{
+    display: flex;
+    justify-content: center;
+    height: 80px;
+}

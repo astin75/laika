@@ -1,40 +1,39 @@
 import React, { useEffect, useState, useRef, createRef } from 'react'
 import { Button, Grid, Col, TextInput, Switch, Select } from '@mantine/core'
-import styles from './ProjectTile.module.css'
+import styles from './ProjectTitle.module.css'
 import { projectCollection } from 'imports/db/collections'
 import { useTracker } from 'meteor/react-meteor-data'
 
-export default function ProjectTile(props) {
+export default function ProjectTitle({ projectName, setProjectName }) {
   const projectList = useTracker(() => projectCollection.find({}).fetch())
   const [DBFlag, setDBFlag] = useState(true)
-  const ref = createRef()
   const [tempProjectList, setTempProjectList] = useState([])
   const [tempMasterName, setTempMasterName] = useState('')
   const [IsMaster, setIsMaster] = useState(true)
-  const [TempProjectName, setTempProjectName] = useState('')
   const [errName, setErrName] = useState('')
   const switchStyles = {
     label: { fontSize: 13 },
   }
 
   const MasterName = (e) => {
-    let tempIsMaster = e.currentTarget.checked
-    setIsMaster(tempIsMaster)
-    if (tempIsMaster === false) {
+    setIsMaster(e.currentTarget.checked)
+    if (e.currentTarget.checked === false) {
       setDBFlag(true)
     }
   }
 
   const putName = (e) => {
-    let projtName = e.target.value
-
-    if (projtName.length < 4) {
+    if (e.target.value.length < 4) {
       setErrName('4자 이상 입력해주세요.')
-    } else {
-      setErrName('')
-      let List = [{ masterProjectName: tempMasterName, projectName: projtName }]
-      props.setProjectName(List)
+      return
     }
+    setErrName('')
+    setProjectName([
+      {
+        masterProjectName: tempMasterName,
+        projectName: e.target.value,
+      },
+    ])
   }
 
   useEffect(() => {
@@ -47,11 +46,11 @@ export default function ProjectTile(props) {
       setTempProjectList(masterProjectList)
       setDBFlag(false)
     }
-  }, [TempProjectName, projectList])
+  }, [projectList])
 
   return (
     <Grid>
-      <Col span={3}>
+      <Col span={4}>
         <TextInput
           onChange={(event) => putName(event)}
           label={'Project Name'}
@@ -61,6 +60,7 @@ export default function ProjectTile(props) {
       </Col>
       <Col span={3}>
         <Switch
+          className={styles.masterSwitch}
           label="Is Master"
           styles={switchStyles}
           checked={IsMaster}
@@ -69,7 +69,11 @@ export default function ProjectTile(props) {
       </Col>
       <Col span={3}>
         {IsMaster === false ? (
-          <Select data={tempProjectList} onChange={(event) => setTempMasterName(event)} />
+          <Select
+            className={styles.masterSelect}
+            data={tempProjectList}
+            onChange={(event) => setTempMasterName(event)}
+          />
         ) : (
           <></>
         )}

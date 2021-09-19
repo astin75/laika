@@ -1,10 +1,10 @@
 import React, { createRef, useEffect, useState } from 'react'
-import AddState from './addState/AddState'
-import AddImages from './addImages/AddImages'
+import AddState from './AddState/AddState'
+import AddImages from './AddImages/AddImages'
 import StateList from './StateList/StateList'
 import BoundingBoxConfig from './BoundingBoxConfig/BoundingBoxConfig'
 import KeypointConfig from './KeypointConfig/KeypointConfig'
-import ProjectTile from './projectName/ProjectTile'
+import ProjectTitle from './ProjectTitle/ProjectTitle'
 import styles from './ProjectUpload.module.css'
 import { useNotifications } from '@mantine/notifications'
 import { useTracker } from 'meteor/react-meteor-data'
@@ -18,10 +18,10 @@ import { Button, Switch, Grid, Col } from '@mantine/core'
 import { Link } from 'react-router-dom'
 
 export default function ProjectUpload() {
-  const [ProjectName, setProjectName] = useState({ List: [] })
+  const [projectName, setProjectName] = useState([{ masterProjectName: true, projectName: '' }])
   const [boxClassList, setBoxClassList] = useState([])
-  const [KeyPointClassList, setKeyPointClassList] = useState({ List: [] })
-  const [ObjectStateBox, setObjectStateBox] = useState({ stateList: [] })
+  const [keyPointClassList, setKeyPointClassList] = useState([])
+  const [objectStateBox, setObjectStateBox] = useState([])
 
   const [ImgFileInfo, setImgFileInfo] = useState({ imgInfo: [] })
   const [RawImgList, setRawImgList] = useState({ rawFile: [] })
@@ -42,39 +42,10 @@ export default function ProjectUpload() {
     label: { fontSize: 13 },
   }
 
-  const stateAdd = (stateName, action1, action2) => {
-    if (ObjectStateBox.stateList.length === 0) {
-      let stateList = [{ id: Date.now(), stateName: stateName, action1: action1, action2: action2 }]
-      setObjectStateBox({ stateList })
-    } else if (ObjectStateBox.stateList.length > 1) {
-      alert('최대 2개 추가 가능합니다.')
-    } else {
-      let stateList = [
-        ...ObjectStateBox.stateList,
-        { id: Date.now(), stateName: stateName, action1: action1, action2: action2 },
-      ]
-      setObjectStateBox({ stateList })
-    }
-  }
-
-  const stateEdit = (stateName, action1, action2) => {
-    let stateList = [...ObjectStateBox.stateList]
-    const index = stateList.indexOf(stateName)
-    stateList[index].action1 = action1
-    stateList[index].action2 = action2
-    setObjectStateBox({ stateList })
-  }
-
   const onRegister = (e) => {
     e.preventDefault()
     let RandValue = new Uint32Array(1)
     window.crypto.getRandomValues(RandValue)
-
-    let bbox = BoxClassList
-    let keypoint = KeyPointClassList
-    let stateList = ObjectStateBox
-    let polygon = checkedPolygon
-    let objectId = checkedObjectIdFlag
 
     let upload
     // console.log(ImgFileInfo)
@@ -84,12 +55,16 @@ export default function ProjectUpload() {
     let tempGroundTruthJson = [...GroundTruthJson.List]
     let unConfirmed = 0
     let count = 0
+    console.log(tempImgFileInfo, '22?')
 
     for (count = 0; count < FileCount.count; count++) {
+      console.log()
       tempGroundTruthJson[count].projectID = RandValue[0]
-      tempGroundTruthJson[count].projectName = ProjectName[0].projectName
+      tempGroundTruthJson[count].projectName = projectName[0].projectName
+      tempGroundTruthJson[count].masterProjectName = projectName[0].masterProjectName
       tempImgFileInfo[count].projectID = RandValue[0]
-      tempImgFileInfo[count].projectName = ProjectName[0].projectName
+      tempImgFileInfo[count].projectName = projectName[0].projectName
+      tempImgFileInfo[count].masterProjectName = projectName[0].masterProjectName
       imageInfoCollection.insert(tempImgFileInfo[count])
       gtInfoCollection.insert(tempImgFileInfo[count])
 
@@ -114,16 +89,16 @@ export default function ProjectUpload() {
         upload.start()
       })
     }
-    console.log(ProjectName)
 
     let tempProjectInfo = {
-      projectName: ProjectName[0].projectName,
+      projectName: projectName[0].projectName,
+      masterProjectName: projectName[0].masterProjectName,
       projectId: RandValue[0],
-      bbox: bbox,
-      keypoint: keypoint,
-      stateList: stateList,
-      polygon: polygon,
-      objectId: objectId,
+      bbox: boxClassList,
+      keypoint: keyPointClassList,
+      stateList: objectStateBox,
+      polygon: checkedPolygon,
+      objectId: checkedObjectIdFlag,
       totalFileSize: FileCount.count,
       totalUnConfirmSize: unConfirmed,
     }
@@ -159,40 +134,32 @@ export default function ProjectUpload() {
         </div>
 
         <div>
-          <ProjectTile setProjectName={setProjectName} ProjectName={ProjectName} />
-
+          <ProjectTitle ProjectName={projectName} setProjectName={setProjectName} />
           <BoundingBoxConfig boxClassList={boxClassList} setBoxClassList={setBoxClassList} />
+          <KeypointConfig
+            keyPointClassList={keyPointClassList}
+            setKeyPointClassList={setKeyPointClassList}
+          />
+          <AddState objectStateBox={objectStateBox} setObjectStateBox={setObjectStateBox} />
 
-          <Grid>
-            <KeypointConfig
-              KeyPointClassList={KeyPointClassList}
-              setKeyPointClassList={setKeyPointClassList}
-            />
-          </Grid>
-
-          <div className="form-row">
-            <div className="form-group col-md-3">
+          <Grid style={{ margin: '14px 0' }}>
+            <Col span={3}>
               <Switch
                 label="Polygon"
                 styles={switchStyles}
                 checked={checkedPolygon}
                 onChange={(event) => setCheckedPolygon(event.currentTarget.checked)}
               ></Switch>
-            </div>
-            <div className="form-group col-md-3">
+            </Col>
+            <Col span={3}>
               <Switch
                 styles={switchStyles}
                 label="Object Id"
                 checked={checkedObjectIdFlag}
                 onChange={(event) => setCheckedObjectIdFlag(event.currentTarget.checked)}
               ></Switch>
-            </div>
-          </div>
-          {ObjectStateBox.stateList.length > 0 ? (
-            <StateList stateEdit={stateEdit} ObjectStateBox={ObjectStateBox} />
-          ) : (
-            <div></div>
-          )}
+            </Col>
+          </Grid>
 
           <AddImages
             ImgFileInfo={ImgFileInfo}
@@ -205,8 +172,9 @@ export default function ProjectUpload() {
             setFileCount={setFileCount}
           />
 
-          <div className="form-group">
+          <div>
             <Button
+              className={styles.registerButton}
               onClick={onRegister}
               type="submit"
               leftIcon={<i className="far fa-check-square"></i>}
@@ -216,7 +184,6 @@ export default function ProjectUpload() {
             </Button>
           </div>
         </div>
-        <AddState stateAdd={stateAdd} />
       </div>
     </main>
   )

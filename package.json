@@ -15,6 +15,7 @@
     "@mantine/hooks": "^2.5.0",
     "@mantine/notifications": "^2.5.0",
     "@types/meteor": "^1.4.69",
+    "babel-eslint": "^10.1.0",
     "bcrypt": "^5.0.1",
     "meteor-node-stubs": "^1.0.1",
     "moment": "^2.29.1",
@@ -50,7 +51,7 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.0",
-    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "prettier": "^2.4.1"

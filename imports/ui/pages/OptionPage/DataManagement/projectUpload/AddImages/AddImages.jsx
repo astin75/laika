@@ -1,6 +1,7 @@
 import React, { createRef, useState } from 'react'
 import { Button, Grid, Col, TextInput, Switch } from '@mantine/core'
 import styles from '../BoundingBoxConfig/BoundingBoxConfig.module.css'
+
 export default function AddImages(pros) {
   const [WithGroundTruthFlag, setWithGroundTruthFlag] = useState(false)
   const switchStyles = {
@@ -22,6 +23,7 @@ export default function AddImages(pros) {
           fileName: e.target.files[count].name,
           fileId: RandValue[count],
           projectName: false,
+          masterProjectName: false,
           projectID: false,
           confirmFlag: false,
         })
@@ -29,6 +31,7 @@ export default function AddImages(pros) {
         tempRawImgList.rawFile.push(e.target.files[count])
         tempGroundTruthJson.List.push({
           projectName: false,
+          masterProjectName: false,
           projectId: false,
           bbox: [],
           keypoint: [],
@@ -41,8 +44,19 @@ export default function AddImages(pros) {
       }
     } else {
       for (count = 0; count < e.target.files.length; count++) {
+        tempImgFileInfo.imgInfo.push({
+          fileName: e.target.files[count].name,
+          fileId: RandValue[count],
+          projectName: false,
+          masterProjectName: false,
+          projectID: false,
+          confirmFlag: false,
+        })
+
+        tempRawImgList.rawFile.push(e.target.files[count])
         tempGroundTruthJson.List.push({
           projectName: false,
+          masterProjectName: false,
           projectId: false,
           bbox: [],
           keypoint: [],
@@ -61,21 +75,22 @@ export default function AddImages(pros) {
   }
 
   return (
-    <div className="form-row">
-      <div className="form-group col-md-3">
+    <Grid style={{ margin: '14px 0' }}>
+      <Col span={3}>
         <Switch
+          disabled
           label="Annotations"
           styles={switchStyles}
           checked={WithGroundTruthFlag}
           onChange={(event) => setWithGroundTruthFlag(event.currentTarget.checked)}
         ></Switch>
-      </div>
-      <div className="form-group col-md-4">
+      </Col>
+      <Col span={3} className="form-group col-md-4">
         <input type="file" webkitdirectory="" className="custom-file-input" onChange={onChange} />
         <label className="custom-file-label">
           {pros.FileCount.count !== undefined ? <>파일 : {pros.FileCount.count} 개</> : <>{}</>}
         </label>
-      </div>
-    </div>
+      </Col>
+    </Grid>
   )
 }

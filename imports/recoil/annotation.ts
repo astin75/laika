@@ -71,11 +71,11 @@ export const createAnnotationDispatcher = () => {
         (annot, annotIdx) => {
           const newAnnot = { ...annot };
           if (annotIdx === idx) {
-            newAnnot.regions.rect.highlighted = true;
+            // newAnnot.regions.rect.highlighted = true;
             newAnnot.regions.rect.highlightedVertex = vertex;
           } else {
             if (newAnnot.regions.rect) {
-              newAnnot.regions.rect.highlighted = false;
+              // newAnnot.regions.rect.highlighted = false;
               newAnnot.regions.rect.highlightedVertex = undefined;
             }
           }
@@ -87,31 +87,29 @@ export const createAnnotationDispatcher = () => {
     });
   });
 
-  // const highlightRegion = useRecoilCallback<
-  //   [number | undefined, RegionDataType, IVertexInfo | undefined],
-  //   void
-  // >(
-  //   ({ set }) =>
-  //     (idx, type, vertex) =>
-  //       set(undoStack, (undoList) => {
-  //         const updateList: IAnnotation[][] = _.cloneDeep(undoList);
-  //         const lastList = updateList[updateList.length - 1].map(
-  //           (annot, annotIdx) => {
-  //             const newAnnot = { ...annot };
-  //             if (annotIdx === idx) {
-  //               newAnnot.region.highlighted = true;
-  //               newAnnot.region.highlightedVertex = vertex;
-  //             } else {
-  //               newAnnot.region.highlighted = false;
-  //               newAnnot.region.highlightedVertex = undefined;
-  //             }
-  //             return newAnnot;
-  //           }
-  //         );
-  //         updateList[updateList.length - 1] = lastList;
-  //         return updateList;
-  //       })
-  // );
+  const selectRect = useRecoilCallback<[number | undefined], void>(
+    ({ set }) =>
+      (idx) => {
+        set(undoStack, (undoList) => {
+          const updateList: IAnnotation[][] = _.cloneDeep(undoList);
+          const lastList = updateList[updateList.length - 1].map(
+            (annot, annotIdx) => {
+              const newAnnot = { ...annot };
+              if (annotIdx === idx) {
+                newAnnot.regions.rect.selected = true;
+              } else {
+                if (newAnnot.regions.rect) {
+                  newAnnot.regions.rect.selected = false;
+                }
+              }
+              return newAnnot;
+            }
+          );
+          updateList[updateList.length - 1] = lastList;
+          return updateList;
+        });
+      }
+  );
 
   const undo = useRecoilCallback<[], void>(
     (
@@ -169,6 +167,7 @@ export const createAnnotationDispatcher = () => {
     insert,
     edit,
     highlightRect,
+    selectRect,
     undo,
     redo,
     del,

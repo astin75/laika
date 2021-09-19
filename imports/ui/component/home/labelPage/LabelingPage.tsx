@@ -1,17 +1,17 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import ImageFilesPage from './ImageFilesPage/ImageFilesPage';
 import ObjectPage from './ObjectPage/ObjectPage';
 import HeaderPage from './HeaderPage/HeaderPage';
 
 import styles from './LabelingPage.module.css';
-import Editor, {EditorMode} from './Editor';
+import Editor, { EditorMode } from './Editor';
 import TmpBar from './TmpBar';
-import {useSetRecoilState} from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import {
   AnnotationDispatcher,
   annotationDispatcherState,
-  createAnnotationDispatcher
+  createAnnotationDispatcher,
 } from '../../../../recoil/annotation';
 
 export default function LabelingPage() {
@@ -31,7 +31,7 @@ export default function LabelingPage() {
   // Annotation Dispatcher
   const setAnnotationDispatcher = useSetRecoilState(annotationDispatcherState);
   const dispatcherRef = useRef<AnnotationDispatcher>(
-    createAnnotationDispatcher(),
+    createAnnotationDispatcher()
   );
   useEffect(() => {
     setAnnotationDispatcher(dispatcherRef.current);
@@ -39,11 +39,11 @@ export default function LabelingPage() {
 
   return (
     <div className={styles.main}>
-      <HeaderPage/>
+      <HeaderPage />
       <div className={styles.contents}>
-        <ImageFilesPage/>
-        <Editor image={image}/>
-        <TmpBar mode={mode} onModeChange={setMode}/>
+        <ImageFilesPage />
+        <Editor image={image} mode={mode} />
+        <TmpBar mode={mode} onModeChange={setMode} />
         {/*<ObjectPage/>*/}
       </div>
     </div>

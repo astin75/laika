@@ -1,22 +1,23 @@
 // @ts-ignore
-import React, {useEffect, useRef} from 'react';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import React, { useEffect, useRef } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { IPoint } from '../../../../../canvasTools/IPoint';
 import {
   CanvasViewDispatcher,
   canvasViewDispatcherState,
   createCanvasViewDispatcher,
 } from '../../../../../recoil/canvas';
-import styles from './editor.module.css';
-import {IPoint} from '../../../../../canvasTools/IPoint';
-import RectDrawer from '../CanvasHandler/RectDrawer';
+import CanvasMover from '../CanvasHandler/CanvasMover';
 import PolygonDrawer from '../CanvasHandler/PolygonDrawer';
+import RectDrawer from '../CanvasHandler/RectDrawer';
+import styles from './editor.module.css';
 
 export enum EditorMode {
   Idle = 'idle',
   Rect = 'rect',
   Skeleton = 'skeleton',
   Polyline = 'polyline',
-  Polygon = 'polygon'
+  Polygon = 'polygon',
 }
 
 interface IEditorProps {
@@ -24,7 +25,7 @@ interface IEditorProps {
   mode: EditorMode;
 }
 
-export default function Editor({image, mode}: IEditorProps) {
+export default function Editor({ image, mode }: IEditorProps) {
   const containerRef = useRef<HTMLElement>(null);
 
   // canvas dispatcher
@@ -63,15 +64,16 @@ export default function Editor({image, mode}: IEditorProps) {
   }, [image, containerRef]);
 
   let canvasHandler;
+
   switch (mode) {
     case EditorMode.Rect:
-      canvasHandler = <RectDrawer frame={image} onWheel={handleWheel}/>;
+      canvasHandler = <RectDrawer frame={image} onWheel={handleWheel} />;
       break;
     case EditorMode.Polygon:
-      canvasHandler = <PolygonDrawer frame={image} onWheel={handleWheel}/>;
+      canvasHandler = <PolygonDrawer frame={image} onWheel={handleWheel} />;
       break;
     default:
-      canvasHandler = <RectDrawer frame={image} onWheel={handleWheel}/>;
+      canvasHandler = <CanvasMover frame={image} onWheel={handleWheel} />;
       break;
   }
 

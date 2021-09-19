@@ -52,7 +52,7 @@ export const drawRegionOnCanvas = (
   region: IRegionData,
   context: CanvasRenderingContext2D,
   view: ICanvasView,
-  colorCode: string,
+  colorCode: string
 ) => {
   switch (region.type) {
     case RegionDataType.Rect:
@@ -69,7 +69,7 @@ export const drawRegionOnCanvas = (
 export const isPointInRegion = (
   point: IPoint,
   region: IRegionData,
-  margin = 5,
+  margin = 5
 ) => {
   const xIn =
     region.x - margin < point.x && point.x < region.x + region.width + margin;
@@ -78,72 +78,121 @@ export const isPointInRegion = (
   return xIn && yIn;
 };
 
-export const findNearestRegion = (
-  mousePosition: IPoint,
-  regions: IRegionData[],
-  view: ICanvasView,
-  margin = 5,
-) => {
-  const [transformedPosition] = transformCanvasPointToImagePoint(
-    view,
-    mousePosition,
-  );
-  const inRegionMask = regions.map(
-    (region) =>
-      region.visible && isPointInRegion(transformedPosition, region, margin),
-  );
+// export const findNearestRegion = (
+//   mousePosition: IPoint,
+//   regions: IRegionData[],
+//   view: ICanvasView,
+//   margin = 5,
+// ) => {
+//   const [transformedPosition] = transformCanvasPointToImagePoint(
+//     view,
+//     mousePosition,
+//   );
+//   const inRegionMask = regions.map(
+//     (region) =>
+//       region.visible && isPointInRegion(transformedPosition, region, margin),
+//   );
+//
+//   let minArea = Infinity;
+//   let nearestAnnotationIdx: number | undefined;
+//   inRegionMask.forEach((isIn, idx) => {
+//     if (!isIn) return;
+//     if (regions[idx].area < minArea) {
+//       minArea = regions[idx].area!;
+//       nearestAnnotationIdx = idx;
+//     }
+//   });
+//   let nearestPointIdx: number | undefined;
+//   if (nearestAnnotationIdx !== undefined) {
+//     const region = regions[nearestAnnotationIdx];
+//     let minDistance = margin;
+//     region.boundingPoints.forEach((point, idx) => {
+//       const distance = getDistanceOfTwoPoints(point, transformedPosition);
+//       if (distance < minDistance) {
+//         minDistance = distance;
+//         nearestPointIdx = idx;
+//       }
+//     });
+//   }
+//   return { nearestAnnotationIdx, nearestPointIdx };
+// };
 
-  let minArea = Infinity;
-  let nearestAnnotationIdx: number | undefined;
-  inRegionMask.forEach((isIn, idx) => {
-    if (!isIn) return;
-    if (regions[idx].area < minArea) {
-      minArea = regions[idx].area!;
-      nearestAnnotationIdx = idx;
-    }
-  });
-  let nearestPointIdx: number | undefined;
-  if (nearestAnnotationIdx !== undefined) {
-    const region = regions[nearestAnnotationIdx];
-    let minDistance = margin;
-    region.boundingPoints.forEach((point, idx) => {
-      const distance = getDistanceOfTwoPoints(point, transformedPosition);
-      if (distance < minDistance) {
-        minDistance = distance;
-        nearestPointIdx = idx;
-      }
-    });
-  }
-  return { nearestAnnotationIdx, nearestPointIdx };
-};
+// export const findNearestPoint = (
+//   mousePosition: IPoint,
+//   regions: IRegionData[],
+//   view: ICanvasView,
+//   margin = 5,
+// ) => {
+//   const [transformedPosition] = transformCanvasPointToImagePoint(
+//     view,
+//     mousePosition,
+//   );
+//
+//   let minDistance = margin;
+//   let nearestAnnotationIdx: number | undefined;
+//   let nearestPointIdx: number | undefined;
+//   regions.forEach((region, annotIdx) => {
+//     region.points?.forEach((point, pointIdx) => {
+//       if (!point.visible) return;
+//       const distance = getDistanceOfTwoPoints(point, transformedPosition);
+//       if (distance < minDistance) {
+//         minDistance = distance;
+//         nearestAnnotationIdx = annotIdx;
+//         nearestPointIdx = pointIdx;
+//       }
+//     });
+//   });
+//
+//   return { nearestAnnotationIdx, nearestPointIdx };
+// };
 
 export const findNearestPoint = (
   mousePosition: IPoint,
-  regions: IRegionData[],
+  region: IRegionData,
   view: ICanvasView,
-  margin = 5,
+  margin = 5
 ) => {
   const [transformedPosition] = transformCanvasPointToImagePoint(
     view,
-    mousePosition,
+    mousePosition
   );
 
   let minDistance = margin;
-  let nearestAnnotationIdx: number | undefined;
   let nearestPointIdx: number | undefined;
-  regions.forEach((region, annotIdx) => {
-    region.points?.forEach((point, pointIdx) => {
-      if (!point.visible) return;
-      const distance = getDistanceOfTwoPoints(point, transformedPosition);
-      if (distance < minDistance) {
-        minDistance = distance;
-        nearestAnnotationIdx = annotIdx;
-        nearestPointIdx = pointIdx;
-      }
-    });
+  region.points?.forEach((point, pointIdx) => {
+    if (!point.visible) return;
+    const distance = getDistanceOfTwoPoints(point, transformedPosition);
+    if (distance < minDistance) {
+      minDistance = distance;
+      nearestPointIdx = pointIdx;
+    }
   });
 
-  return { nearestAnnotationIdx, nearestPointIdx };
+  return nearestPointIdx;
+};
+
+export const findNearestBoundingPoint = (
+  mousePosition: IPoint,
+  region: IRegionData,
+  view: ICanvasView,
+  margin = 5
+) => {
+  const [transformedPosition] = transformCanvasPointToImagePoint(
+    view,
+    mousePosition
+  );
+
+  let minDistance = margin;
+  let nearestPointIdx: number | undefined;
+  region.boundingPoints.forEach((point, pointIdx) => {
+    const distance = getDistanceOfTwoPoints(point, transformedPosition);
+    if (distance < minDistance) {
+      minDistance = distance;
+      nearestPointIdx = pointIdx;
+    }
+  });
+
+  return nearestPointIdx;
 };
 
 export const getAreaOfRegion = (region: IRegionData) => {
@@ -164,7 +213,7 @@ export const getBoundingPointsOfRegion = (
   x: number,
   y: number,
   width: number,
-  height: number,
+  height: number
 ): IPoint[] => {
   return [
     { x, y },
@@ -181,7 +230,7 @@ export const getBoundingPointsOfRegion = (
 export const moveRegion = (
   region: IRegionData,
   mouseOffset: IPoint,
-  view: ICanvasView,
+  view: ICanvasView
 ) => {
   const transformed: IPoint = {
     x: mouseOffset.x / view.scale,
@@ -242,7 +291,7 @@ export const movePointOfRegion = (
   region: IRegionData,
   pointIdx: number,
   mousePosition: IPoint,
-  view: ICanvasView,
+  view: ICanvasView
 ) => {
   if (region.points === undefined) return region;
   const [transformed] = transformCanvasPointToImagePoint(view, mousePosition);

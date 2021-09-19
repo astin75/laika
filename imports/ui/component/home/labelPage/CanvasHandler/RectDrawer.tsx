@@ -3,31 +3,45 @@ import {
   IPoint,
   transformCanvasPointToImagePoint,
 } from '../../../../../canvasTools/IPoint';
-import {makeRectRegion} from '../../../../../canvasTools/IRect';
+import {
+  isPointInRect,
+  makeRectRegion,
+  moveBoundingPointOfRect,
+} from '../../../../../canvasTools/IRect';
 import Canvas from '../Canvas';
 import {
   annotationDispatcherState,
-  currentAnnotations, selectionIdx,
+  currentAnnotations,
+  IAnnotation,
+  selectionIdx,
 } from '../../../../../recoil/annotation';
-import {canvasView} from '../../../../../recoil/canvas';
+import { canvasView } from '../../../../../recoil/canvas';
 import _ from 'lodash';
-import React, {useRef, useState} from 'react';
-import {useRecoilState, useRecoilValue} from 'recoil';
-import {ICanvasHandlerProps} from './ICanvasHandler';
+import React, { useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { ICanvasHandlerProps } from './ICanvasHandler';
+import RectEditor from './RectEditor';
+import {
+  findNearestBoundingPoint,
+  findNearestPoint,
+  IVertexInfo,
+} from '../../../../../canvasTools/IRegionData';
 
 type HandlerState =
   | 'idle'
-  | 'holding' // Mouse Down
-  | 'pending' // Pending update for recoil data
-  | 'draw'; // Drawing State
+  | 'onPoint'
+  | 'drawHolding' // Mouse Down
+  | 'draw' // Drawing State
+  | 'moveHolding'
+  | 'movePoint';
 
 // React Region 생성 Handler
-export default function RectDrawer({frame, onWheel}: ICanvasHandlerProps) {
+export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
   const [state, setState] = useState<HandlerState>('idle');
-  const [startPoint, setStartPoint] = useState<IPoint>({x: 0, y: 0});
+  const [startPoint, setStartPoint] = useState<IPoint>({ x: 0, y: 0 });
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const annotations = useRecoilValue(currentAnnotations);
-  const [selection, setSelection] = useRecoilState(selectionIdx);
+  const selection = useRecoilValue(selectionIdx);
 
   const view = useRecoilValue(canvasView);
 
@@ -41,7 +55,11 @@ export default function RectDrawer({frame, onWheel}: ICanvasHandlerProps) {
     switch (state) {
       case 'idle':
         setStartPoint(mousePoint);
-        setState('holding');
+        if (annotations[selection].regions.rect === undefined)
+          setState('drawHolding');
+        break;
+      case 'onPoint':
+        setState('moveHolding');
         break;
       default:
         break;
@@ -65,10 +83,36 @@ export default function RectDrawer({frame, onWheel}: ICanvasHandlerProps) {
     );
 
     switch (state) {
-      case 'holding': {
-        console.log(movementOffset)
+      case 'idle':
+      case 'onPoint':
+        const region = annotations[selection]?.regions.rect;
+        if (region === undefined) break;
+        let nearestPoint = undefined;
+        let vertex: IVertexInfo = undefined;
+        if (isPointInRect(mousePoint, region, view, 5)) {
+          nearestPoint = findNearestBoundingPoint(mousePoint, region, view, 10);
+          if (nearestPoint !== undefined) {
+            setState('onPoint');
+          } else {
+            setState('idle');
+          }
+        }
+        if (nearestPoint !== undefined)
+          vertex = {
+            idx: nearestPoint,
+            type: 'boundingPoint',
+          };
+        annotationDispatcher.highlightRect(selection, vertex);
+        break;
+
+      case 'drawHolding': {
         if (!(getNormOfPoint(movementOffset) > 0)) break;
         setState('draw');
+        break;
+      }
+      case 'moveHolding': {
+        if (!(getNormOfPoint(movementOffset) > 0)) break;
+        setState('movePoint');
         break;
       }
       case 'draw': {
@@ -76,6 +120,16 @@ export default function RectDrawer({frame, onWheel}: ICanvasHandlerProps) {
         updateAnnotation.regions.rect = makeRectRegion(pointA, pointB);
         annotationDispatcher?.edit(selection, updateAnnotation, true);
         break;
+      }
+      case 'movePoint': {
+        const updatedAnnot: IAnnotation = _.cloneDeep(annotations[selection]);
+        updatedAnnot.regions.rect = moveBoundingPointOfRect(
+          updatedAnnot.regions.rect,
+          updatedAnnot.regions.rect.highlightedVertex.idx,
+          mousePoint,
+          view
+        );
+        annotationDispatcher.edit(selection, updatedAnnot, true);
       }
       default:
         break;

@@ -9,6 +9,7 @@ import {
 import styles from './editor.module.css';
 import {IPoint} from '../../../../../canvasTools/IPoint';
 import RectDrawer from '../CanvasHandler/RectDrawer';
+import PolygonDrawer from '../CanvasHandler/PolygonDrawer';
 
 export enum EditorMode {
   Idle = 'idle',
@@ -64,12 +65,14 @@ export default function Editor({image, mode}: IEditorProps) {
   let canvasHandler;
   switch (mode) {
     case EditorMode.Rect:
+      canvasHandler = <RectDrawer frame={image} onWheel={handleWheel}/>;
+      break;
+    case EditorMode.Polygon:
+      canvasHandler = <PolygonDrawer frame={image} onWheel={handleWheel}/>;
+      break;
     default:
       canvasHandler = <RectDrawer frame={image} onWheel={handleWheel}/>;
       break;
-    // default:
-    //   canvasHandler = <CanvasSelector frame={image} onWheel={handleWheel} />;
-    //   break;
   }
 
   return (

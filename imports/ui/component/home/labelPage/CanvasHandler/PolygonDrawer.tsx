@@ -1,51 +1,46 @@
-import React, { useState } from 'react';
-import { useRecoilValue } from 'recoil';
 import {
   getNormOfPoint,
   IPoint,
   transformCanvasPointToImagePoint,
 } from '../../../../../canvasTools/IPoint';
-import { isPointInRect } from '../../../../../canvasTools/IRect';
-import { findNearestPoint } from '../../../../../canvasTools/IRegionData';
+import {makeRectRegion} from '../../../../../canvasTools/IRect';
+import Canvas from '../Canvas';
 import {
   annotationDispatcherState,
-  currentAnnotations,
-  selectionIdx,
+  currentAnnotations, selectionIdx,
 } from '../../../../../recoil/annotation';
-import {
-  canvasView,
-  canvasViewDispatcherState,
-} from '../../../../../recoil/canvas';
-import Canvas from '../Canvas';
-import { ICanvasHandlerProps } from './ICanvasHandler';
+import {canvasView} from '../../../../../recoil/canvas';
+import _ from 'lodash';
+import React, {useRef, useState} from 'react';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {ICanvasHandlerProps} from './ICanvasHandler';
 
 type HandlerState =
   | 'idle'
-  | 'onRegion'
-  | 'onPoint'
-  | 'moveCanvas'
-  | 'holding'
-  | 'movePoint';
+  | 'holding' // Mouse Down
+  | 'pending' // Pending update for recoil data
+  | 'draw'; // Drawing State
 
-// Region/Vertex 선택 이벤트 Handler
-export default function RectEditor({ frame, onWheel }: ICanvasHandlerProps) {
+export default function PolygonDrawer({frame, onWheel}: ICanvasHandlerProps) {
   const [state, setState] = useState<HandlerState>('idle');
-  const view = useRecoilValue(canvasView);
-  const canvasViewDispatcher = useRecoilValue(canvasViewDispatcherState);
+  const [startPoint, setStartPoint] = useState<IPoint>({x: 0, y: 0});
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const annotations = useRecoilValue(currentAnnotations);
-  const selection = useRecoilValue(selectionIdx);
+  const [selection, setSelection] = useRecoilState(selectionIdx);
+
+  const view = useRecoilValue(canvasView);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
+    const mousePoint: IPoint = {
+      x: e.nativeEvent.offsetX,
+      y: e.nativeEvent.offsetY,
+    };
+
     switch (state) {
       case 'idle':
-        setState('moveCanvas');
-        break;
-      case 'onPoint':
+        setStartPoint(mousePoint);
         setState('holding');
-        break;
-      case 'onRegion':
         break;
       default:
         break;
@@ -53,6 +48,7 @@ export default function RectEditor({ frame, onWheel }: ICanvasHandlerProps) {
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
     const mousePoint: IPoint = {
       x: e.nativeEvent.offsetX,
       y: e.nativeEvent.offsetY,
@@ -61,33 +57,25 @@ export default function RectEditor({ frame, onWheel }: ICanvasHandlerProps) {
       x: e.movementX,
       y: e.movementY,
     };
-    const [transformedPosition] = transformCanvasPointToImagePoint(
+    const [pointA, pointB] = transformCanvasPointToImagePoint(
       view,
+      startPoint,
       mousePoint
     );
 
     switch (state) {
-      case 'idle':
-      case 'onRegion':
-      case 'onPoint': {
-        const region = annotations[selection].regions.rect;
-        if (region === undefined) break;
-        if (isPointInRect(mousePoint, region, view, 5)) {
-          const nearestPoint = findNearestPoint(mousePoint, region, view, 5);
-          if (nearestPoint !== undefined) setState('onPoint');
-          else setState('onRegion');
-        }
+      case 'holding': {
+        console.log(movementOffset);
+        if (!(getNormOfPoint(movementOffset) > 0)) break;
+        setState('draw');
         break;
       }
-      case 'moveCanvas':
-        canvasViewDispatcher?.shiftCanvas(movementOffset);
+      case 'draw': {
+        const updateAnnotation = _.cloneDeep(annotations[selection]);
+        updateAnnotation.regions.rect = makeRectRegion(pointA, pointB);
+        annotationDispatcher?.edit(selection, updateAnnotation, true);
         break;
-      case 'holding':
-        if (!(getNormOfPoint(movementOffset) > 0)) break;
-        setState('movePoint');
-        break;
-      case 'movePoint':
-        break;
+      }
       default:
         break;
     }

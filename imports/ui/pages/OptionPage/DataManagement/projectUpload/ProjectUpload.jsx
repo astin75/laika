@@ -91,6 +91,9 @@ export default function ProjectUpload() {
     let tempProjectInfo = {
       projectName: projectName[0].projectName,
       masterProjectName: projectName[0].masterProjectName,
+      startDate: '',
+      endDate: '',
+      workers: [],
       projectId: RandValue[0],
       bbox: boxClassList,
       keypoint: keyPointClassList,

@@ -1,6 +1,6 @@
 import { useTracker } from 'meteor/react-meteor-data'
 import React from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import FloatNav from 'ui/components/FloatNav'
 
 export default function Index() {

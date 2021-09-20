@@ -31,7 +31,7 @@ export default function ProjectList2() {
           <Button
             className={styles.topMenuButton}
             variant="gradient"
-            gradient={{ from: 'indigo', to: 'cyan' }}
+            gradient={{ from: 'teal', to: 'lime', deg: 105 }}
             component={Link}
             to="/projectManagementPage"
           >
@@ -42,7 +42,7 @@ export default function ProjectList2() {
             variant="gradient"
             gradient={{ from: 'grape', to: 'pink', deg: 35 }}
             component={Link}
-            to="/projectManagementPage"
+            to="/userControlPage"
           >
             계정 관리
           </Button>

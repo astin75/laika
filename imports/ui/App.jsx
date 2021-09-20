@@ -11,8 +11,9 @@ import AccountPage from 'ui/pages/AccountPage/AccountPage'
 import IndexPage from 'ui/pages/IndexPage'
 import NotFound from 'ui/pages/NotFound'
 import { OptionPage } from 'ui/pages/OptionPage/DataManagement/OptionPage'
-import ProjectList2 from 'ui/pages/OptionPage/DataManagement/projectList2/ProjectList2'
-import ProjectUpload from 'ui/pages/OptionPage/DataManagement/projectUpload/ProjectUpload'
+import ProjectList2 from 'ui/pages/OptionPage/DataManagement/ProjectList2/ProjectList2'
+import ProjectUpload from 'ui/pages/OptionPage/DataManagement/ProjectUpload/ProjectUpload'
+import UserControl from 'ui/pages/OptionPage/DataManagement/UserControl/UserControl'
 import LabelingPage from 'ui/pages/OptionPage/LabelingPage/LabelingPage'
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="/accountPage" component={AccountPage} />
             <Route path="/projectListPage" component={ProjectList2} />
             <Route path="/projectManagementPage" component={ProjectUpload} />
+            <Route path="/userControlPage" component={UserControl} />
           </Switch>
         </DefaultLayout>
       </Route>

@@ -1,9 +1,9 @@
-import { Meteor } from 'meteor/meteor'
 import { tasksCollection } from 'imports/db/collections'
 import { imageInfoCollection } from 'imports/db/collections'
 import { gtInfoCollection } from 'imports/db/collections'
 import { projectCollection } from 'imports/db/collections'
 import Images from 'imports/db/files'
+import { Meteor } from 'meteor/meteor'
 
 imageInfoCollection.allow({
   insert() {
@@ -28,6 +28,18 @@ gtInfoCollection.allow({
   },
 })
 projectCollection.allow({
+  insert() {
+    return true
+  },
+  update() {
+    return true
+  },
+  remove() {
+    return true
+  },
+})
+
+Meteor.users.allow({
   insert() {
     return true
   },

@@ -1,16 +1,18 @@
 import { Button, Select, Table } from '@mantine/core'
-import { projectCollection } from 'imports/db'
 import { Meteor } from 'meteor/meteor'
 import { useTracker } from 'meteor/react-meteor-data'
-import React, { createRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import NavigationBar from 'ui/components/NavigationBar/NavigationBar'
 
+// @ts-ignore
 import styles from './UserControl.module.css'
 
 export default function UserControl() {
   const userList = useTracker(() => Meteor.users.find({}).fetch())
-  const [selectValue, setSelectValue] = useState('')
+  console.log(userList)
+
+  const [rank, setRank] = useState('')
   const rankOption = [
     { value: 'admin', label: 'admin' },
     { value: 'worker', label: 'worker' },
@@ -18,10 +20,9 @@ export default function UserControl() {
   ]
 
   const onRankChange = (userName) => {
-    if (selectValue) {
-      console.log('aa', selectValue, '22')
+    if (rank) {
       let oops = Meteor.users.findOne({ username: userName })
-      Meteor.users.update(oops._id, { $set: { profile: { rank: { selectValue } } } })
+      Meteor.users.update(oops._id, { $set: { profile: { rank } } })
     }
   }
 
@@ -34,7 +35,7 @@ export default function UserControl() {
   }
 
   const handleChange = (option) => {
-    setSelectValue(option)
+    setRank(option)
   }
 
   return (
@@ -70,24 +71,28 @@ export default function UserControl() {
         </thead>
         <tbody>
           {userList &&
-            userList.map((x, idx) => (
-              <tr>
+            userList.map((user, idx) => (
+              <tr key={user._id}>
                 <td>{idx + 1}</td>
-                <td>{x.username}</td>
+                <td>{user.username}</td>
                 <td>
                   <Select
                     onChange={(rankOption) => handleChange(rankOption)}
                     className={styles.selectBTN}
-                    defaultValue={x.profile.rank}
+                    defaultValue={user.profile.rank}
                     data={rankOption}
                   />
                 </td>
                 <td>
-                  <Button color="teal" size="compact-sm" onClick={() => onRankChange(x.username)}>
+                  <Button
+                    color="teal"
+                    size="compact-sm"
+                    onClick={() => onRankChange(user.username)}
+                  >
                     적용
-                  </Button>{' '}
+                  </Button>
                   &nbsp; / &nbsp;
-                  <Button color="red" size="compact-sm" onClick={() => onDelete(x.username)}>
+                  <Button color="red" size="compact-sm" onClick={() => onDelete(user.username)}>
                     삭제
                   </Button>
                 </td>

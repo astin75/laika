@@ -13,12 +13,8 @@ export default function ProjectList2() {
   const user = useTracker(() => Meteor.user())
   const projectList = useTracker(() => projectCollection.find({}).fetch())
   const [selectedProject, setSelectedProject] = useState(null)
+  const [toggleCurrentProjectDetail, setToggleCurrentProjectDetail] = useState(false)
   const [IsThereAdmin, setIsThereAdmin] = useState(false)
-
-  const onDelete = (project) => {
-    let oops = projectCollection.find({ projectName: project.projectName }).fetch()
-    projectCollection.remove(oops[0]._id)
-  }
 
   useEffect(() => {
     if (user !== null) {
@@ -55,46 +51,55 @@ export default function ProjectList2() {
 
         <div className={styles.projectList}>
           <div className={styles.listHead}>
-            <div>NO</div>
-            <div>PROJECT NAME</div>
-            <div>OPTION</div>
+            <div className={styles.listHeadTitle}>NO</div>
+            <div className={styles.listHeadTitle}>PROJECT NAME</div>
+            <div className={styles.listHeadTitle}>OPTION</div>
           </div>
           <div className={styles.listContents}>
-            {projectList
-              ? projectList.map((e) => (
-                  <div key={e.projectId} className={styles.listContent}>
-                    <div>{e.projectId}</div>
-                    <div>{e.projectName}</div>
-                    <div className={styles.contentOptions}>
-                      <Button
-                        variant="link"
-                        color="lime"
-                        component={Link}
-                        leftIcon={<i className="fas fa-sign-in-alt"></i>}
-                        to={{
-                          pathname: '/labelingPage',
-                          search: `?projectName=${e.projectName}`,
-                        }}
-                        size="lg"
-                      ></Button>
-                      <Button
-                        variant="link"
-                        color="teal"
-                        leftIcon={<i className="fas fa-info-circle"></i>}
-                        size="lg"
-                        onClick={() => {
-                          setSelectedProject(e)
-                        }}
-                      ></Button>
+            <div className={styles.listContentsWrap}>
+              {projectList
+                ? projectList.map((e) => (
+                    <div key={e.projectId} className={styles.listContent}>
+                      <div>{e.projectId}</div>
+                      <div className={styles.projectName}>{e.projectName}</div>
+                      <div className={styles.contentOptions}>
+                        <Button
+                          variant="link"
+                          color="gray"
+                          component={Link}
+                          leftIcon={<i className="fas fa-sign-in-alt"></i>}
+                          to={{
+                            pathname: '/labelingPage',
+                            search: `?projectName=${e.projectName}`,
+                          }}
+                          size="lg"
+                        ></Button>
+                        <Button
+                          variant="link"
+                          color="grape"
+                          leftIcon={<i className="fas fa-info-circle"></i>}
+                          size="lg"
+                          onClick={() => {
+                            setSelectedProject(e)
+                            setToggleCurrentProjectDetail(true)
+                          }}
+                        ></Button>
+                      </div>
                     </div>
-                  </div>
-                ))
-              : ''}
+                  ))
+                : ''}
+            </div>
           </div>
         </div>
       </div>
       <NavigationBar />
-      {selectedProject ? <ProjectDetail selectedProject={selectedProject} /> : ''}
+
+      <ProjectDetail
+        selectedProject={selectedProject}
+        setSelectedProject={setSelectedProject}
+        toggleCurrentProjectDetail={toggleCurrentProjectDetail}
+        setToggleCurrentProjectDetail={setToggleCurrentProjectDetail}
+      />
     </main>
   )
 }

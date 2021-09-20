@@ -13,7 +13,7 @@
 
 .container {
     width: 50%;
-    height: 50%;
+    height: 80%;
     min-width: 350px;
     min-height: 430px;
     background-color: #ffffff;
@@ -21,7 +21,7 @@
     box-sizing: border-box;
 
     display: flex;
-    gap: 10px;
+    /* gap: 10px; */
     flex-direction: column;
     border-radius: 10px;
 
@@ -29,19 +29,22 @@
 
 .topMenu {
     display: flex;
-    justify-content: right;
+    /* flex-direction: row-reverse; */
+    justify-content: flex-end;
+    align-items: center;
+    gap  :20px;
     width : 100%;
-    height : 10%;
+    height : 5%;
 }
-.topMenuButton{
+/* .topMenuButton{
     margin-right: 1em;
     margin-bottom: 1em;
-}
+} */
 
 .projectList{
     display : flex;
     width : 100%;
-    height : 90%;
+    height : 95%;
     padding: 10px;
     box-sizing: border-box;
     flex-direction: column;
@@ -53,10 +56,20 @@
     width: 100%;
     height : 10%;
     justify-content: space-between;
-    /* gap : 50px; */
+    align-items: center;
     font-size: 17px;
     padding : 5px;
     box-sizing: border-box;
+    
+}
+
+.listHeadTitle{
+    width: 100%;
+    height : 100%;
+    display  :flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
 }
 
 .listContents{
@@ -64,8 +77,18 @@
     flex-direction: column;
     width: 100%;
     height : 90%;
+    /* padding : 10px;
+    box-sizing: border-box; */
+    overflow-y: hidden;
+}
+
+.listContentsWrap{
+    display : flex;
+    flex-direction: column;
+    width: 100%;
+    height : 100%;
     gap : 10px;
-    overflow-y: scroll;
+    overflow-y : scroll;
 }
 
 .listContent{
@@ -74,6 +97,7 @@
     display : flex;
     justify-content: space-between;
     align-items: center;
+    text-align: center;
     font-size: 15px;
 
     border : 1px solid #8b9694;
@@ -85,7 +109,10 @@
 }
 
 .listContent:hover{
-box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    background-color: #64b9b2;
+    border : 1px solid #64b9b2;
+
 }
 
 .listHead > div{
@@ -97,6 +124,7 @@ box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1p
     width: 25%;
     height : 10%;
     align-items: center;
+    justify-content: center;
 
 }
 .contentOptions{
@@ -108,4 +136,8 @@ box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1p
 
 .contentOptions > i{
     font-size : 20px;
+}
+
+.projectName{
+    font-weight: bold;
 }

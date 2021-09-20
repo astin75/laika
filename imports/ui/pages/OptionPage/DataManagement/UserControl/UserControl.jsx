@@ -1,8 +1,7 @@
 import { Button, Select, Table } from '@mantine/core'
-import { projectCollection } from 'imports/db'
 import { Meteor } from 'meteor/meteor'
 import { useTracker } from 'meteor/react-meteor-data'
-import React, { createRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import NavigationBar from 'ui/components/NavigationBar/NavigationBar'
 
@@ -10,6 +9,8 @@ import styles from './UserControl.module.css'
 
 export default function UserControl() {
   const userList = useTracker(() => Meteor.users.find({}).fetch())
+  console.log(userList)
+
   const [selectValue, setSelectValue] = useState('')
   const rankOption = [
     { value: 'admin', label: 'admin' },

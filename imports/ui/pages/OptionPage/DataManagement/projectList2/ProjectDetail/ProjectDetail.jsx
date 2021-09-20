@@ -5,11 +5,10 @@ import dayjs from 'dayjs'
 import { Button, MultiSelect, Progress } from '@mantine/core'
 import { DateRangePicker } from '@mantine/dates'
 
+import { Meteor } from 'meteor/meteor'
 import { useTracker } from 'meteor/react-meteor-data'
 import { projectCollection } from 'imports/db/collections'
-
-import { useSpring, animated } from 'react-spring'
-// import testImg from 'GameLogo.png'
+// import { projectCollection } from 'imports/db/collections'
 
 const data = [
   { value: 'react', label: 'React' },
@@ -45,30 +44,55 @@ export default function ProjectDetail({
   setToggleCurrentProjectDetail,
 }) {
   // console.log(selectedProject);
-
+  const user = useTracker(() => Meteor.users.find({}).fetch())
+  const [value, setValue] = useState([[], []])
   const projectList = useTracker(() => projectCollection.find({}).fetch())
-  const deleteWorld = () => {
-    console.log('Deleting the world...')
+
+  const userData = ['peter1', 'peter3']
+  const [selectedUsers, setSelectedUsers] = useState([])
+  if (user) {
+    user.map((e) => userData.push(e.username))
+  }
+
+  const updateProjectDetail = () => {
+    if (value[0] === null || value[1] === null) {
+      alert('프로젝트 일정이 선택되지 않았습니다')
+      return
+    } else if (value[0].length === 0 || value[1].length === 0) {
+      alert('프로젝트 일정이 선택되지 않았습니다')
+      return
+    } else if (selectedUsers.length === 0) {
+      alert('작업자를 지정하지 않았습니다')
+      return
+    }
+
+    projectCollection.update(
+      { _id: selectedProject._id },
+      {
+        $set: {
+          startDate: `${value[0].getFullYear()}-${value[0].getMonth()}-${value[0].getDate()}`,
+          endDate: `${value[1].getFullYear()}-${value[1].getMonth()}-${value[1].getDate()}`,
+          workers: selectedUsers,
+        },
+      }
+    )
+  }
+
+  const deleteProject = () => {
+    // console.log('Deleting the world...')
     const currentProject = projectCollection
       .find({ projectName: selectedProject.projectName })
       .fetch()
     projectCollection.remove(currentProject[0]._id)
     setSelectedProject(null)
   }
-  const abort = () => console.log('Aborted')
-  const confirmDelete = useConfirm('Are you sure', deleteWorld, abort)
-
-  const onDelete = (project) => {
-    confirmDelete()
+  const abort = () => {
+    return
   }
-
-  const [value, setValue] = useState([
-    dayjs(new Date()).startOf('month').toDate(),
-    dayjs(new Date()).startOf('month').add(4, 'days').toDate(),
-  ])
+  const confirmDelete = useConfirm('프로젝트를 삭제하시겠습니까? ', deleteProject, abort)
 
   return (
-    <animated.div
+    <div
       style={{
         opacity: toggleCurrentProjectDetail ? 1 : 0,
         width: toggleCurrentProjectDetail ? '20%' : '0',
@@ -118,13 +142,24 @@ export default function ProjectDetail({
             <div className={styles.detailTitle}>Project Progress</div>
             <Progress
               value={
-                (selectedProject.totalFileSize.length - selectedProject.totalUnConfirmSize) / 100
+                ((selectedProject.totalFileSize.length -
+                  (selectedProject.totalFileSize.length - selectedProject.totalUnConfirmSize)) /
+                  selectedProject.totalFileSize.length) *
+                100
               }
             />
           </div>
           <div className={styles.projectDetails}>
             <div className={styles.detailTitle}>Project Member </div>
-            <MultiSelect data={data} placeholder="Pick members on this Project" />
+            {user ? (
+              <MultiSelect
+                data={userData}
+                placeholder="Pick members on this Project"
+                onChange={(e) => setSelectedUsers(e)}
+              />
+            ) : (
+              ''
+            )}
           </div>
           <div className={styles.projectOptions}>
             <Button
@@ -132,6 +167,7 @@ export default function ProjectDetail({
               color="gray"
               leftIcon={<i className="fas fa-save"></i>}
               size="lg"
+              onClick={updateProjectDetail}
             ></Button>
             <Button
               variant="link"
@@ -149,7 +185,7 @@ export default function ProjectDetail({
               color="gray"
               leftIcon={<i className="fas fa-trash"></i>}
               size="lg"
-              onClick={() => onDelete(selectedProject)}
+              onClick={confirmDelete}
             ></Button>
           </div>
         </div>
@@ -167,6 +203,6 @@ export default function ProjectDetail({
         <div className={styles.exitBtnLeftBar}></div>
         <div className={styles.exitBtnRightBar}></div>
       </div>
-    </animated.div>
+    </div>
   )
 }

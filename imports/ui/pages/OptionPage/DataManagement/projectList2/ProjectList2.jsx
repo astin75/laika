@@ -17,8 +17,8 @@ export default function ProjectList2() {
   const [IsThereAdmin, setIsThereAdmin] = useState(false)
 
   useEffect(() => {
-    if (user !== null) {
-      if (user.profile['rank'] === 'admin') {
+    if (user) {
+      if (user.profile.rank === 'admin') {
         setIsThereAdmin(true)
       }
     }
@@ -58,9 +58,9 @@ export default function ProjectList2() {
           <div className={styles.listContents}>
             <div className={styles.listContentsWrap}>
               {projectList
-                ? projectList.map((e) => (
+                ? projectList.map((e, idx) => (
                     <div key={e.projectId} className={styles.listContent}>
-                      <div>{e.projectId}</div>
+                      <div>{idx + 1}</div>
                       <div className={styles.projectName}>{e.projectName}</div>
                       <div className={styles.contentOptions}>
                         <Button

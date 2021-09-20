@@ -15,9 +15,6 @@ export default function AddImages(props) {
     let tempGroundTruthJson = { List: [] }
     let count = 0
     let RandValue = new Uint32Array(e.target.files.length)
-    const switchStyles = {
-      label: { fontSize: 13 },
-    }
     window.crypto.getRandomValues(RandValue)
     if (WithGroundTruthFlag) {
       for (count = 0; count < e.target.files.length; count++) {

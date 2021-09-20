@@ -4,6 +4,7 @@ import { imageInfoCollection } from 'imports/db/collections'
 import { gtInfoCollection } from 'imports/db/collections'
 import { projectCollection } from 'imports/db/collections'
 import Images from 'imports/db/files'
+import { chunk } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -15,7 +16,9 @@ import KeypointConfig from './KeypointConfig/KeypointConfig'
 import ProjectTitle from './ProjectTitle/ProjectTitle'
 // @ts-ignore
 import styles from './ProjectUpload.module.css'
-import StateList from './StateList/StateList'
+// import StateList from './StateList/StateList'
+
+const CHUNK_SIZE = 500
 
 export default function ProjectUpload() {
   const [projectName, setProjectName] = useState([{ masterProjectName: true, projectName: '' }])
@@ -35,11 +38,11 @@ export default function ProjectUpload() {
   const [isLoading, setIsLoading] = useState(false)
   const [progress, setProgress] = useState(0)
 
-  const step = 1
-  const interval = 100
-  const maxProgress = 100
+  // const step = 10
+  // const interval = 100
+  // const maxProgress = 100
 
-  const [progressPercentage, setProgressPercentage] = useState(1)
+  // const [progressPercentage, setProgressPercentage] = useState(0)
 
   const notifications = useNotifications()
   const showNotification = () =>
@@ -52,32 +55,23 @@ export default function ProjectUpload() {
     label: { fontSize: 13 },
   }
 
-  const insertImage = (file, count) => {
-    const upload = Images.insert(
-      {
-        file,
-        chunkSize: 'dynamic',
-      },
-      false
+  const insertImage = (file) => {
+    return new Promise((resolve) =>
+      setTimeout(() => {
+        const upload = Images.insert(
+          {
+            file,
+            chunkSize: 'dynamic',
+          },
+          false
+        )
+        upload.start()
+        resolve()
+      }, 0)
     )
-
-    upload.on('start', async function (error, fileObj) {
-      await setProgress(Math.floor((count / fileCount) * 100))
-    })
-
-    upload.on('end', async function (error, fileObj) {
-      //console.log('On end File Object: ', fileObj)
-    })
-
-    upload.on('uploaded', function (error, fileObj) {
-      //console.log('uploaded: ', fileObj)
-    })
-
-    upload.start()
   }
 
-  const onRegister = async (e) => {
-    e.preventDefault()
+  const onRegister = async () => {
     let RandValue = new Uint32Array(1)
     window.crypto.getRandomValues(RandValue)
 
@@ -88,22 +82,26 @@ export default function ProjectUpload() {
     let tempGroundTruthJson = [...GroundTruthJson.List]
     let unConfirmed = 0
     let percentage = 0
-    let count = 0
     try {
-      for (count = 0; count < fileCount; count++) {
-        percentage = (count / fileCount) * 100
-        console.log(percentage)
-        tempGroundTruthJson[count].projectID = RandValue[0]
-        tempGroundTruthJson[count].projectName = projectName[0].projectName
-        tempGroundTruthJson[count].masterProjectName = projectName[0].masterProjectName
-        tempImgFileInfo[count].projectID = RandValue[0]
-        tempImgFileInfo[count].projectName = projectName[0].projectName
-        tempImgFileInfo[count].masterProjectName = projectName[0].masterProjectName
-        imageInfoCollection.insert(tempImgFileInfo[count])
-        gtInfoCollection.insert(tempImgFileInfo[count])
-        await insertImage(RawImgList.rawFile[count], count)
-
-        await setProgress(percentage)
+      const imageFileArray = chunk(tempImgFileInfo, CHUNK_SIZE)
+      let imageIndex = 0
+      let chunkCount = 0
+      let innerCount = 0
+      for (; chunkCount < imageFileArray.length; chunkCount++) {
+        for (; innerCount < fileCount; innerCount++) {
+          percentage = (imageIndex / fileCount) * 100
+          tempGroundTruthJson[imageIndex].projectID = RandValue[0]
+          tempGroundTruthJson[imageIndex].projectName = projectName[0].projectName
+          tempGroundTruthJson[imageIndex].masterProjectName = projectName[0].masterProjectName
+          tempImgFileInfo[imageIndex].projectID = RandValue[0]
+          tempImgFileInfo[imageIndex].projectName = projectName[0].projectName
+          tempImgFileInfo[imageIndex].masterProjectName = projectName[0].masterProjectName
+          imageInfoCollection.insert(tempImgFileInfo[imageIndex])
+          gtInfoCollection.insert(tempImgFileInfo[imageIndex])
+          await insertImage(RawImgList.rawFile[imageIndex])
+          await setProgress(percentage)
+          imageIndex++
+        }
       }
 
       let tempProjectInfo = {
@@ -122,28 +120,37 @@ export default function ProjectUpload() {
         totalUnConfirmSize: unConfirmed,
       }
 
-      projectCollection.insert(tempProjectInfo)
+      await projectCollection.insert(tempProjectInfo)
       showNotification()
     } catch (e) {
       //seterrclass로 알려주기
     }
 
-    console.log('progress', progress, progress > 0 && progress < 100)
-    console.log('progress > 0 && progress < 100 &&')
+    // console.log('progress', progress, progress > 0 && progress < 100)
+    // console.log('progress > 0 && progress < 100 &&')
   }
-  useEffect(() => {
-    const updateProgress = () => setProgressPercentage(progressPercentage + step)
-    if (progressPercentage < maxProgress) {
-      setTimeout(updateProgress, interval)
-    }
-  }, [progressPercentage])
+
+  // useEffect(() => {
+  //   // const updateProgress = () => setProgressPercentage(progressPercentage + step)
+  //   if (progressPercentage > 0) {
+  //     if (progressPercentage < 100) {
+  //       setTimeout(() => {
+  //         console.log(count)
+  //         console.log(progressPercentage)
+  //         onRegister()
+  //         setProgressPercentage(progressPercentage + step)
+  //       }, 0)
+  //     }
+  //   }
+  // }, [progressPercentage])
 
   return (
     <>
-      {true && (
+      {isLoading && (
         <div className="styles.overlay">
+          <Overlay opacity={0.5} color="#000" zIndex={5} />
           <div className={styles.progress}>
-            <Progress value={progressPercentage} size="lg" />
+            <Progress value={progress} size="lg" />
           </div>
         </div>
       )}
@@ -212,7 +219,11 @@ export default function ProjectUpload() {
           <div>
             <Button
               className={styles.registerButton}
-              onClick={() => setProgressPercentage(0)}
+              onClick={async () => {
+                setIsLoading(true)
+                await onRegister()
+                setIsLoading(false)
+              }}
               type="submit"
               leftIcon={<i className="far fa-check-square"></i>}
             >

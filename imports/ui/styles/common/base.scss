@@ -156,11 +156,22 @@ input:disabled {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  height:100%;
 }
 
 header {
 
 }
+
+.branding {
+  position: absolute;
+  left: 2rem;
+  top: 2rem;
+
+  z-index: 9;
+  img{
+    width: 16rem;
+  }
 
 main {
   padding: unset;
@@ -169,15 +180,7 @@ main {
   overflow: hidden;
   position: relative;
 
-  .branding {
-    position: absolute;
-    left: 2rem;
-    top: 2rem;
-    
-    z-index: 9;
-    img{
-      width: 16rem;
-    }
+
   }
 
   .content {
@@ -185,9 +188,7 @@ main {
     display: flex;
     width: 100%;
     margin: 0 auto;
-    background: black;
     position: relative;
-    background-image: url("stacked-peaks-haikei.svg");
 
     .thumbnail {
       flex: 0 2 30rem;

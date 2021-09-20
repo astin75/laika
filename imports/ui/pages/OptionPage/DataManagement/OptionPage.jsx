@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import styles from './OptionPage.module.css'
 import { useTracker } from 'meteor/react-meteor-data'
-import ProjectUpload from './projectUpload/ProjectUpload'
+import React, { useEffect, useState } from 'react'
+
+import ProjectUpload from './ProjectUpload/ProjectUpload'
 
 export const OptionPage = () => {
   const user = useTracker(() => Meteor.user())
@@ -15,15 +15,11 @@ export const OptionPage = () => {
     }
   }, [user])
 
-  return (
-    <main className={styles.main}>
-      {IsThereAdmin ? (
-        <ProjectUpload />
-      ) : (
-        <a>
-          <img src={'lockDataManagement.png'} />
-        </a>
-      )}
-    </main>
+  return IsThereAdmin ? (
+    <ProjectUpload />
+  ) : (
+    <a>
+      <img src={'lockDataManagement.png'} />
+    </a>
   )
 }

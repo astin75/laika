@@ -1,0 +1,28 @@
+.container {
+    width: 750px;
+    height: 50%;
+    min-width: 350px;
+    min-height: 430px;
+    background-color: #ffffff;
+    padding: 20px;
+    box-sizing: border-box;
+
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.topMenu {
+    display: flex;
+    justify-content: right;
+}
+.topMenuButton{
+    margin-right: 1em;
+    margin-bottom: 1em;
+    transition-duration:1.5s;
+}
+
+.topMenuButton:hover{
+    color: whitesmoke;
+    box-shadow:150px 0 0 0 rgba(0,0,0,0.5) inset;
+}

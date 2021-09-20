@@ -1,18 +1,8 @@
-.main {
-    width: 100%;
-    height: 100vh;
-    background-color: #1b1b1b;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url("stacked-peaks-haikei.svg");
-}
-
 .container {
-    width: 50%;
-    height: 50%;
+    width: 750px;
+    height:auto;
     min-width: 350px;
-    min-height: 430px;
+    min-height: 600px;
     background-color: #ffffff;
     padding: 20px;
     box-sizing: border-box;
@@ -29,4 +19,20 @@
 .topMenuButton{
     margin-right: 1em;
     margin-bottom: 1em;
+    transition-duration:1.5s;
 }
+
+.topMenuButton:hover{
+    color: whitesmoke;
+    box-shadow:150px 0 0 0 rgba(0,0,0,0.5) inset;
+}
+
+.tableStyles{
+
+
+}
+
+.selectBTN{
+    width: 150px;
+}
+

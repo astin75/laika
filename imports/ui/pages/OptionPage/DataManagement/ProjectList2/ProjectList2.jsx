@@ -1,12 +1,12 @@
+import { Button, Highlight, Image, PasswordInput, Text, TextInput } from '@mantine/core'
+import { projectCollection } from 'imports/db/collections'
+import { Meteor } from 'meteor/meteor'
+import { useTracker } from 'meteor/react-meteor-data'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useTracker } from 'meteor/react-meteor-data'
-import styles from './ProjectList2.module.css'
-import { Meteor } from 'meteor/meteor'
-import { projectCollection } from 'imports/db/collections'
 
-import { TextInput, Button, PasswordInput, Image, Text, Highlight } from '@mantine/core'
 import NavigationBar from '../../../../components/NavigationBar/NavigationBar'
+import styles from './ProjectList2.module.css'
 
 export default function ProjectList2() {
   const user = useTracker(() => Meteor.user())
@@ -19,20 +19,19 @@ export default function ProjectList2() {
   }
 
   useEffect(() => {
-    if (user !== undefined) {
-      if (user.profile['rank'] === 'admin') {
-        setIsThereAdmin(true)
-      }
+    if (user?.profile?.rank === 'admin') {
+      setIsThereAdmin(true)
     }
   }, [user])
+
   return (
-    <main className={styles.main}>
+    <>
       <div className={styles.container}>
         <div className={styles.topMenu}>
           <Button
             className={styles.topMenuButton}
             variant="gradient"
-            gradient={{ from: 'indigo', to: 'cyan' }}
+            gradient={{ from: 'teal', to: 'lime', deg: 105 }}
             component={Link}
             to="/projectManagementPage"
           >
@@ -43,7 +42,7 @@ export default function ProjectList2() {
             variant="gradient"
             gradient={{ from: 'grape', to: 'pink', deg: 35 }}
             component={Link}
-            to="/projectManagementPage"
+            to="/userControlPage"
           >
             계정 관리
           </Button>
@@ -94,6 +93,6 @@ export default function ProjectList2() {
         </table>
       </div>
       <NavigationBar />
-    </main>
+    </>
   )
 }

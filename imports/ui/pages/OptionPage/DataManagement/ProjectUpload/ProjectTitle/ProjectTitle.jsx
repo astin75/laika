@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useRef, createRef } from 'react'
-import { Button, Grid, Col, TextInput, Switch, Select } from '@mantine/core'
-import styles from './ProjectTitle.module.css'
+import { Button, Col, Grid, Select, Switch, TextInput } from '@mantine/core'
 import { projectCollection } from 'imports/db/collections'
 import { useTracker } from 'meteor/react-meteor-data'
+import React, { createRef, useEffect, useRef, useState } from 'react'
+
+import styles from './ProjectTitle.module.css'
 
 export default function ProjectTitle({ projectName, setProjectName }) {
   const projectList = useTracker(() => projectCollection.find({}).fetch())
   const [DBFlag, setDBFlag] = useState(true)
   const [tempProjectList, setTempProjectList] = useState([])
   const [tempMasterName, setTempMasterName] = useState('')
-  const [IsMaster, setIsMaster] = useState(true)
+  const [isMaster, setIsMaster] = useState(true)
   const [errName, setErrName] = useState('')
   const switchStyles = {
     label: { fontSize: 13 },
@@ -63,19 +64,17 @@ export default function ProjectTitle({ projectName, setProjectName }) {
           className={styles.masterSwitch}
           label="Is Master"
           styles={switchStyles}
-          checked={IsMaster}
+          checked={isMaster}
           onChange={(event) => MasterName(event)}
         ></Switch>
       </Col>
       <Col span={3}>
-        {IsMaster === false ? (
+        {!isMaster && (
           <Select
             className={styles.masterSelect}
             data={tempProjectList}
             onChange={(event) => setTempMasterName(event)}
           />
-        ) : (
-          <></>
         )}
       </Col>
     </Grid>

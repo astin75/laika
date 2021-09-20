@@ -4,12 +4,12 @@
 
 .masterSwitch{
     display: flex;
-
     height: 80px;
 }
 
 .masterSelect{
     display: flex;
     justify-content: center;
+    align-items:center;
     height: 80px;
 }

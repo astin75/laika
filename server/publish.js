@@ -2,6 +2,7 @@ import { tasksCollection } from 'imports/db/collections'
 import { imageInfoCollection } from 'imports/db/collections'
 import { gtInfoCollection } from 'imports/db/collections'
 import { projectCollection } from 'imports/db/collections'
+import { userProfileCollection } from 'imports/db/collections'
 import Images from 'imports/db/files'
 import { Meteor } from 'meteor/meteor'
 
@@ -39,7 +40,7 @@ projectCollection.allow({
   },
 })
 
-Meteor.users.allow({
+userProfileCollection.allow({
   insert() {
     return true
   },
@@ -62,6 +63,10 @@ Meteor.publish('projectCollection', function () {
 })
 
 Meteor.publish('files.images.all', function () {
+  return Images.find().cursor
+})
+
+Meteor.publish('userProfileCollection', function () {
   return Images.find().cursor
 })
 

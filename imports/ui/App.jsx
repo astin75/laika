@@ -15,6 +15,7 @@ import ProjectList2 from 'ui/pages/OptionPage/DataManagement/ProjectList2/Projec
 import ProjectUpload from 'ui/pages/OptionPage/DataManagement/ProjectUpload/ProjectUpload'
 import UserControl from 'ui/pages/OptionPage/DataManagement/UserControl/UserControl'
 import LabelingPage from 'ui/pages/OptionPage/LabelingPage/LabelingPage'
+import RoadMap from 'ui/pages/RoadMap/RoadMap'
 
 const App = () => {
   const underMinSize = useMediaQuery('(max-width: 1024px)')
@@ -32,6 +33,7 @@ const App = () => {
             <Route path="/projectListPage" component={ProjectList2} />
             <Route path="/projectManagementPage" component={ProjectUpload} />
             <Route path="/userControlPage" component={UserControl} />
+            <Route path="/RoadMap" component={RoadMap} />
           </Switch>
         </DefaultLayout>
       </Route>

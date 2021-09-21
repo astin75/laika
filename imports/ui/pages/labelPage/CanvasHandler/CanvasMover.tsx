@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { IPoint } from '../../../../../canvasTools/IPoint';
+import { IPoint } from '../../../../canvasTools/IPoint';
 import {
   canvasView,
   canvasViewDispatcherState,
-} from '../../../../../recoil/canvas';
+} from '../../../../recoil/canvas';
 import Canvas from '../Canvas';
 import { ICanvasHandlerProps } from './ICanvasHandler';
 

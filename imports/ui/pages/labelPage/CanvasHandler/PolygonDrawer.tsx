@@ -5,23 +5,20 @@ import {
   getNormOfPoint,
   IPoint,
   transformCanvasPointToImagePoint,
-} from '../../../../../canvasTools/IPoint';
-import {
-  appendPointToPolygon,
-  movePolygonVertex,
-} from '../../../../../canvasTools/IPolygon';
+} from '../../../../canvasTools/IPoint';
+import { appendPointToPolygon, movePolygonVertex } from '../../../../canvasTools/IPolygon';
 import {
   findNearestKeyPoint,
   findNearestPoint,
   IVertexInfo,
-} from '../../../../../canvasTools/IRegionData';
+} from '../../../../canvasTools/IRegionData';
 import {
   annotationDispatcherState,
   currentAnnotations,
   IAnnotation,
   selectionIdx,
-} from '../../../../../recoil/annotation';
-import { canvasView } from '../../../../../recoil/canvas';
+} from '../../../../recoil/annotation';
+import { canvasView } from '../../../../recoil/canvas';
 import Canvas from '../Canvas';
 import { ICanvasHandlerProps } from './ICanvasHandler';
 
@@ -45,9 +42,7 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
 
     switch (state) {
       case 'idle': {
-        const updateAnnotation: IAnnotation = _.cloneDeep(
-          annotations[selection]
-        );
+        const updateAnnotation: IAnnotation = _.cloneDeep(annotations[selection]);
         updateAnnotation.regions.polygon = appendPointToPolygon(
           updateAnnotation.regions.polygon,
           transformed

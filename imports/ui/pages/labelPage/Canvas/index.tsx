@@ -1,6 +1,6 @@
-import { drawRegionOnCanvas } from '../../../../../canvasTools/IRegionData';
-import { currentAnnotations } from '../../../../../recoil/annotation';
-import { canvasView } from '../../../../../recoil/canvas';
+import { drawRegionOnCanvas } from '../../../../canvasTools/IRegionData';
+import { currentAnnotations } from '../../../../recoil/annotation';
+import { canvasView } from '../../../../recoil/canvas';
 // import {
 //   categoryDispatcher,
 //   categoryDispatcherState,
@@ -9,9 +9,9 @@ import { canvasView } from '../../../../../recoil/canvas';
 // @ts-ignore
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { getRandomHexColor } from '../../../../../common/utils';
-import { drawRectOnCanvas } from '../../../../../canvasTools/IRect';
-import { drawPolygonOnCanvas } from '../../../../../canvasTools/IPolygon';
+import { getRandomHexColor } from '../../../../common/utils';
+import { drawRectOnCanvas } from '../../../../canvasTools/IRect';
+import { drawPolygonOnCanvas } from '../../../../canvasTools/IPolygon';
 
 interface ICanvasProps {
   frame: HTMLImageElement | undefined;

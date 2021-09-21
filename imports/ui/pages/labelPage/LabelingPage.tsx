@@ -12,7 +12,8 @@ import {
   AnnotationDispatcher,
   annotationDispatcherState,
   createAnnotationDispatcher,
-} from '../../../../recoil/annotation';
+} from '../../../recoil/annotation';
+
 
 export default function LabelingPage() {
   // TODO: DB에서 이미지 꺼내와야 함

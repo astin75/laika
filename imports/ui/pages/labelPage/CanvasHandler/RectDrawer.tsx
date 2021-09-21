@@ -2,20 +2,20 @@ import {
   getNormOfPoint,
   IPoint,
   transformCanvasPointToImagePoint,
-} from '../../../../../canvasTools/IPoint';
+} from '../../../../canvasTools/IPoint';
 import {
   isPointInRect,
   makeRectRegion,
   moveBoundingPointOfRect,
-} from '../../../../../canvasTools/IRect';
+} from '../../../../canvasTools/IRect';
 import Canvas from '../Canvas';
 import {
   annotationDispatcherState,
   currentAnnotations,
   IAnnotation,
   selectionIdx,
-} from '../../../../../recoil/annotation';
-import { canvasView } from '../../../../../recoil/canvas';
+} from '../../../../recoil/annotation';
+import { canvasView } from '../../../../recoil/canvas';
 import _ from 'lodash';
 import React, { useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -25,7 +25,7 @@ import {
   findNearestBoundingPoint,
   findNearestPoint,
   IVertexInfo,
-} from '../../../../../canvasTools/IRegionData';
+} from '../../../../canvasTools/IRegionData';
 
 type HandlerState =
   | 'idle'

@@ -1,12 +1,12 @@
 // @ts-ignore
 import React, { useEffect, useRef } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { IPoint } from '../../../../../canvasTools/IPoint';
+import { IPoint } from '../../../../canvasTools/IPoint';
 import {
   CanvasViewDispatcher,
   canvasViewDispatcherState,
   createCanvasViewDispatcher,
-} from '../../../../../recoil/canvas';
+} from '../../../../recoil/canvas';
 import CanvasMover from '../CanvasHandler/CanvasMover';
 import PolygonDrawer from '../CanvasHandler/PolygonDrawer';
 import RectDrawer from '../CanvasHandler/RectDrawer';

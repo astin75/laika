@@ -5,7 +5,7 @@ import {
   annotationDispatcherState,
   currentAnnotations,
   selectionIdx,
-} from '../../../../../recoil/annotation';
+} from '../../../../recoil/annotation';
 import { EditorMode } from '../Editor';
 import classNames from 'classnames';
 

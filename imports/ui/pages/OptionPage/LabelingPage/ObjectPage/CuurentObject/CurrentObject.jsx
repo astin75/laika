@@ -4,13 +4,14 @@ import CurrentObjectOptions from './CurrentObjectOptions/CurrentObjectOptions'
 import CurrentObjectInfor from './CurrentObjectInfor/CurrentObjectInfor'
 
 export default function CurrentObject({ currentObject, currentProjectInfo }) {
+  // console.log(currentObject.objectId);
   return (
     <div className={styles.pageWrap}>
       <div className={styles.selectedObject}>
-        Selected Object
-        {currentObject ? `[Object ${currentObject.objectNo}]` : ''}
+        {/* Selected Object */}
+        {currentObject ? `[Object ${currentObject.objectId}]` : ''}
       </div>
-      <CurrentObjectOptions currentProjectInfo={currentProjectInfo} />
+      {currentProjectInfo ? <CurrentObjectOptions currentProjectInfo={currentProjectInfo} /> : ''}
       {currentObject ? (
         <CurrentObjectInfor currentObject={currentObject} currentProjectInfo={currentProjectInfo} />
       ) : (

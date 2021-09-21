@@ -4,11 +4,12 @@ import React, { useState } from 'react'
 
 export default function CurrentObjectOptions({ currentProjectInfo }) {
   const [currentDrawOption, setCurrentDrawOption] = useState('')
-  if (currentProjectInfo !== null) console.log('test', currentProjectInfo.polygon)
+  // if (currentProjectInfo !== null)
+  //   console.log("test", currentProjectInfo.polygon);
 
   return (
     <div className={styles.currentObjectOptionsWrap}>
-      {currentProjectInfo !== null && currentProjectInfo.bbox.List.length > 0 ? (
+      {currentProjectInfo !== null && currentProjectInfo.bbox.length > 0 ? (
         <Icon
           icon="akar-icons:square"
           style={{
@@ -23,7 +24,7 @@ export default function CurrentObjectOptions({ currentProjectInfo }) {
       ) : (
         ''
       )}
-      {currentProjectInfo !== null && currentProjectInfo.keypoint.List.length > 0 ? (
+      {currentProjectInfo !== null && currentProjectInfo.keypoint.length > 0 ? (
         <Icon
           icon="akar-icons:dot-grid"
           style={{

@@ -21,10 +21,11 @@ export default function LabelingPage() {
   const imageList = useTracker(() => imageInfoCollection.find({}).fetch())
 
   const [currentProjectInfo, setCurrentProjectInfo] = useState(null)
+  const [currentImagesInfo, setCurrentImagesInfo] = useState(null)
   const [currentImageInfo, setCurrentImageInfo] = useState(null)
   const [currentGtInfo, setCurrentGtInfo] = useState(null)
 
-  // console.log("gt", gtinfor);
+  // console.log(projectList)
 
   useEffect(() => {
     if (projectList.length !== 0) {
@@ -36,13 +37,13 @@ export default function LabelingPage() {
 
   useEffect(() => {
     if (currentProjectInfo !== null) {
-      let currentImageInfoTmp
-      currentImageInfoTmp = imageList.filter((e) => e.projectName === query.projectName)
-      if (currentImageInfo === null) setCurrentImageInfo(currentImageInfoTmp)
+      let currentImagesInfoTmp
+      currentImagesInfoTmp = imageList.filter((e) => e.projectName === query.projectName)
+      if (currentImagesInfo === null) setCurrentImagesInfo(currentImagesInfoTmp)
 
       let currentGtInfoTmp
       currentGtInfoTmp = gtinfor.filter((e) => e.projectName === query.projectName)
-      if (currentGtInfo === null) setCurrentGtInfo(currentImageInfoTmp)
+      if (currentGtInfo === null) setCurrentGtInfo(currentImagesInfoTmp)
     }
   }, [currentProjectInfo])
 
@@ -50,9 +51,12 @@ export default function LabelingPage() {
     <div className={styles.main}>
       <HeaderPage />
       <div className={styles.contents}>
-        <ImageFilesPage currentImageInfo={currentImageInfo} />
+        <ImageFilesPage
+          currentImagesInfo={currentImagesInfo}
+          setCurrentImageInfo={setCurrentImageInfo}
+        />
         <CanvasPage />
-        <ObjectPage currentProjectInfo={currentProjectInfo} />
+        <ObjectPage currentProjectInfo={currentProjectInfo} currentImageInfo={currentImageInfo} />
       </div>
     </div>
   )

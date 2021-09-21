@@ -1,34 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import styles from './ObjectOptions.module.css'
 
-import objectForm from '../ObjectPage'
+import { imageInfoCollection } from 'imports/db/collections'
+import { gtInfoCollection } from 'imports/db/collections'
 
-function AddObject({ setObjects }) {
+function AddObject({ currentImageInfo }) {
   const [objectNo, setObjectNo] = useState(0)
   const addObjectFunc = () => {
-    setObjects((pre) => [
-      ...pre,
-      {
-        bBox: [0, 0, 0, 0], // xmin, ymin, w, h
-        keyPoint: [
-          [0, 0, 0],
-          [0, 0, 0],
-          [0, 0, 0],
-          [0, 0, 0],
-        ], // [x,y,v]
-        polygon: [
-          [0, 0],
-          [0, 0],
-          [0, 0],
-          [0, 0],
-          [0, 0],
-        ], // [x,y],[x,y],[x,y] ...
-        state1: '',
-        state2: '',
-        objectTracking: 0,
-        objectNo: objectNo,
-      },
-    ])
+    const RandValue = new Uint32Array(1)
+    window.crypto.getRandomValues(RandValue)
+
+    const tempObjectInfo = {
+      projectName: false,
+      masterProjectName: false,
+      projectId: false,
+      bbox: [],
+      keypoint: [],
+      stateList: [],
+      polygon: [],
+      objectId: false,
+      ImgFileId: RandValue[0],
+      ImgFileName: currentImageInfo.fileName,
+    }
+
+    imageInfoCollection.update({ _id: currentImageInfo._id }, { $push: { object: tempObjectInfo } })
+
     setObjectNo((pre) => pre + 1)
   }
 
@@ -58,10 +54,10 @@ function CancleObject() {
   )
 }
 
-export default function ObjectOptions({ setObjects }) {
+export default function ObjectOptions({ currentImageInfo }) {
   return (
     <div className={styles.pageWrap}>
-      <AddObject setObjects={setObjects} />
+      <AddObject currentImageInfo={currentImageInfo} />
       <div style={{ display: 'flex', gap: '10px' }}>
         <ConfirmObject />
         <CancleObject />

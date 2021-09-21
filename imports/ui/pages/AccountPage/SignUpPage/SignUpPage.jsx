@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import { Button, Highlight, Image, PasswordInput, Text, TextInput } from '@mantine/core'
+import { useNotifications } from '@mantine/notifications'
+import { userProfileCollection } from 'imports/db'
 import { Accounts } from 'meteor/accounts-base'
-import styles from './SignUpPage.module.css'
+import React, { useState } from 'react'
 
-import { TextInput, Button, PasswordInput, Image, Text, Highlight } from '@mantine/core'
+import styles from './SignUpPage.module.css'
 
 export default function SignUpPage({ setIsThereAccount }) {
   const [userID, setUserID] = useState('')
@@ -12,10 +14,27 @@ export default function SignUpPage({ setIsThereAccount }) {
   const [errPW1, setErrPW1] = useState('')
   const [errPW2, setErrPW2] = useState('')
 
+  const notifications = useNotifications()
+  const showNotification = (msg, color) =>
+    notifications.showNotification({
+      title: '',
+      message: msg,
+      color: color,
+    })
+
   const signUpProcess = () => {
     const handleError = (err) => {
       if (err) {
+        setIsThereAccount(false)
+        showNotification('중복된 아이디가 있습니다.! 🤥', 'red')
+        return
       } else {
+        showNotification('환영합니다.! 🤥', 'teal')
+        let tempProjectInfo = {
+          userName: userID,
+          rank: 'admin',
+        }
+        userProfileCollection.insert(tempProjectInfo)
       }
     }
 
@@ -42,14 +61,11 @@ export default function SignUpPage({ setIsThereAccount }) {
         {
           username: userID,
           password: userPW,
-          profile: {
-            rank: 'admin',
-          },
         },
         handleError
       )
     } else {
-      props.mode('signUp')
+      setIsThereAccount(true)
     }
   }
 

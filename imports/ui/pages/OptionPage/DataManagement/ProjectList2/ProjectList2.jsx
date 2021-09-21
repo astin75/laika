@@ -18,9 +18,10 @@ export default function ProjectList2() {
 
   useEffect(() => {
     if (user) {
-      if (user.profile.rank === 'admin') {
-        setIsThereAdmin(true)
-      }
+      console.log('test', user)
+      // if (user.profile.rank === 'admin') {
+      //   setIsThereAdmin(true)
+      // }
     }
   }, [user])
 

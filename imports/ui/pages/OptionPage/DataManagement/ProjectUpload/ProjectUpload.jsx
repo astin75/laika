@@ -16,7 +16,6 @@ import KeypointConfig from './KeypointConfig/KeypointConfig'
 import ProjectTitle from './ProjectTitle/ProjectTitle'
 // @ts-ignore
 import styles from './ProjectUpload.module.css'
-// import StateList from './StateList/StateList'
 
 const CHUNK_SIZE = 500
 

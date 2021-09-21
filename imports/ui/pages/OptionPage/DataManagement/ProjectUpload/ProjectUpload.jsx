@@ -96,7 +96,7 @@ export default function ProjectUpload() {
           tempImgFileInfo[imageIndex].projectName = projectName[0].projectName
           tempImgFileInfo[imageIndex].masterProjectName = projectName[0].masterProjectName
           imageInfoCollection.insert(tempImgFileInfo[imageIndex])
-          gtInfoCollection.insert(tempImgFileInfo[imageIndex])
+          gtInfoCollection.insert(tempGroundTruthJson[imageIndex])
           await insertImage(RawImgList.rawFile[imageIndex])
           await setProgress(percentage)
           imageIndex++

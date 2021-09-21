@@ -28,6 +28,12 @@ export default function ProjectTitle({ projectName, setProjectName }) {
       setErrName('4자 이상 입력해주세요.')
       return
     }
+
+    if (!projectCollection.findOne({ projectName: e.target.value })) {
+      setErrName('동일한 일반 프로젝트 명이 있습니다.')
+      return
+    }
+
     setErrName('')
     setProjectName([
       {

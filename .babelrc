@@ -3,7 +3,13 @@
     [
       "module-resolver",
       {
-        "root": ["./"]
+        "root": ["./"],
+        "alias":{
+          "imports":"./imports",
+          "ui":"./imports/ui",
+          "db":"./imports/db",
+          "api":"./imports/api"
+        }
       }
     ]
   ]

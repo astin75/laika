@@ -8,17 +8,6 @@ import { DateRangePicker } from '@mantine/dates'
 import { Meteor } from 'meteor/meteor'
 import { useTracker } from 'meteor/react-meteor-data'
 import { projectCollection } from 'imports/db/collections'
-// import { projectCollection } from 'imports/db/collections'
-
-const data = [
-  { value: 'react', label: 'React' },
-  { value: 'ng', label: 'Angular' },
-  { value: 'svelte', label: 'Svelte' },
-  { value: 'vue', label: 'Vue' },
-  { value: 'riot', label: 'Riot' },
-  { value: 'next', label: 'Next.js' },
-  { value: 'blitz', label: 'Blitz.js' },
-]
 
 const useConfirm = (message = '', onConfirm, onCancel) => {
   if (!onConfirm || typeof onConfirm !== 'function') {
@@ -50,6 +39,8 @@ export default function ProjectDetail({
 
   const userData = ['peter1', 'peter3']
   const [selectedUsers, setSelectedUsers] = useState([])
+
+  // console.log(projectList)
   if (user) {
     user.map((e) => userData.push(e.username))
   }
@@ -76,6 +67,8 @@ export default function ProjectDetail({
         },
       }
     )
+    setSelectedProject(null)
+    setToggleCurrentProjectDetail(false)
   }
 
   const deleteProject = () => {

@@ -1,8 +1,9 @@
-import React from 'react'
-import styles from './NavigationBar.module.css'
-import { Link } from 'react-router-dom'
 import { Button } from '@mantine/core'
 import { Meteor } from 'meteor/meteor'
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+import styles from './NavigationBar.module.css'
 
 export default function NavigationBar() {
   const buttonStyles = { root: { marginRight: 12 } }
@@ -27,7 +28,7 @@ export default function NavigationBar() {
           className={styles.linkStyles}
           component={Link}
           onClick={logout}
-          to="/projectListPage"
+          to="/accountPage"
           size={'compact-xs'}
           radius={10}
           styles={buttonStyles}
@@ -40,7 +41,7 @@ export default function NavigationBar() {
         <Button
           className={styles.linkStyles}
           component={Link}
-          to="/accountPage"
+          to="/projectListPage"
           size={'compact-xs'}
           radius={10}
           styles={buttonStyles}

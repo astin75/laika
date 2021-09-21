@@ -2,7 +2,7 @@
   "name": "sample-meteor-react",
   "private": true,
   "scripts": {
-    "start": "meteor run",
+    "start": "export NODE_OPTIONS=--max_old_space_size=4096 && meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer",
@@ -19,6 +19,7 @@
     "babel-eslint": "^10.1.0",
     "bcrypt": "^5.0.1",
     "dayjs": "^1.10.7",
+    "lodash": "^4.17.21",
     "meteor-node-stubs": "^1.0.1",
     "moment": "^2.29.1",
     "postcss": "^8.3.6",
@@ -50,12 +51,14 @@
   },
   "devDependencies": {
     "@iconify/react": "^3.0.1",
+    "babel-eslint": "^10.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
+    "clsx": "^1.1.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-prettier": "^3.4.1",
-    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react": "^7.25.2",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "prettier": "^2.4.1"
   }

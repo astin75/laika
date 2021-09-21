@@ -1,0 +1,11 @@
+.fileUpload{
+  display: flex;
+  align-items:center;
+  position:relative;
+
+}
+
+.fileLabel{
+  top: 50%;
+  transform:translateY(-50%);
+} 

@@ -1,4 +1,5 @@
 import { Button, Select, Table } from '@mantine/core'
+import { userProfileCollection } from 'imports/db/collections'
 import { Meteor } from 'meteor/meteor'
 import { useTracker } from 'meteor/react-meteor-data'
 import React, { useState } from 'react'
@@ -9,8 +10,8 @@ import NavigationBar from 'ui/components/NavigationBar/NavigationBar'
 import styles from './UserControl.module.css'
 
 export default function UserControl() {
-  const userList = useTracker(() => Meteor.users.find({}).fetch())
-  console.log(userList)
+  const userList = useTracker(() => userProfileCollection.find({}).fetch())
+  console.log(userList, 'e')
 
   const [rank, setRank] = useState('')
   const rankOption = [
@@ -21,16 +22,13 @@ export default function UserControl() {
 
   const onRankChange = (userName) => {
     if (rank) {
-      let oops = Meteor.users.findOne({ username: userName })
-      Meteor.users.update(oops._id, { $set: { profile: { rank } } })
+      let oops = userProfileCollection.findOne({ userName: userName })
+      userProfileCollection.update(oops._id, { $set: { rank: rank } })
     }
   }
 
   const onDelete = (userName) => {
-    console.log(userName)
-
-    let oops = Meteor.users.findOne({ username: userName })
-    console.log(oops, 'aa')
+    let oops = Meteor.users.findOne({ userName: userName })
     Meteor.users.remove(oops._id)
   }
 
@@ -74,12 +72,12 @@ export default function UserControl() {
             userList.map((user, idx) => (
               <tr key={user._id}>
                 <td>{idx + 1}</td>
-                <td>{user.username}</td>
+                <td>{user.userName}</td>
                 <td>
                   <Select
                     onChange={(rankOption) => handleChange(rankOption)}
                     className={styles.selectBTN}
-                    defaultValue={user.profile.rank}
+                    defaultValue={user.rank}
                     data={rankOption}
                   />
                 </td>
@@ -87,12 +85,17 @@ export default function UserControl() {
                   <Button
                     color="teal"
                     size="compact-sm"
-                    onClick={() => onRankChange(user.username)}
+                    onClick={() => onRankChange(user.userName)}
                   >
                     적용
                   </Button>
                   &nbsp; / &nbsp;
-                  <Button color="red" size="compact-sm" onClick={() => onDelete(user.username)}>
+                  <Button
+                    disabled={true}
+                    color="red"
+                    size="compact-sm"
+                    onClick={() => onDelete(user.userName)}
+                  >
                     삭제
                   </Button>
                 </td>

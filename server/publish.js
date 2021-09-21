@@ -62,11 +62,11 @@ Meteor.publish('projectCollection', function () {
   return projectCollection.find()
 })
 
-Meteor.publish('files.images.all', function () {
-  return Images.find().cursor
+Meteor.publish('userProfileCollection', function () {
+  return userProfileCollection.find()
 })
 
-Meteor.publish('userProfileCollection', function () {
+Meteor.publish('files.images.all', function () {
   return Images.find().cursor
 })
 

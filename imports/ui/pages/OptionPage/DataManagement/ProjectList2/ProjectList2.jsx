@@ -1,5 +1,6 @@
 import { Button, Highlight, Image, PasswordInput, Text, TextInput } from '@mantine/core'
 import { projectCollection } from 'imports/db/collections'
+import { userProfileCollection } from 'imports/db/collections'
 import { Meteor } from 'meteor/meteor'
 import { useTracker } from 'meteor/react-meteor-data'
 import React, { useEffect, useState } from 'react'
@@ -11,6 +12,7 @@ import styles from './ProjectList2.module.css'
 export default function ProjectList2() {
   const user = useTracker(() => Meteor.user())
   const projectList = useTracker(() => projectCollection.find({}).fetch())
+  const userList = useTracker(() => userProfileCollection.find({}).fetch())
   const [IsThereAdmin, setIsThereAdmin] = useState(false)
 
   const onDelete = (project) => {
@@ -19,8 +21,14 @@ export default function ProjectList2() {
   }
 
   useEffect(() => {
-    if (user?.profile?.rank === 'admin') {
-      setIsThereAdmin(true)
+    let id = user?.username
+    let i
+    if (id && IsThereAdmin === false) {
+      for (i = 0; i < userList.length; i++) {
+        if (id === userList[i].userName && userList[i].rank === 'admin') {
+          setIsThereAdmin(true)
+        }
+      }
     }
   }, [user])
 

@@ -1,7 +1,7 @@
 import { useTracker } from 'meteor/react-meteor-data'
 import React, { useEffect, useState } from 'react'
 
-import ProjectUpload from './ProjectUpload/ProjectUpload'
+import ProjectUpload from './projectUpload/ProjectUpload'
 
 export const OptionPage = () => {
   const user = useTracker(() => Meteor.user())

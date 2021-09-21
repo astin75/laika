@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './ProjectDetail.module.css'
 import dayjs from 'dayjs'
-import { Button, MultiSelect, Progress } from '@mantine/core'
+import { Button, MultiSelect, Progress, Mark } from '@mantine/core'
 import { DateRangePicker } from '@mantine/dates'
 
 import { Meteor } from 'meteor/meteor'
 import { useTracker } from 'meteor/react-meteor-data'
 import { projectCollection } from 'imports/db/collections'
+import { userProfileCollection } from 'imports/db/collections'
 
 const useConfirm = (message = '', onConfirm, onCancel) => {
   if (!onConfirm || typeof onConfirm !== 'function') {
@@ -36,13 +37,17 @@ export default function ProjectDetail({
   const user = useTracker(() => Meteor.users.find({}).fetch())
   const [value, setValue] = useState([[], []])
   const projectList = useTracker(() => projectCollection.find({}).fetch())
+  const userList = useTracker(() => userProfileCollection.find({}).fetch())
 
-  const userData = ['peter1', 'peter3']
+  console.log('user', projectList)
+  const userData = []
   const [selectedUsers, setSelectedUsers] = useState([])
+  const [progressValue, setProgressValue] = useState(0)
 
-  // console.log(projectList)
-  if (user) {
-    user.map((e) => userData.push(e.username))
+  if (userList) {
+    userList.map((e) => {
+      userData.push(e.userName)
+    })
   }
 
   const updateProjectDetail = () => {
@@ -95,9 +100,7 @@ export default function ProjectDetail({
       }}
       className={styles.container}
     >
-      <div className={styles.top}>
-        <img src={'GameLogo.png'}></img>
-      </div>
+      <div className={styles.top}></div>
       {selectedProject ? (
         <div className={styles.bottom}>
           <div className={styles.selectedObjects}>
@@ -124,23 +127,12 @@ export default function ProjectDetail({
             )}
           </div>
           <div className={styles.projectDetails}>
-            <div className={styles.detailTitle}>Project Name </div>
-            <div>{selectedProject.projectName} </div>
+            <div className={styles.detailTitle}>Project Name</div>
+            <div>{selectedProject.projectName}</div>
           </div>
           <div className={styles.projectDetails}>
             <div className={styles.detailTitle}>Project Schedule </div>
             <DateRangePicker placeholder="Pick dates range" value={value} onChange={setValue} />
-          </div>
-          <div className={styles.projectDetails}>
-            <div className={styles.detailTitle}>Project Progress</div>
-            <Progress
-              value={
-                ((selectedProject.totalFileSize.length -
-                  (selectedProject.totalFileSize.length - selectedProject.totalUnConfirmSize)) /
-                  selectedProject.totalFileSize.length) *
-                100
-              }
-            />
           </div>
           <div className={styles.projectDetails}>
             <div className={styles.detailTitle}>Project Member </div>
@@ -154,6 +146,19 @@ export default function ProjectDetail({
               ''
             )}
           </div>
+
+          <div className={styles.projectDetails}>
+            <div className={styles.detailTitle}>Project Progress</div>
+            <Progress
+              value={
+                ((selectedProject.totalFileSize.length -
+                  (selectedProject.totalFileSize.length - selectedProject.totalUnConfirmSize)) /
+                  selectedProject.totalFileSize.length) *
+                100
+              }
+            />
+          </div>
+
           <div className={styles.projectOptions}>
             <Button
               variant="link"

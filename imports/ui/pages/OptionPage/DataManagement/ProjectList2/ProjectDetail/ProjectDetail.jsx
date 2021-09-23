@@ -1,31 +1,31 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import styles from './ProjectDetail.module.css'
-import dayjs from 'dayjs'
-import { Button, MultiSelect, Progress, Mark } from '@mantine/core'
-import { DateRangePicker } from '@mantine/dates'
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import styles from './ProjectDetail.module.css';
+import dayjs from 'dayjs';
+import { Button, MultiSelect, Progress, Mark } from '@mantine/core';
+import { DateRangePicker } from '@mantine/dates';
 
-import { Meteor } from 'meteor/meteor'
-import { useTracker } from 'meteor/react-meteor-data'
-import { projectCollection } from 'imports/db/collections'
-import { userProfileCollection } from 'imports/db/collections'
+import { Meteor } from 'meteor/meteor';
+import { useTracker } from 'meteor/react-meteor-data';
+import { projectCollection } from 'imports/db/collections';
+import { userProfileCollection } from 'imports/db/collections';
 
 const useConfirm = (message = '', onConfirm, onCancel) => {
   if (!onConfirm || typeof onConfirm !== 'function') {
-    return
+    return;
   }
   if (onCancel && typeof onCancel !== 'function') {
-    return
+    return;
   }
   const confirmAction = () => {
     if (window.confirm(message)) {
-      onConfirm()
+      onConfirm();
     } else {
-      onCancel()
+      onCancel();
     }
-  }
-  return confirmAction
-}
+  };
+  return confirmAction;
+};
 
 export default function ProjectDetail({
   selectedProject,
@@ -34,32 +34,31 @@ export default function ProjectDetail({
   setToggleCurrentProjectDetail,
 }) {
   // console.log(selectedProject);
-  const user = useTracker(() => Meteor.users.find({}).fetch())
-  const [value, setValue] = useState([[], []])
-  const projectList = useTracker(() => projectCollection.find({}).fetch())
-  const userList = useTracker(() => userProfileCollection.find({}).fetch())
+  const user = useTracker(() => Meteor.users.find({}).fetch());
+  const [value, setValue] = useState([[], []]);
+  const projectList = useTracker(() => projectCollection.find({}).fetch());
+  const userList = useTracker(() => userProfileCollection.find({}).fetch());
 
-  console.log('user', projectList)
-  const userData = []
-  const [selectedUsers, setSelectedUsers] = useState([])
-  const [progressValue, setProgressValue] = useState(0)
+  const userData = [];
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [progressValue, setProgressValue] = useState(0);
 
   if (userList) {
     userList.map((e) => {
-      userData.push(e.userName)
-    })
+      userData.push(e.userName);
+    });
   }
 
   const updateProjectDetail = () => {
     if (value[0] === null || value[1] === null) {
-      alert('프로젝트 일정이 선택되지 않았습니다')
-      return
+      alert('프로젝트 일정이 선택되지 않았습니다');
+      return;
     } else if (value[0].length === 0 || value[1].length === 0) {
-      alert('프로젝트 일정이 선택되지 않았습니다')
-      return
+      alert('프로젝트 일정이 선택되지 않았습니다');
+      return;
     } else if (selectedUsers.length === 0) {
-      alert('작업자를 지정하지 않았습니다')
-      return
+      alert('작업자를 지정하지 않았습니다');
+      return;
     }
 
     projectCollection.update(
@@ -71,23 +70,23 @@ export default function ProjectDetail({
           workers: selectedUsers,
         },
       }
-    )
-    setSelectedProject(null)
-    setToggleCurrentProjectDetail(false)
-  }
+    );
+    setSelectedProject(null);
+    setToggleCurrentProjectDetail(false);
+  };
 
   const deleteProject = () => {
     // console.log('Deleting the world...')
     const currentProject = projectCollection
       .find({ projectName: selectedProject.projectName })
-      .fetch()
-    projectCollection.remove(currentProject[0]._id)
-    setSelectedProject(null)
-  }
+      .fetch();
+    projectCollection.remove(currentProject[0]._id);
+    setSelectedProject(null);
+  };
   const abort = () => {
-    return
-  }
-  const confirmDelete = useConfirm('프로젝트를 삭제하시겠습니까? ', deleteProject, abort)
+    return;
+  };
+  const confirmDelete = useConfirm('프로젝트를 삭제하시겠습니까? ', deleteProject, abort);
 
   return (
     <div
@@ -194,13 +193,13 @@ export default function ProjectDetail({
       <div
         className={styles.exitBtn}
         onClick={() => {
-          setSelectedProject(null)
-          setToggleCurrentProjectDetail(false)
+          setSelectedProject(null);
+          setToggleCurrentProjectDetail(false);
         }}
       >
         <div className={styles.exitBtnLeftBar}></div>
         <div className={styles.exitBtnRightBar}></div>
       </div>
     </div>
-  )
+  );
 }

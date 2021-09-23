@@ -1,35 +1,28 @@
-import React, { useEffect, useState } from "react";
-import styles from "./ObjectOptions.module.css";
+import React, { useEffect, useState } from 'react';
+import styles from './ObjectOptions.module.css';
 
-import objectForm from "../ObjectPage";
+import { imageInfoCollection } from 'imports/db/collections';
+import { gtInfoCollection } from 'imports/db/collections';
 
-function AddObject({ setObjects }) {
-  const [objectNo, setObjectNo] = useState(0);
+function AddObject({ currentImageInfo, setObjects }) {
   const addObjectFunc = () => {
-    setObjects((pre) => [
-      ...pre,
-      {
-        bBox: [0, 0, 0, 0], // xmin, ymin, w, h
-        keyPoint: [
-          [0, 0, 0],
-          [0, 0, 0],
-          [0, 0, 0],
-          [0, 0, 0],
-        ], // [x,y,v]
-        polygon: [
-          [0, 0],
-          [0, 0],
-          [0, 0],
-          [0, 0],
-          [0, 0],
-        ], // [x,y],[x,y],[x,y] ...
-        state1: "",
-        state2: "",
-        objectTracking: 0,
-        objectNo: objectNo,
-      },
-    ]);
-    setObjectNo((pre) => pre + 1);
+    const RandValue = new Uint32Array(1);
+    window.crypto.getRandomValues(RandValue);
+
+    const tempObjectInfo = {
+      projectName: false,
+      masterProjectName: false,
+      projectId: false,
+      bbox: [],
+      keypoint: [],
+      stateList: [],
+      polygon: [],
+      objectId: RandValue[0],
+      ImgFileId: currentImageInfo._id,
+      ImgFileName: currentImageInfo.fileName,
+    };
+
+    setObjects((pre) => [...pre, tempObjectInfo]);
   };
 
   return (
@@ -58,11 +51,11 @@ function CancleObject() {
   );
 }
 
-export default function ObjectOptions({ setObjects }) {
+export default function ObjectOptions({ currentImageInfo, setObjects }) {
   return (
     <div className={styles.pageWrap}>
-      <AddObject setObjects={setObjects} />
-      <div style={{ display: "flex", gap: "10px" }}>
+      <AddObject currentImageInfo={currentImageInfo} setObjects={setObjects} />
+      <div style={{ display: 'flex', gap: '10px' }}>
         <ConfirmObject />
         <CancleObject />
       </div>

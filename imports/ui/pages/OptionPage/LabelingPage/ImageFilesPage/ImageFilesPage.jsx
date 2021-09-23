@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
-import styles from "./ImageFilesPage.module.css";
+import React, { useEffect, useState } from 'react';
+import styles from './ImageFilesPage.module.css';
 
-export default function ImageFilesPage({
-  currentImagesInfo,
-  setCurrentImageInfo,
-}) {
-  // Error, Done, Have to work
-  const imageState = ["#dd7171", "#61c46e", "#cccccc"];
+export default function ImageFilesPage({ currentImagesInfo, setCurrentImageInfo }) {
+  // Ready, Working, Worked,
+  const imageState = ['#dd7171', '#61c46e', '#cccccc'];
 
   const selectCurrentImage = (currentImage) => {
     setCurrentImageInfo(currentImage);
@@ -27,7 +24,7 @@ export default function ImageFilesPage({
                   {e.fileName}
                 </div>
               ))
-            : ""}
+            : ''}
         </div>
       </div>
     </div>

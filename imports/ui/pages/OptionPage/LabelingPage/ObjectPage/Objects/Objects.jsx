@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import styles from './Objects.module.css'
-import { Icon } from '@iconify/react'
-import { useTracker } from 'meteor/react-meteor-data'
+import React, { useEffect, useState } from 'react';
+import styles from './Objects.module.css';
+import { Icon } from '@iconify/react';
+import { useTracker } from 'meteor/react-meteor-data';
 
-import { imageInfoCollection } from 'imports/db/collections'
-import { gtInfoCollection } from 'imports/db/collections'
+import { imageInfoCollection } from 'imports/db/collections';
+import { gtInfoCollection } from 'imports/db/collections';
 
 export default function Objects({ setCurrentObject, currentImageInfo }) {
-  const imageList = useTracker(() => imageInfoCollection.find().fetch())
-  const gtList = useTracker(() => gtInfoCollection.find().fetch())
+  const imageList = useTracker(() => imageInfoCollection.find().fetch());
+  const gtList = useTracker(() => gtInfoCollection.find().fetch());
 
   const deleteObejctbtn = (currentObjectId) => {
     imageInfoCollection.update(
       { _id: currentImageInfo._id },
       { $pull: { object: { objectId: currentObjectId } } }
-    )
-  }
+    );
+  };
 
-  console.log(imageList, gtList)
+  // console.log(imageList, gtList)
 
   return (
     <div className={styles.pageWrap}>
@@ -34,5 +34,5 @@ export default function Objects({ setCurrentObject, currentImageInfo }) {
             ))
         : ''} */}
     </div>
-  )
+  );
 }

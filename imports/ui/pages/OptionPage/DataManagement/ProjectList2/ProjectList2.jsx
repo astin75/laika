@@ -1,29 +1,29 @@
-import { Button, Highlight, Image, PasswordInput, Text, TextInput } from '@mantine/core'
-import { projectCollection } from 'imports/db/collections'
-import { Meteor } from 'meteor/meteor'
-import { useTracker } from 'meteor/react-meteor-data'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Button, Highlight, Image, PasswordInput, Text, TextInput } from '@mantine/core';
+import { projectCollection } from 'imports/db/collections';
+import { Meteor } from 'meteor/meteor';
+import { useTracker } from 'meteor/react-meteor-data';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import NavigationBar from '../../../../components/NavigationBar/NavigationBar'
-import ProjectDetail from './ProjectDetail/ProjectDetail'
-import styles from './ProjectList2.module.css'
+import NavigationBar from '../../../../components/NavigationBar/NavigationBar';
+import ProjectDetail from './ProjectDetail/ProjectDetail';
+import styles from './ProjectList2.module.css';
 
 export default function ProjectList2() {
-  const user = useTracker(() => Meteor.user())
-  const projectList = useTracker(() => projectCollection.find({}).fetch())
-  const [selectedProject, setSelectedProject] = useState(null)
-  const [toggleCurrentProjectDetail, setToggleCurrentProjectDetail] = useState(false)
-  const [IsThereAdmin, setIsThereAdmin] = useState(false)
+  const user = useTracker(() => Meteor.user());
+  const projectList = useTracker(() => projectCollection.find({}).fetch());
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [toggleCurrentProjectDetail, setToggleCurrentProjectDetail] = useState(false);
+  const [IsThereAdmin, setIsThereAdmin] = useState(false);
 
   useEffect(() => {
     if (user) {
-      console.log('test', user)
+      // console.log('test', user)
       // if (user.profile.rank === 'admin') {
       //   setIsThereAdmin(true)
       // }
     }
-  }, [user])
+  }, [user]);
 
   // console.log(projectList)
   return (
@@ -81,8 +81,8 @@ export default function ProjectList2() {
                           leftIcon={<i className="fas fa-info-circle"></i>}
                           size="lg"
                           onClick={() => {
-                            setSelectedProject(e)
-                            setToggleCurrentProjectDetail(true)
+                            setSelectedProject(e);
+                            setToggleCurrentProjectDetail(true);
                           }}
                         ></Button>
                       </div>
@@ -101,5 +101,5 @@ export default function ProjectList2() {
         setToggleCurrentProjectDetail={setToggleCurrentProjectDetail}
       />
     </main>
-  )
+  );
 }

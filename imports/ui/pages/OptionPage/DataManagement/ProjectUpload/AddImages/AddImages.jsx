@@ -1,46 +1,23 @@
-import { Button, Col, Grid, Switch, TextInput } from '@mantine/core'
-import clsx from 'clsx'
-import React, { useState } from 'react'
+import { Button, Col, Grid, Switch, TextInput } from '@mantine/core';
+import clsx from 'clsx';
+import React, { useState } from 'react';
 
-import styles from './AddImages.module.css'
+import styles from './AddImages.module.css';
 
 export default function AddImages(props) {
-  const [WithGroundTruthFlag, setWithGroundTruthFlag] = useState(false)
+  const [WithGroundTruthFlag, setWithGroundTruthFlag] = useState(false);
   const switchStyles = {
     label: { fontSize: 13 },
-  }
+  };
   const onChange = (e) => {
-    let tempImgFileInfo = { imgInfo: [] }
-    let tempRawImgList = { rawFile: [] }
-    let tempGroundTruthJson = { List: [] }
-    let count = 0
-    let RandValue = new Uint32Array(e.target.files.length)
-    window.crypto.getRandomValues(RandValue)
+    let tempImgFileInfo = { imgInfo: [] };
+    let tempRawImgList = { rawFile: [] };
+    let tempGroundTruthJson = { List: [] };
+    let count = 0;
+    let RandValue = new Uint32Array(e.target.files.length);
+    window.crypto.getRandomValues(RandValue);
     if (WithGroundTruthFlag) {
-      for (count = 0; count < e.target.files.length; count++) {
-        tempImgFileInfo.imgInfo.push({
-          fileName: e.target.files[count].name,
-          fileId: RandValue[count],
-          projectName: false,
-          masterProjectName: false,
-          projectID: false,
-          confirmFlag: false,
-        })
-
-        tempRawImgList.rawFile.push(e.target.files[count])
-        tempGroundTruthJson.List.push({
-          projectName: false,
-          masterProjectName: false,
-          projectId: false,
-          bbox: [],
-          keypoint: [],
-          stateList: [],
-          polygon: [],
-          objectId: false,
-          ImgFileId: RandValue[count],
-          ImgFileName: e.target.files[count].name,
-        })
-      }
+      console.log(true);
     } else {
       for (count = 0; count < e.target.files.length; count++) {
         tempImgFileInfo.imgInfo.push({
@@ -50,9 +27,9 @@ export default function AddImages(props) {
           masterProjectName: false,
           projectID: false,
           confirmFlag: false,
-        })
+        });
 
-        tempRawImgList.rawFile.push(e.target.files[count])
+        tempRawImgList.rawFile.push(e.target.files[count]);
         tempGroundTruthJson.List.push({
           projectName: false,
           masterProjectName: false,
@@ -64,14 +41,14 @@ export default function AddImages(props) {
           objectId: false,
           ImgFileId: RandValue[count],
           ImgFileName: e.target.files[count].name,
-        })
+        });
       }
     }
-    props.setImgFileInfo(tempImgFileInfo)
-    props.setRawImgList(tempRawImgList)
-    props.setGroundTruthJson(tempGroundTruthJson)
-    props.setFileCount(count)
-  }
+    props.setImgFileInfo(tempImgFileInfo);
+    props.setRawImgList(tempRawImgList);
+    props.setGroundTruthJson(tempGroundTruthJson);
+    props.setFileCount(count);
+  };
 
   return (
     <Grid style={{ margin: '14px 0' }}>
@@ -91,5 +68,5 @@ export default function AddImages(props) {
         </label>
       </Col>
     </Grid>
-  )
+  );
 }

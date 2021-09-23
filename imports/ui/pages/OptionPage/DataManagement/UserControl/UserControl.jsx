@@ -2,16 +2,18 @@ import { Button, Select, Table } from '@mantine/core'
 import { userProfileCollection } from 'imports/db/collections'
 import { Meteor } from 'meteor/meteor'
 import { useTracker } from 'meteor/react-meteor-data'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, Redirect } from 'react-router-dom'
 import NavigationBar from 'ui/components/NavigationBar/NavigationBar'
 
 // @ts-ignore
 import styles from './UserControl.module.css'
 
 export default function UserControl() {
+  const user = useTracker(() => Meteor.user())
+  const [IsThereAdmin, setIsThereAdmin] = useState(true)
+
   const userList = useTracker(() => userProfileCollection.find({}).fetch())
-  console.log(userList, 'e')
 
   const [rank, setRank] = useState('')
   const rankOption = [
@@ -36,7 +38,19 @@ export default function UserControl() {
     setRank(option)
   }
 
-  return (
+  useEffect(() => {
+    let id = user?.username
+    let i
+    if (id && IsThereAdmin === false) {
+      for (i = 0; i < userList.length; i++) {
+        if (id === userList[i].userName && userList[i].rank === 'admin') {
+          setIsThereAdmin(true)
+        }
+      }
+    }
+  }, [user])
+
+  return IsThereAdmin === true ? (
     <div className={styles.container}>
       <div className={styles.topMenu}>
         <Button
@@ -105,5 +119,7 @@ export default function UserControl() {
       </Table>
       <NavigationBar />
     </div>
+  ) : (
+    <Redirect to={'./accountPage'} />
   )
 }

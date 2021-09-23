@@ -5,7 +5,7 @@ import React, { createRef, useEffect, useRef, useState } from 'react'
 
 import styles from './ProjectTitle.module.css'
 
-export default function ProjectTitle({ projectName, setProjectName }) {
+export default function ProjectTitle({ projectName, setProjectName, setGlobalError }) {
   const projectList = useTracker(() => projectCollection.find({}).fetch())
   const [DBFlag, setDBFlag] = useState(true)
   const [tempProjectList, setTempProjectList] = useState([])
@@ -26,11 +26,13 @@ export default function ProjectTitle({ projectName, setProjectName }) {
   const putName = (e) => {
     if (e.target.value.length < 4) {
       setErrName('4자 이상 입력해주세요.')
+      setGlobalError(true)
       return
     }
 
     if (!projectCollection.findOne({ projectName: e.target.value })) {
       setErrName('동일한 일반 프로젝트 명이 있습니다.')
+      setGlobalError(true)
     }
 
     setErrName('')
@@ -40,6 +42,7 @@ export default function ProjectTitle({ projectName, setProjectName }) {
         projectName: e.target.value,
       },
     ])
+    setGlobalError(false)
   }
 
   useEffect(() => {

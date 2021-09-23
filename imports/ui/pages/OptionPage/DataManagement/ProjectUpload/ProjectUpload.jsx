@@ -60,7 +60,6 @@ export default function ProjectUpload() {
         );
 
         upload.start();
-        console.log(upload);
         resolve();
       }, 0)
     );

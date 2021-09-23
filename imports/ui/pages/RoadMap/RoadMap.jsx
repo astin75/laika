@@ -134,7 +134,7 @@ export default function RoadMap() {
                             </Button>
                             &nbsp; / &nbsp;
                             <Button
-                                disabled={true}
+                                disabled={false}
                                 color="red"
                                 size="compact-sm"
                                 onClick={() => onDelete(x.projectName)}

@@ -47,13 +47,14 @@ export default function ProjectUpload() {
     label: { fontSize: 13 },
   };
 
-  const insertImage = (file) => {
+  const insertImage = (file, projectName) => {
     return new Promise((resolve) =>
       setTimeout(() => {
         const upload = Images.insert(
           {
             file,
             chunkSize: 'dynamic',
+            meta:{projectName:projectName}
           },
           false
         );
@@ -93,8 +94,7 @@ export default function ProjectUpload() {
           imageInfoCollection.insert(tempImgFileInfo[imageIndex]);
           gtInfoCollection.insert(tempGroundTruthJson[imageIndex]);
           let RawdataWithProjectName = RawImgList.rawFile[imageIndex];
-          RawdataWithProjectName.public = projectName[0].projectName;
-          await insertImage(RawdataWithProjectName);
+          await insertImage(RawdataWithProjectName, projectName[0].projectName);
           await setProgress(percentage);
           imageIndex++;
         }

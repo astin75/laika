@@ -17,21 +17,7 @@ import styles from 'ui/pages/OptionPage/DataManagement/UserControl/UserControl.m
 import styels from './RoadMap.module.css';
 
 export default function RoadMap() {
-  this.state = {
-    fileType: 'json',
-    fileDownloadUrl: null,
-    status: '',
-    data: [
-      { state: 'Arizona', electors: 11 },
-      { state: 'Florida', electors: 29 },
-      { state: 'Iowa', electors: 6 },
-      { state: 'Michigan', electors: 16 },
-      { state: 'North Carolina', electors: 15 },
-      { state: 'Ohio', electors: 18 },
-      { state: 'Pennsylvania', electors: 20 },
-      { state: 'Wisconsin', electors: 10 },
-    ],
-  };
+
   const downloadFile = ({ data, fileName, fileType }) => {
     // Create a blob with the data we want to download as a file
     const blob = new Blob([data], { type: fileType });
@@ -95,7 +81,7 @@ export default function RoadMap() {
 
   const onDownload = (e, projectName) => {
     let gtinfo = gtInfoCollection.find({ projectName: projectName }).fetch();
-    let imgRaw = Images.find({ public: projectName }).cursor;
+    let imgRaw = Images.find({ meta: {projectName:projectName} }).cursor;
     console.log(imgRaw);
     e.preventDefault();
     multiDownloadFile(gtinfo);
@@ -106,9 +92,22 @@ export default function RoadMap() {
     // });
   };
 
-  const onDelete = (userName) => {
-    let oops = Meteor.users.findOne({ userName: userName });
-    Meteor.users.remove(oops._id);
+  const onDelete = (projectName) => {
+    let gtinfo = gtInfoCollection.find({ projectName: projectName }).fetch()
+    let imginfo = imageInfoCollection.find({ projectName: projectName }).fetch()
+    let rawImg = Images.find({ meta: {projectName:projectName} }).fetch()
+    let prjectInfo = projectCollection.find({ projectName: projectName }).fetch()
+    let count = 0
+
+    for (count =0; count < gtinfo.length; count++)
+    {
+      gtInfoCollection.remove( gtinfo[count]._id);
+      imageInfoCollection.remove(imginfo[count]._id);
+      Images.remove(rawImg[count]._id);
+    }
+
+    projectCollection.remove(prjectInfo[0]._id)
+
   };
 
   const handleChange = (option) => {
@@ -143,7 +142,7 @@ export default function RoadMap() {
                   </Button>
                   &nbsp; / &nbsp;
                   <Button
-                    disabled={true}
+                    disabled={false}
                     color="red"
                     size="compact-sm"
                     onClick={() => onDelete(x.projectName)}

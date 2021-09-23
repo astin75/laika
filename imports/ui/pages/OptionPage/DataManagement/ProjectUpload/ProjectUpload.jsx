@@ -7,6 +7,7 @@ import Images from 'imports/db/files';
 import { chunk } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import SmallNavigation from 'ui/components/SmallNavigation/SmallNavigation';
 
 import NavigationBar from '../../../../components/NavigationBar/NavigationBar';
 import AddImages from './AddImages/AddImages';
@@ -16,7 +17,6 @@ import KeypointConfig from './KeypointConfig/KeypointConfig';
 import ProjectTitle from './ProjectTitle/ProjectTitle';
 // @ts-ignore
 import styles from './ProjectUpload.module.css';
-import SmallNavigation from "ui/components/SmallNavigation/SmallNavigation";
 
 const CHUNK_SIZE = 500;
 
@@ -37,14 +37,15 @@ export default function ProjectUpload() {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const [globalError, setGlobalError] = useState(true)
+  const [globalError, setGlobalError] = useState(true);
 
   const notifications = useNotifications();
-  const showNotification = (color, msg) =>
+  const showNotification = (color, msg, autoClose) =>
     notifications.showNotification({
-      title: '',
-      message:msg,
-      color: color
+      title: msg,
+      message: 'never close unless you click',
+      color: color,
+      autoClose: autoClose,
     });
 
   const switchStyles = {
@@ -58,7 +59,7 @@ export default function ProjectUpload() {
           {
             file,
             chunkSize: 'dynamic',
-            meta:{projectName:projectName}
+            meta: { projectName: projectName },
           },
           false
         );
@@ -70,10 +71,9 @@ export default function ProjectUpload() {
   };
 
   const onRegister = async () => {
-
     let RandValue = new Uint32Array(1);
     window.crypto.getRandomValues(RandValue);
-
+    setProgress(0);
 
     let tempImgFileInfo = [...ImgFileInfo.imgInfo];
     let tempGroundTruthJson = [...GroundTruthJson.List];
@@ -101,6 +101,7 @@ export default function ProjectUpload() {
           imageIndex++;
         }
       }
+      setProgress(100);
 
       let tempProjectInfo = {
         projectName: projectName[0].projectName,
@@ -119,14 +120,11 @@ export default function ProjectUpload() {
       };
 
       await projectCollection.insert(tempProjectInfo);
-      showNotification("blue",'프로젝트가 등록 되었습니다.! 🤥');
+      showNotification('blue', '프로젝트가 등록 되었습니다.! 🤥', false);
     } catch (e) {
-
+      showNotification('red', '프로젝트 등록 에러.! 🤥', false);
     }
-
-
   };
-
 
   return (
     <>
@@ -140,15 +138,18 @@ export default function ProjectUpload() {
       )}
 
       <div className={styles.container}>
-        <SmallNavigation/>
-
+        <SmallNavigation />
 
         <div>
-          <ProjectTitle ProjectName={projectName} setProjectName={setProjectName} setGlobalError={setGlobalError} />
+          <ProjectTitle
+            ProjectName={projectName}
+            setProjectName={setProjectName}
+            setGlobalError={setGlobalError}
+          />
           <BoundingBoxConfig boxClassList={boxClassList} setBoxClassList={setBoxClassList} />
           <KeypointConfig
-              keyPointClassList={keyPointClassList}
-              setKeyPointClassList={setKeyPointClassList}
+            keyPointClassList={keyPointClassList}
+            setKeyPointClassList={setKeyPointClassList}
           />
           <AddState objectStateBox={objectStateBox} setObjectStateBox={setObjectStateBox} />
 
@@ -184,7 +185,7 @@ export default function ProjectUpload() {
 
           <div>
             <Button
-                disabled={globalError}
+              disabled={globalError}
               className={styles.registerButton}
               onClick={async () => {
                 setIsLoading(true);

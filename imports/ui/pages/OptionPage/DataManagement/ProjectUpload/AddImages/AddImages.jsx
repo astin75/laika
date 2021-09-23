@@ -14,47 +14,58 @@ export default function AddImages(props) {
     let tempRawImgList = { rawFile: [] };
     let tempGroundTruthJson = { List: [] };
     let count = 0;
+    let Filecount = 0;
     let RandValue = new Uint32Array(e.target.files.length);
     window.crypto.getRandomValues(RandValue);
     if (WithGroundTruthFlag) {
-      console.log(true);
+      if (e.target.files[1].name.slice(-4) === 'json') {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+          let json = JSON.parse(e.target.result[1]);
+          let formatted = JSON.stringify(json, null, 2);
+          console.log(formatted);
+        };
+      }
     } else {
       for (count = 0; count < e.target.files.length; count++) {
-        tempImgFileInfo.imgInfo.push({
-          fileName: e.target.files[count].name,
-          fileId: RandValue[count],
-          projectName: false,
-          masterProjectName: false,
-          projectID: false,
-          confirmFlag: false,
-        });
+        if (e.target.files[count].name.slice(-4) !== 'json') {
+          Filecount++;
+          tempImgFileInfo.imgInfo.push({
+            fileName: e.target.files[count].name,
+            fileId: RandValue[count],
+            projectName: false,
+            masterProjectName: false,
+            projectID: false,
+            confirmFlag: false,
+          });
 
-        tempRawImgList.rawFile.push(e.target.files[count]);
-        tempGroundTruthJson.List.push({
-          projectName: false,
-          masterProjectName: false,
-          projectId: false,
-          bbox: [],
-          keypoint: [],
-          stateList: [],
-          polygon: [],
-          objectId: false,
-          ImgFileId: RandValue[count],
-          ImgFileName: e.target.files[count].name,
-        });
+          tempRawImgList.rawFile.push(e.target.files[count]);
+          tempGroundTruthJson.List.push({
+            projectName: false,
+            masterProjectName: false,
+            projectId: false,
+            bbox: [],
+            keypoint: [],
+            stateList: [],
+            polygon: [],
+            objectId: false,
+            ImgFileId: RandValue[count],
+            ImgFileName: e.target.files[count].name,
+          });
+        }
       }
     }
     props.setImgFileInfo(tempImgFileInfo);
     props.setRawImgList(tempRawImgList);
     props.setGroundTruthJson(tempGroundTruthJson);
-    props.setFileCount(count);
+    props.setFileCount(Filecount);
   };
 
   return (
     <Grid style={{ margin: '14px 0' }}>
       <Col span={3}>
         <Switch
-          disabled
+          disabled={false}
           label="Annotations"
           styles={switchStyles}
           checked={WithGroundTruthFlag}

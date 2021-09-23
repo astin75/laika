@@ -17,6 +17,11 @@ import styles from 'ui/pages/OptionPage/DataManagement/UserControl/UserControl.m
 import styels from './RoadMap.module.css';
 
 export default function RoadMap() {
+    const projectList = useTracker(() => projectCollection.find({}).fetch());
+    const onRankChange = (e, projectName) => {
+        let gtinfo = gtInfoCollection.find({projectName: projectName}).fetch();
+        let imageInfo = imageInfoCollection.find({projectName: projectName}).fetch();
+    };
 
     const downloadFile = ({data, fileName, fileType}) => {
         // Create a blob with the data we want to download as a file
@@ -37,9 +42,9 @@ export default function RoadMap() {
 
     const multiDownloadFile = (rawImgs, gt) => {
         let zip = new JSZip();
-        var count = 0;
         let zipFilename = 'Pictures.zip';
 
+        // 이미지 DB 리스트 link -> blob 으로 변경뒤 zip.file로 push
         rawImgs.forEach(function (link, i) {
             var filename1 = i + '.jpg';
             let webUrl = String(Images.findOne(rawImgs[i]._id).link())
@@ -47,10 +52,9 @@ export default function RoadMap() {
             let imgBlob = fetch(webUrl)
                 .then(res => res.blob())
             zip.file(filename1, imgBlob, {binary: true});
-
         });
 
-
+        // GT DB를 array -> json 으로 변경 후 -> blob 으로 변경뒤 zip.file로 push
         gt.forEach(function (gtValue, i) {
             var filename = i + '.json';
 
@@ -59,6 +63,7 @@ export default function RoadMap() {
             zip.file(filename, blob, {binary: true});
         });
 
+        // 최종 zip 으로 out~
         zip.generateAsync({type: 'blob'}).then(function (content) {
             saveAs(content, zipFilename);
         });
@@ -66,32 +71,18 @@ export default function RoadMap() {
 
     };
 
-    const [downloadUrl, setDownloadUrl] = useState('');
-    const downClick = useRef(null);
 
-    const projectList = useTracker(() => projectCollection.find({}).fetch());
-    const onRankChange = (e, projectName) => {
-        let gtinfo = gtInfoCollection.find({projectName: projectName}).fetch();
-        let imageInfo = imageInfoCollection.find({projectName: projectName}).fetch();
-    };
 
-    // console.log(gtinfo, 1)
-    // console.log(imageInfo, 2)
 
-    //userProfileCollection.update(oops._id, { $set: { rank: rank } })
 
     const onDownload = (e, projectName) => {
         let gtinfo = gtInfoCollection.find({projectName: projectName}).fetch();
-        //let imgRaw = Images.findOne();
+
         let imgRaw = Images.find({meta: {projectName: projectName}}).fetch();
-        //imgRaw = Images.findOne(imgRaw[0]._id).link()
+
         e.preventDefault();
         multiDownloadFile(imgRaw, gtinfo);
-        // downloadFile({
-        //   data: JSON.stringify(gtinfo[0], null, 4),
-        //   fileName: 'users.json',
-        //   fileType: 'text/json',
-        // });
+
     };
 
     const onDelete = (projectName) => {
@@ -152,7 +143,7 @@ export default function RoadMap() {
                             </Button>
                             <Button
                                 download={'states.json'}
-                                href={downloadUrl}
+
                                 size="compact-sm"
                                 onClick={(event) => onDownload(event, x.projectName)}
                             >

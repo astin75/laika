@@ -2,7 +2,7 @@
 /* @import "https://fonts.googleapis.com/earlyaccess/notosanskr.css"; */
 @font-face {
   font-family: Noto;
-  src: url(../font/NotoSansCJKkr-Regular.eot), url(../font/NotoSansCJKkr-Regular.woff); }
+  src: url(../font/NotoSansCJKkr-Regular.eot), url(../font/NotoSansCJKkr-Regular.otf); }
 body,
 html {
   width: 100%;

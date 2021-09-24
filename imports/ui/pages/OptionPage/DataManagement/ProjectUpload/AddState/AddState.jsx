@@ -92,10 +92,15 @@ export default function AddState({ objectStateBox, setObjectStateBox }) {
           <Button color="green" onClick={onAdd} disabled={isDisabled}>
             추가하기
           </Button>
+
         </Col>
+
       </Grid>
-      <Grid>
-        <small className="text-muted">객체 상태를 추가할 수 있습니다. </small>
+      <Grid >
+        <Col span={6}>
+          <small className="text-muted">객체 상태를 추가 할 수 있습니다. </small>
+        </Col>
+
       </Grid>
 
       {objectStateBox.length > 0 && (

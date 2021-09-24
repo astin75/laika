@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './ObjectOptions.module.css';
 
+import { Icon } from '@iconify/react';
 import { imageInfoCollection } from 'imports/db/collections';
 import { gtInfoCollection } from 'imports/db/collections';
 
@@ -63,7 +64,8 @@ export default function ObjectOptions({ currentImageInfo, setObjects }) {
     <div className={styles.pageWrap}>
       <AddObject currentImageInfo={currentImageInfo} setObjects={setObjects} />
       <div style={{ display: 'flex', gap: '10px' }}>
-        <ConfirmObject />
+        {/* <ConfirmObject /> */}
+        <Icon icon="emojione:white-heavy-check-mark" style={{ width: '21px', height: '21px' }} />
         <CancleObject />
       </div>
     </div>

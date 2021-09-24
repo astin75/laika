@@ -38,7 +38,6 @@ export default function BboxInfor({ objectColorValues }) {
         </div>
       )}
       <div>Box</div>
-      <div>6</div>
       <div
         className={styles.bboxColor}
         style={{ backgroundColor: `${bboxInfor.color}` }}
@@ -71,6 +70,7 @@ export default function BboxInfor({ objectColorValues }) {
         onChange={(e) => {
           setBboxInfor((pre) => ({ ...pre, class: e }));
         }}
+        style={{ width: '80px' }}
       />
     </div>
   );

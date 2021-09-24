@@ -11,12 +11,12 @@ export default function ImageFilesPage({ currentImagesInfo, setCurrentImageInfo 
     setCurrentImageInfo(currentImage);
   };
 
-  const imageHoverOnFunc = (e) => {
-    e.target.style.background = 'red';
-  };
-  const imageHoverOffFunc = (e) => {
-    e.target.style.background = e.confirmFlag ? `${imageState[1]}` : `${imageState[2]}`;
-  };
+  // const imageHoverOnFunc = (e) => {
+  //   e.target.style.background = 'rgba(0, 227, 180)';
+  // };
+  // const imageHoverOffFunc = (e) => {
+  //   e.target.style.background = e.confirmFlag ? `${imageState[1]}` : `#ffffff`;
+  // };
 
   return (
     <div className={styles.pageWrap}>
@@ -28,14 +28,15 @@ export default function ImageFilesPage({ currentImagesInfo, setCurrentImageInfo 
                 <div
                   key={e._id}
                   className={styles.imageFiles}
-                  style={{
-                    backgroundColor: e.confirmFlag ? `${imageState[1]}` : `${imageState[2]}`,
-                  }}
                   onClick={() => selectCurrentImage(e)}
-                  onMouseOver={imageHoverOnFunc}
-                  onMouseOut={imageHoverOffFunc}
                 >
-                  {e.fileName}
+                  <div>{e.fileName}</div>
+                  <div
+                    className={styles.imageFileState}
+                    style={{
+                      backgroundColor: e.confirmFlag ? `${imageState[1]}` : `${imageState[0]}`,
+                    }}
+                  ></div>
                 </div>
               ))
             : ''}

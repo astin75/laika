@@ -77,7 +77,7 @@ export default function LabelingPage() {
 
   return (
     <div className={styles.main}>
-      <HeaderPage />
+      <HeaderPage currentProjectInfo={currentProjectInfo} />
       <div className={styles.contents}>
         {/* 현재 프로젝트에서 업로드한 이미지 페이지 */}
         <ImageFilesPage

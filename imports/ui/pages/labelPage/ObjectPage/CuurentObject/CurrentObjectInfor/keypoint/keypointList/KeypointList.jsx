@@ -33,6 +33,7 @@ export default function KeypointList() {
               onChange={(e) => {
                 setKeyPointClass(e);
               }}
+              style={{ width: '80px' }}
             />
           </div>
         </div>

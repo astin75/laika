@@ -3,7 +3,7 @@
   height: 5%;
   display: flex;
   justify-content: space-between;
-  align-items : center;
+  /* align-items : center; */
   /* background-color: #000000; */
 }
 
@@ -42,7 +42,7 @@
   width: 21px;
   height: 21px;
   border-radius: 50%;
-  background-color: #ca7d7d;
+  background-color: rgba(236, 112, 99);
   display: flex;
   justify-content: center;
   align-items: center;

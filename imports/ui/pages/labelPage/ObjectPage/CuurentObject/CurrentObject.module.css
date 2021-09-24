@@ -9,8 +9,11 @@
   height: 30px;
   font-size: 15px;
   line-height: 30px;
-  background-color: #000000;
-  color: #ffffff;
+      background-color: rgb(244, 246, 246);
+
+  /* border-bottom: 1px solid #616161; */
+
+  color: #000000;
   padding: 0px 5px;
   /* margin-bottom: 5px; */
   box-sizing: border-box;

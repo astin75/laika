@@ -11,8 +11,10 @@
   font-size : 17px;
   line-height: 30px;
   text-align: center;
-  color : #ffffff;
-  background-color : #000000;
+  color : #000000;
+  /* background-color : #000000; */
+    border-bottom: 1px solid #616161;
+
   margin-bottom: 5px;
 }
 
@@ -38,6 +40,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+    /* border-bottom: 1px solid #616161; */
+
 }
 
 .objectTitle {

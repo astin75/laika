@@ -31,7 +31,7 @@ export default function BoundingBoxConfig({ boxClassList, setBoxClassList }) {
   }
 
   return (
-    <>
+    <div>
       <Grid style={{ margin: '14px 0' }}>
         <Col span={3}>
           <Switch
@@ -73,7 +73,7 @@ export default function BoundingBoxConfig({ boxClassList, setBoxClassList }) {
           ))}
         </Grid>
       )}
-    </>
+    </div>
   )
 }
 

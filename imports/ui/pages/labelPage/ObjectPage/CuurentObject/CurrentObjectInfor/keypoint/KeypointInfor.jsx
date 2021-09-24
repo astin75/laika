@@ -42,13 +42,11 @@ export default function KeypointInfor({ objectColorValues }) {
         </div>
       )}
       <div className={styles.keypointTitle}>Keypoint</div>
-      <div>7</div>
 
       <div
         className={styles.dropdownBtn}
         onClick={() => {
           setKeypointListToggle((pre) => !pre);
-          console.log(keypointListToggle);
         }}
       ></div>
       {keypointListToggle ? <KeypointList /> : ''}

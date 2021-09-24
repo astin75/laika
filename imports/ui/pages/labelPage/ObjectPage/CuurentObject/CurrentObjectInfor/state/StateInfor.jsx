@@ -15,7 +15,8 @@ export default function StateInfor({ idx }) {
   return (
     <div className={styles.stateInforWrap}>
       <div>State{idx}</div>
-      <Select size="xs" data={stateClassInfor} onChange={setStateInfor} />
+
+      <Select size="xs" data={stateClassInfor} onChange={setStateInfor} style={{ width: '80px' }} />
     </div>
   );
 }

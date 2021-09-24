@@ -38,7 +38,6 @@ export default function PolygonInfor({ objectColorValues }) {
         </div>
       )}
       <div>Polygon</div>
-      <div>2</div>
       <div
         className={styles.polygonInforColor}
         style={{ backgroundColor: `${polygonInfor.color}` }}
@@ -71,6 +70,7 @@ export default function PolygonInfor({ objectColorValues }) {
         onChange={(e) => {
           setPolygonInfor((pre) => ({ ...pre, class: e }));
         }}
+        style={{ width: '80px' }}
       />
     </div>
   );

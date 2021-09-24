@@ -15,7 +15,12 @@ export default function ObjectTrackingInfor() {
   return (
     <div className={styles.objectTrackingInforWrap}>
       <div>Object Tracking ID</div>
-      <Select size="xs" data={objectTrackingClassInfor} onChange={setObjectTrackingInfor} />
+      <Select
+        size="xs"
+        data={objectTrackingClassInfor}
+        onChange={setObjectTrackingInfor}
+        style={{ width: '80px' }}
+      />
     </div>
   );
 }

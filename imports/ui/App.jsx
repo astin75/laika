@@ -13,8 +13,9 @@ import IndexPage from 'ui/pages/IndexPage';
 import LabelingPage from 'ui/pages/labelPage/LabelingPage';
 import NotFound from 'ui/pages/NotFound';
 import { OptionPage } from 'ui/pages/OptionPage/DataManagement/OptionPage';
-import ProjectList2 from 'ui/pages/OptionPage/DataManagement/ProjectList2/ProjectList2';
-import ProjectUpload from 'ui/pages/OptionPage/DataManagement/ProjectUpload/ProjectUpload';
+
+import ProjectList2 from 'imports/ui/pages/OptionPage/DataManagement/ProjectList2/ProjectList2';
+import ProjectUpload from 'imports/ui/pages/OptionPage/DataManagement/ProjectUpload/ProjectUpload';
 import UserControl from 'ui/pages/OptionPage/DataManagement/UserControl/UserControl';
 import RoadMap from 'ui/pages/RoadMap/RoadMap';
 

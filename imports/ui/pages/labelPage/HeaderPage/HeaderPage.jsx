@@ -8,7 +8,11 @@ export default function HeaderPage({ currentProjectInfo }) {
   return (
     <div className={styles.header}>
       <div></div>
-      <div className={styles.headerName}>{currentProjectInfo.projectName}</div>
+      {currentProjectInfo ? (
+        <div className={styles.headerName}>{currentProjectInfo.projectName}</div>
+      ) : (
+        ''
+      )}
       <NavigationBar />
     </div>
   );

@@ -1,48 +1,44 @@
-import React, { useEffect, useState } from "react";
-import styles from "./ImageFilesPage.module.css";
+import React, { useEffect, useState } from 'react';
+import styles from './ImageFilesPage.module.css';
+import { Table } from '@mantine/core';
 
-export default function ImageFilesPage() {
-  const images = [
-    ["Image1", "0"],
-    ["Image2", "1"],
-    ["Image3", "2"],
-    ["Image4", "0"],
-    ["Image5", "1"],
-    ["Image7", "1"],
-    ["Image8", "0"],
-    ["Image9", "1"],
-    ["Image10", "1"],
-    ["Image11", "2"],
-    ["Image12", "2"],
-    ["Image13", "1"],
-    ["Image14", "0"],
-    ["Image15", "1"],
-    ["Image16", "2"],
-    ["Image17", "2"],
-    ["Image18", "1"],
-    ["Image19", "1"],
-    ["Image20", "1"],
-    ["Image21", "2"],
-    ["Image22", "0"],
-    ["Image23", "1"],
-  ];
-
+export default function ImageFilesPage({ currentImagesInfo, setCurrentImageInfo }) {
   // Error, Done, Have to work
-  const imageState = ["#dd7171", "#61c46e", "#cccccc"];
+  const imageState = ['#dd7171', '#61c46e', '#cccccc'];
+
+  // 현재 이미지 클릭 시, 현재 클릭한 이미지 정보가 변수에 담김 --> objectPage로 전달
+  const selectCurrentImage = (currentImage) => {
+    setCurrentImageInfo(currentImage);
+  };
+
+  const imageHoverOnFunc = (e) => {
+    e.target.style.background = 'red';
+  };
+  const imageHoverOffFunc = (e) => {
+    e.target.style.background = e.confirmFlag ? `${imageState[1]}` : `${imageState[2]}`;
+  };
 
   return (
     <div className={styles.pageWrap}>
       <div className={styles.imageFilesBigWrap}>
         <div className={styles.imageFilesSmallWrap}>
-          {images.map((e) => (
-            <div
-              key={e[0]}
-              className={styles.imageFiles}
-              style={{ backgroundColor: `${imageState[e[1]]}` }}
-            >
-              {e[0]}
-            </div>
-          ))}
+          <div className={styles.imageFilesTitle}>Image File List</div>
+          {currentImagesInfo
+            ? currentImagesInfo.map((e) => (
+                <div
+                  key={e._id}
+                  className={styles.imageFiles}
+                  style={{
+                    backgroundColor: e.confirmFlag ? `${imageState[1]}` : `${imageState[2]}`,
+                  }}
+                  onClick={() => selectCurrentImage(e)}
+                  onMouseOver={imageHoverOnFunc}
+                  onMouseOut={imageHoverOffFunc}
+                >
+                  {e.fileName}
+                </div>
+              ))
+            : ''}
         </div>
       </div>
     </div>

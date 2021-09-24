@@ -1,14 +1,13 @@
-import classNames from 'classnames';
 import React, { useState } from 'react';
+import styles from './TmpBar.module.css';
 import { useRecoilState, useRecoilValue } from 'recoil';
-
 import {
   annotationDispatcherState,
   currentAnnotations,
   selectionIdx,
 } from '../../../../recoil/annotation';
 import { EditorMode } from '../Editor';
-import styles from './TmpBar.module.css';
+import classNames from 'classnames';
 
 interface ITmpBar {
   mode: EditorMode;
@@ -40,30 +39,33 @@ export default function TmpBar({ mode, onModeChange }: ITmpBar) {
         <button onClick={deleteObject}>Del </button>
         {/* 새 어노테이션 시작하는 버튼. Add -> 리스트에서 클릭 -> Rect, Skeleton(아직안함), Polygon 버튼 눌러서 작업 모드로 들어감 */}
         <button
-          className={classNames(mode === EditorMode.Rect ? styles.button_active : '')}
+          className={classNames(
+            mode === EditorMode.Rect ? styles.button_active : ''
+          )}
           onClick={() => {
             if (mode == EditorMode.Rect) onModeChange(EditorMode.Idle);
             else onModeChange(EditorMode.Rect);
-          }}
-        >
+          }}>
           Box
         </button>
         <button
-          className={classNames(mode === EditorMode.Skeleton ? styles.button_active : '')}
+          className={classNames(
+            mode === EditorMode.Skeleton ? styles.button_active : ''
+          )}
           onClick={() => {
             if (mode == EditorMode.Skeleton) onModeChange(EditorMode.Idle);
             else onModeChange(EditorMode.Skeleton);
-          }}
-        >
+          }}>
           Skel.
         </button>
         <button
-          className={classNames(mode === EditorMode.Polygon ? styles.button_active : '')}
+          className={classNames(
+            mode === EditorMode.Polygon ? styles.button_active : ''
+          )}
           onClick={() => {
             if (mode == EditorMode.Polygon) onModeChange(EditorMode.Idle);
             else onModeChange(EditorMode.Polygon);
-          }}
-        >
+          }}>
           Polygon
         </button>
       </section>
@@ -80,8 +82,7 @@ export default function TmpBar({ mode, onModeChange }: ITmpBar) {
                 annotationDispatcher?.setSelectionAnnotation(idx, true);
                 // 새로 클릭한 놈 idx 저장
                 setSelection(idx);
-              }}
-            >
+              }}>
               {annot.className}
             </div>
           );
@@ -114,13 +115,15 @@ export default function TmpBar({ mode, onModeChange }: ITmpBar) {
               <h4>area</h4>
               <p>{annotations[selection].regions.polygon.area}</p>
               <h4>loc</h4>
-              {annotations[selection].regions.polygon.points.map((point, idx) => {
-                return (
-                  <p key={`${annotations[selection].key}_${idx}`}>
-                    x: {point.x}, y:{point.y}
-                  </p>
-                );
-              })}
+              {annotations[selection].regions.polygon.points.map(
+                (point, idx) => {
+                  return (
+                    <p key={`${annotations[selection].key}_${idx}`}>
+                      x: {point.x}, y:{point.y}
+                    </p>
+                  );
+                }
+              )}
             </div>
           ) : (
             <></>

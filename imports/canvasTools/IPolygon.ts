@@ -1,13 +1,30 @@
+<<<<<<< HEAD
+import { ICanvasView } from './../recoil/canvas';
+import _ from 'lodash';
+import { ICanvasView } from '../recoil/canvas';
+import { drawCircle, drawLine, drawPath, drawText } from './drawUtils';
+=======
 import _ from 'lodash'
 
 import { ICanvasView } from './../recoil/canvas'
 import { drawCircle, drawPath, drawText } from './drawUtils'
+>>>>>>> f538cdebeaf550ed4d060ef8e0bed913c0030f7d
 import {
   IPoint,
   transformCanvasPointToImagePoint,
   transformImagePointToCanvasPoint,
+<<<<<<< HEAD
+} from './IPoint';
+import {
+  getBoundingPointsOfRegion,
+  IKeypoint,
+  IRegionData,
+  RegionDataType,
+} from './IRegionData';
+=======
 } from './IPoint'
 import { getBoundingPointsOfRegion, IKeypoint, IRegionData, RegionDataType } from './IRegionData'
+>>>>>>> f538cdebeaf550ed4d060ef8e0bed913c0030f7d
 
 export const appendPointToPolygon = (
   region: IRegionData | undefined,
@@ -18,7 +35,11 @@ export const appendPointToPolygon = (
     alias: '0',
     x: point.x,
     y: point.y,
+<<<<<<< HEAD
+  };
+=======
   }
+>>>>>>> f538cdebeaf550ed4d060ef8e0bed913c0030f7d
   if (region === undefined) {
     return {
       x: point.x,
@@ -32,6 +53,22 @@ export const appendPointToPolygon = (
       visible: true,
       highlighted: false,
       selected: false,
+<<<<<<< HEAD
+    };
+  }
+
+  const newRegion: IRegionData = _.cloneDeep(region);
+  newRegion.points.push(keypoint);
+  const xCoords = region.points.map((point) => point.x);
+  const yCoords = region.points.map((point) => point.x);
+  newRegion.x = Math.min(...xCoords);
+  newRegion.y = Math.min(...yCoords);
+  newRegion.width = Math.max(...xCoords) - newRegion.x;
+  newRegion.height = Math.max(...yCoords) - newRegion.y;
+  newRegion.area = getAreaOfPolygon(region);
+  return newRegion;
+};
+=======
     }
   }
 
@@ -46,6 +83,7 @@ export const appendPointToPolygon = (
   newRegion.area = getAreaOfPolygon(region)
   return newRegion
 }
+>>>>>>> f538cdebeaf550ed4d060ef8e0bed913c0030f7d
 
 export const movePolygonVertex = (
   region: IRegionData,
@@ -53,12 +91,43 @@ export const movePolygonVertex = (
   point: IPoint,
   view: ICanvasView
 ): IRegionData => {
+<<<<<<< HEAD
+  const newRegion: IRegionData = _.cloneDeep(region);
+  const [transformed] = transformCanvasPointToImagePoint(view, point);
+=======
   const newRegion: IRegionData = _.cloneDeep(region)
   const [transformed] = transformCanvasPointToImagePoint(view, point)
+>>>>>>> f538cdebeaf550ed4d060ef8e0bed913c0030f7d
   newRegion.points[pointIdx] = {
     ...newRegion.points[pointIdx],
     x: transformed.x,
     y: transformed.y,
+<<<<<<< HEAD
+  };
+  const xCoords = newRegion.points.map((point) => point.x);
+  const yCoords = newRegion.points.map((point) => point.x);
+  newRegion.x = Math.min(...xCoords);
+  newRegion.y = Math.min(...yCoords);
+  newRegion.width = Math.max(...xCoords) - newRegion.x;
+  newRegion.height = Math.max(...yCoords) - newRegion.y;
+  newRegion.area = getAreaOfPolygon(region);
+  return newRegion;
+};
+
+export const getAreaOfPolygon = (region: IRegionData) => {
+  let area = 0;
+  const { points } = region;
+  const numPoints = points.length;
+  if (numPoints < 3) return area;
+
+  let j = numPoints - 1;
+  for (let i = 0; i < numPoints; i += 1) {
+    area += points[i].x * points[j].y - points[j].x * points[i].y;
+    j = i;
+  }
+  return Math.abs(area) / 2;
+};
+=======
   }
   const xCoords = newRegion.points.map((point) => point.x)
   const yCoords = newRegion.points.map((point) => point.x)
@@ -83,6 +152,7 @@ export const getAreaOfPolygon = (region: IRegionData) => {
   }
   return Math.abs(area) / 2
 }
+>>>>>>> f538cdebeaf550ed4d060ef8e0bed913c0030f7d
 
 export const drawPolygonOnCanvas = (
   region: IRegionData,
@@ -90,6 +160,25 @@ export const drawPolygonOnCanvas = (
   view: ICanvasView,
   colorCode: string
 ) => {
+<<<<<<< HEAD
+  const highlightVertex = region.highlightedVertex;
+  region.points.forEach((point, idx) => {
+    const vertex: IPoint = { x: point.x, y: point.y };
+    const nextIdx = idx === region.points.length - 1 ? 0 : idx + 1;
+    const nextVertex: IPoint = {
+      x: region.points[nextIdx].x,
+      y: region.points[nextIdx].y,
+    };
+    const [p1] = transformImagePointToCanvasPoint(view, vertex);
+    drawCircle(p1.x, p1.y, 3, context, colorCode);
+    if (highlightVertex && highlightVertex.idx === idx) {
+      drawCircle(p1.x, p1.y, 6, context, colorCode);
+    }
+    drawText(p1.x, p1.y - 5, String(idx), context, colorCode);
+  });
+  drawPath(region.points, context, colorCode, view);
+};
+=======
   const highlightVertex = region.highlightedVertex
   region.points.forEach((point, idx) => {
     const vertex: IPoint = { x: point.x, y: point.y }
@@ -107,3 +196,4 @@ export const drawPolygonOnCanvas = (
   })
   drawPath(region.points, context, colorCode, view)
 }
+>>>>>>> f538cdebeaf550ed4d060ef8e0bed913c0030f7d

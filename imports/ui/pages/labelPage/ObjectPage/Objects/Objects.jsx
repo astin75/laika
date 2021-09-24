@@ -1,60 +1,33 @@
-import React, { useEffect, useState } from "react";
-import styles from "./Objects.module.css";
+import React, { useEffect, useState } from 'react';
+import styles from './Objects.module.css';
+import { Icon } from '@iconify/react';
+import { useTracker } from 'meteor/react-meteor-data';
 
-export default function Objects({ setCurrentObject, objects }) {
-  // const objects = [
-  //   {
-  //     bBox: [1, 2, 3, 4], // xmin, ymin, w, h
-  //     keyPoint: [
-  //       [0, 0, 0],
-  //       [0, 0, 0],
-  //       [0, 0, 0],
-  //       [0, 0, 0],
-  //     ], // [x,y,v]
-  //     polygon: [
-  //       [0, 0],
-  //       [0, 0],
-  //       [0, 0],
-  //       [0, 0],
-  //       [0, 0],
-  //     ], // [x,y],[x,y],[x,y] ...
-  //     state1: "car",
-  //     state2: "stop",
-  //     objectTracking: 0,
-  //   },
-  //   {
-  //     bBox: [0, 0, 0, 0], // xmin, ymin, w, h
-  //     keyPoint: [
-  //       [0, 0, 0],
-  //       [0, 0, 0],
-  //       [0, 0, 0],
-  //       [0, 0, 0],
-  //     ], // [x,y,v]
-  //     polygon: [
-  //       [0, 0],
-  //       [0, 0],
-  //       [0, 0],
-  //       [0, 0],
-  //       [0, 0],
-  //     ], // [x,y],[x,y],[x,y] ...
-  //     state1: "car",
-  //     state2: "stop",
-  //     objectTracking: 1,
-  //   },
-  // ];
+import { imageInfoCollection } from 'imports/db/collections';
+import { gtInfoCollection } from 'imports/db/collections';
 
-  // objects.map((name, value) => console.log(name));
+export default function Objects({ objects, setCurrentObject, setObjects, currentImageInfo }) {
+  const deleteObejctbtn = (currentObjectId) => {
+    setObjects(objects.filter((e) => e.objectId !== currentObjectId));
+  };
+
+  // console.log(objects);
+
   return (
     <div className={styles.pageWrap}>
-      {objects.map((name, value) => (
-        <div
-          key={name.objectNo}
-          className={styles.object}
-          onClick={() => setCurrentObject(name)}
-        >
-          object {name.objectNo}
-        </div>
-      ))}
+      <div className={styles.objectListTitle}>Objects</div>
+      <div className={styles.objectListWrap}>
+        {currentImageInfo !== null
+          ? objects.map((object, idx) => (
+              <div key={object.objectId} className={styles.object}>
+                <div className={styles.objectTitle} onClick={() => setCurrentObject(object)}>
+                  object {object.objectId}
+                </div>
+                <Icon icon="bi:trash" onClick={() => deleteObejctbtn(object.objectId)} />
+              </div>
+            ))
+          : ''}
+      </div>
     </div>
   );
 }

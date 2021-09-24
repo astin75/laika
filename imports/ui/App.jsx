@@ -1,25 +1,25 @@
-import './styles/style.scss'
+import './styles/style.scss';
 
-import { Overlay } from '@mantine/core'
-import { useMediaQuery } from '@mantine/hooks'
-import DefaultLayout from 'imports/ui/components/DefaultLayout/DefaultLayout'
-import MinScreen from 'imports/ui/pages/MinScreen'
-import React from 'react'
-import { Route, Switch } from 'react-router-dom'
-import { RecoilRoot } from 'recoil'
+import { Overlay } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+import DefaultLayout from 'imports/ui/components/DefaultLayout/DefaultLayout';
+import MinScreen from 'imports/ui/pages/MinScreen';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 // import OptionPage from "imports/ui/pages/OptionPage/DataManagement_new/OptionPage";
-import AccountPage from 'ui/pages/AccountPage/AccountPage'
-import IndexPage from 'ui/pages/IndexPage'
-import LabelingPage from 'ui/pages/labelPage/LabelingPage'
-import NotFound from 'ui/pages/NotFound'
-import { OptionPage } from 'ui/pages/OptionPage/DataManagement/OptionPage'
-import ProjectList2 from 'ui/pages/OptionPage/DataManagement/ProjectList2/ProjectList2'
-import ProjectUpload from 'ui/pages/OptionPage/DataManagement/ProjectUpload/ProjectUpload'
-import UserControl from 'ui/pages/OptionPage/DataManagement/UserControl/UserControl'
-import RoadMap from 'ui/pages/RoadMap/RoadMap'
+import AccountPage from 'ui/pages/AccountPage/AccountPage';
+import IndexPage from 'ui/pages/IndexPage';
+import LabelingPage from 'ui/pages/labelPage/LabelingPage';
+import NotFound from 'ui/pages/NotFound';
+import { OptionPage } from 'ui/pages/OptionPage/DataManagement/OptionPage';
+import ProjectList2 from 'ui/pages/OptionPage/DataManagement/projectList2/ProjectList2';
+import ProjectUpload from 'ui/pages/OptionPage/DataManagement/projectUpload/ProjectUpload';
+import UserControl from 'ui/pages/OptionPage/DataManagement/UserControl/UserControl';
+import RoadMap from 'ui/pages/RoadMap/RoadMap';
 
 const App = () => {
-  const underMinSize = useMediaQuery('(max-width: 1024px)')
+  const underMinSize = useMediaQuery('(max-width: 1024px)');
   return (
     <RecoilRoot>
       {underMinSize ? (
@@ -44,7 +44,7 @@ const App = () => {
         </Switch>
       )}
     </RecoilRoot>
-  )
-}
+  );
+};
 
-export default App
+export default App;

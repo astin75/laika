@@ -1,61 +1,63 @@
-import React, { useState } from 'react'
-import { useRecoilValue } from 'recoil'
+import React, { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { IPoint } from '../../../../canvasTools/IPoint';
+import {
+  canvasView,
+  canvasViewDispatcherState,
+} from '../../../../recoil/canvas';
+import Canvas from '../Canvas';
+import { ICanvasHandlerProps } from './ICanvasHandler';
 
-import { IPoint } from '../../../../canvasTools/IPoint'
-import { canvasView, canvasViewDispatcherState } from '../../../../recoil/canvas'
-import Canvas from '../Canvas'
-import { ICanvasHandlerProps } from './ICanvasHandler'
-
-type HandlerState = 'idle' | 'moveCanvas'
+type HandlerState = 'idle' | 'moveCanvas';
 
 export default function CanvasMover({ frame, onWheel }: ICanvasHandlerProps) {
-  const [state, setState] = useState<HandlerState>('idle')
-  const view = useRecoilValue(canvasView)
-  const canvasViewDispatcher = useRecoilValue(canvasViewDispatcherState)
+  const [state, setState] = useState<HandlerState>('idle');
+  const view = useRecoilValue(canvasView);
+  const canvasViewDispatcher = useRecoilValue(canvasViewDispatcherState);
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 0) return
+    if (e.button !== 0) return;
     switch (state) {
       case 'idle':
-        setState('moveCanvas')
-        break
+        setState('moveCanvas');
+        break;
       default:
-        break
+        break;
     }
-  }
+  };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const movementOffset: IPoint = {
       x: e.movementX,
       y: e.movementY,
-    }
+    };
 
     switch (state) {
       case 'moveCanvas':
-        canvasViewDispatcher?.shiftCanvas(movementOffset)
-        break
+        canvasViewDispatcher?.shiftCanvas(movementOffset);
+        break;
       default:
-        break
+        break;
     }
-  }
+  };
 
   const handleMouseUp = (e: React.MouseEvent) => {
-    if (e.button !== 0) return
+    if (e.button !== 0) return;
     switch (state) {
       default:
-        setState('idle')
-        break
+        setState('idle');
+        break;
     }
-  }
+  };
 
   const handleMouseOut = (e: React.MouseEvent) => {
-    if (e.button !== 0) return
+    if (e.button !== 0) return;
     switch (state) {
       default:
-        setState('idle')
-        break
+        setState('idle');
+        break;
     }
-  }
+  };
 
   return (
     <Canvas
@@ -66,5 +68,5 @@ export default function CanvasMover({ frame, onWheel }: ICanvasHandlerProps) {
       onMouseUp={handleMouseUp}
       onMouseOut={handleMouseOut}
     />
-  )
+  );
 }

@@ -1,15 +1,17 @@
 .pageWrap {
   width: 100%;
-  height: 30px;
+  height: 5%;
   display: flex;
   justify-content: space-between;
+  align-items : center;
   /* background-color: #000000; */
 }
 
 .addObjectWrap {
   width: 21px;
   height: 21px;
-  background-color: #1948a0;
+  background-color: #4877ce;
+  /* border : 1px solid #000000; */
   position: relative;
   display: flex;
   justify-content: center;

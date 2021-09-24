@@ -1,0 +1,10 @@
+.currentObjectOptionsWrap {
+  width: 100%;
+  height: 40px;
+  background-color: #9b9999;
+  display: flex;
+  gap: 10px;
+  padding: 5px;
+  box-sizing: border-box;
+  align-items: center;
+}

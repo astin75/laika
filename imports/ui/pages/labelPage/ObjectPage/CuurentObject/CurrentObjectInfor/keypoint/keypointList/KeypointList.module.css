@@ -1,0 +1,36 @@
+.listWrap{
+    position : absolute;
+    width : 100%;
+    height : 300px;
+    top : 40px;
+    left : 0px;
+    background-color : #ffffff;
+    display : flex;
+    gap : 10px;
+    flex-direction: column;
+    z-index : 1;
+    padding : 10px;
+    box-sizing: border-box;
+    justify-content: center;
+}
+
+.list{
+    width: 100%;
+    height : 10%;
+    display : flex;
+    justify-content: space-between;
+}
+
+.listTitle{
+    width: 20%;
+    height : 100%;
+
+}
+
+
+.listOptionList{
+    display : flex;
+    gap: 10px;
+    align-items: center;
+}
+

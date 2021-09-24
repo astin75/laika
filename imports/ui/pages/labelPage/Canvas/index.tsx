@@ -1,3 +1,6 @@
+import { drawRegionOnCanvas } from '../../../../canvasTools/IRegionData';
+import { currentAnnotations } from '../../../../recoil/annotation';
+import { canvasView } from '../../../../recoil/canvas';
 // import {
 //   categoryDispatcher,
 //   categoryDispatcherState,
@@ -5,12 +8,10 @@
 // } from '@src/recoil/category';
 // @ts-ignore
 import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-
-import { drawPolygonOnCanvas } from '../../../../canvasTools/IPolygon';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { getRandomHexColor } from '../../../../common/utils';
 import { drawRectOnCanvas } from '../../../../canvasTools/IRect';
-import { currentAnnotations } from '../../../../recoil/annotation';
-import { canvasView } from '../../../../recoil/canvas';
+import { drawPolygonOnCanvas } from '../../../../canvasTools/IPolygon';
 
 interface ICanvasProps {
   frame: HTMLImageElement | undefined;
@@ -63,10 +64,16 @@ export default function Canvas({
 
       // annotation draw
       annotations.forEach(async (annot) => {
-        if (annot.regions.rect) drawRectOnCanvas(annot.regions.rect, context, view, annot.color);
+        if (annot.regions.rect)
+          drawRectOnCanvas(annot.regions.rect, context, view, annot.color);
 
         if (annot.regions.polygon)
-          drawPolygonOnCanvas(annot.regions.polygon, context, view, annot.color);
+          drawPolygonOnCanvas(
+            annot.regions.polygon,
+            context,
+            view,
+            annot.color
+          );
       });
     }
   };

@@ -1,7 +1,6 @@
 // @ts-ignore
 import React, { useEffect, useRef } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-
 import { IPoint } from '../../../../canvasTools/IPoint';
 import {
   CanvasViewDispatcher,
@@ -12,6 +11,8 @@ import CanvasMover from '../CanvasHandler/CanvasMover';
 import PolygonDrawer from '../CanvasHandler/PolygonDrawer';
 import RectDrawer from '../CanvasHandler/RectDrawer';
 import styles from './editor.module.css';
+
+import EditorOptions from './EditorOptions/EditorOptions';
 
 export enum EditorMode {
   Idle = 'idle',
@@ -83,6 +84,7 @@ export default function Editor({ image, mode }: IEditorProps) {
 
   return (
     <section className={styles.pageWrap} ref={containerRef}>
+      <EditorOptions />
       {canvasHandler}
     </section>
   );

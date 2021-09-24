@@ -46,6 +46,7 @@ export default function LabelingPage() {
       currentImagesInfoTmp = imageList.filter((e) => e.projectName === query.projectName);
       if (currentImagesInfo === null) setCurrentImagesInfo(currentImagesInfoTmp);
 
+      // 임의로 세팅
       let currentGtInfoTmp;
       currentGtInfoTmp = gtinfor.filter((e) => e.projectName === query.projectName);
       if (currentGtInfo === null) setCurrentGtInfo(currentImagesInfoTmp);
@@ -78,6 +79,7 @@ export default function LabelingPage() {
     <div className={styles.main}>
       <HeaderPage />
       <div className={styles.contents}>
+        {/* 현재 프로젝트에서 업로드한 이미지 페이지 */}
         <ImageFilesPage
           currentImagesInfo={currentImagesInfo}
           setCurrentImageInfo={setCurrentImageInfo}
@@ -86,6 +88,8 @@ export default function LabelingPage() {
         <Editor image={image} mode={mode} />
         {/* 임시로 데이터 확인하려고 넣은 우측바 */}
         {/* <TmpBar mode={mode} onModeChange={setMode} /> */}
+
+        {/* 클릭한 이미지에 대한 Object 페이지 */}
         <ObjectPage currentProjectInfo={currentProjectInfo} currentImageInfo={currentImageInfo} />
       </div>
     </div>

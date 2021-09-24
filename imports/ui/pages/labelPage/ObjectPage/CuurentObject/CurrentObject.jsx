@@ -10,7 +10,10 @@ export default function CurrentObject({ currentObject, currentProjectInfo }) {
       <div className={styles.selectedObject}>
         {currentObject ? `[Object ${currentObject.objectId}]` : ''}
       </div>
+      {/* 프로젝트에서 설정한 label 종류 옵션 바*/}
       {currentProjectInfo ? <CurrentObjectOptions currentProjectInfo={currentProjectInfo} /> : ''}
+
+      {/* 현재 내가 클릭한 object의 infor*/}
       {currentObject ? (
         <CurrentObjectInfor currentObject={currentObject} currentProjectInfo={currentProjectInfo} />
       ) : (

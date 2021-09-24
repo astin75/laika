@@ -6,6 +6,7 @@ import { gtInfoCollection } from 'imports/db/collections';
 
 function AddObject({ currentImageInfo, setObjects }) {
   const addObjectFunc = () => {
+    // 현재 이미지를 선택해야만 object를 추가할수 있음
     if (!currentImageInfo) {
       alert('이미지를 먼저 클릭해주세요');
       return;
@@ -14,6 +15,7 @@ function AddObject({ currentImageInfo, setObjects }) {
     const RandValue = new Uint32Array(1);
     window.crypto.getRandomValues(RandValue);
 
+    // 임시로 객체를 만들어서 object 생성 --> db로 바꿀 필요있음
     const tempObjectInfo = {
       projectName: false,
       masterProjectName: false,

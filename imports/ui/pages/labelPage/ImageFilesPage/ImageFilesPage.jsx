@@ -5,6 +5,8 @@ import { Table } from '@mantine/core';
 export default function ImageFilesPage({ currentImagesInfo, setCurrentImageInfo }) {
   // Error, Done, Have to work
   const imageState = ['#dd7171', '#61c46e', '#cccccc'];
+
+  // 현재 이미지 클릭 시, 현재 클릭한 이미지 정보가 변수에 담김 --> objectPage로 전달
   const selectCurrentImage = (currentImage) => {
     setCurrentImageInfo(currentImage);
   };

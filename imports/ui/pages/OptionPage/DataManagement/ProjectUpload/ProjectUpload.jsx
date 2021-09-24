@@ -121,9 +121,11 @@ export default function ProjectUpload() {
       };
 
       await projectCollection.insert(tempProjectInfo);
+      setProjectName([{ masterProjectName: true, projectName: '' }]);
+      setGlobalError(true);
       showNotification('blue', '프로젝트가 등록 되었습니다.! 🤥', false);
     } catch (e) {
-      console.log("update Error")
+      console.log('update Error');
       showNotification('red', '프로젝트 등록 에러.! 🤥', false);
     }
   };

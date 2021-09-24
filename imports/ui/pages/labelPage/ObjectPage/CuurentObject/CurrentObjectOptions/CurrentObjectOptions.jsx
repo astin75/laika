@@ -38,7 +38,7 @@ export default function CurrentObjectOptions({ currentProjectInfo }) {
       ) : (
         ''
       )}
-      {currentProjectInfo !== null && currentProjectInfo.polygon === 'true' ? (
+      {currentProjectInfo !== null && currentProjectInfo.polygon === true ? (
         <Icon
           icon="bx:bx-shape-polygon"
           style={{

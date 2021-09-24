@@ -8,6 +8,7 @@
   flex-direction: column;
   padding: 10px;
   box-sizing: border-box;
+  justify-content: center;
   /* color: #ffffff; */
   font-size: 13px;
   gap: 20px;

@@ -11,18 +11,23 @@ export default function Objects({ objects, setCurrentObject, setObjects, current
     setObjects(objects.filter((e) => e.objectId !== currentObjectId));
   };
 
+  // console.log(objects);
+
   return (
     <div className={styles.pageWrap}>
-      {currentImageInfo !== null
-        ? objects.map((object, idx) => (
-            <div key={object.objectId} className={styles.object}>
-              <div className={styles.objectTitle} onClick={() => setCurrentObject(object)}>
-                object {object.objectId}
+      <div className={styles.objectListTitle}>Objects</div>
+      <div className={styles.objectListWrap}>
+        {currentImageInfo !== null
+          ? objects.map((object, idx) => (
+              <div key={object.objectId} className={styles.object}>
+                <div className={styles.objectTitle} onClick={() => setCurrentObject(object)}>
+                  object {object.objectId}
+                </div>
+                <Icon icon="bi:trash" onClick={() => deleteObejctbtn(object.objectId)} />
               </div>
-              <Icon icon="bi:trash" onClick={() => deleteObejctbtn(object.objectId)} />
-            </div>
-          ))
-        : ''}
+            ))
+          : ''}
+      </div>
     </div>
   );
 }

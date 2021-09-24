@@ -4,6 +4,10 @@ import styles from './CurrentObjectInfor.module.css';
 import { Select, ColorPicker } from '@mantine/core';
 
 import BboxInfor from './bbox/BboxInfor';
+import KeypointInfor from './keypoint/KeypointInfor';
+import PolygonInfor from './polygon/PolygonInfor';
+import StateInfor from './state/StateInfor';
+import ObjectTrackingInfor from './objectTracking/ObjectTrackingInfor';
 
 const objectColorValues = [
   '#25262b',
@@ -23,13 +27,7 @@ const objectColorValues = [
 ];
 
 export default function CurrentObjectInfor({ currentObject, currentProjectInfo }) {
-  const [polygonInfor, setPolygonInfor] = useState({
-    class: '',
-    visible: true,
-    color: '#25262b',
-    number: '',
-    bboxPallteConfig: false,
-  });
+  console.log(currentProjectInfo);
 
   return (
     <div className={styles.currentObjectInforWrap}>
@@ -38,28 +36,16 @@ export default function CurrentObjectInfor({ currentObject, currentProjectInfo }
       ) : (
         ''
       )}
-      <div>
-        <div></div>
-        <div>Polygon</div>
-        <div></div>
-        <div></div>
-      </div>
-      <div>
-        <div></div>
-        <div>Keypoint</div>
-        <div></div>
-      </div>
-      <div>
-        <div>
-          <div>State1</div>
-        </div>
-        <div>
-          <div>State2</div>
-        </div>
-        <div>
-          <div>ID</div>
-        </div>
-      </div>
+      {currentProjectInfo.polygon ? <PolygonInfor objectColorValues={objectColorValues} /> : ''}
+      {currentProjectInfo.keypoint.length > 0 ? (
+        <KeypointInfor objectColorValues={objectColorValues} />
+      ) : (
+        ''
+      )}
+
+      {currentProjectInfo.stateList.length > 0 ? <StateInfor idx={1} /> : ''}
+      {currentProjectInfo.stateList.length > 1 ? <StateInfor idx={2} /> : ''}
+      <ObjectTrackingInfor />
     </div>
   );
 }

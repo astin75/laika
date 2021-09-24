@@ -1,7 +1,7 @@
 .pageBigWrap {
   width: 25%;
   height: 100%;
-  background-color: #3b548a;
+  background-color: #494949;
 
   padding: 10px;
   box-sizing: border-box;
@@ -10,12 +10,6 @@
 .pageSmallWrap {
   width: 100%;
   height: 100%;
-  /* padding: 10px; */
-  /* box-sizing: border-box; */
-  /* background-color: #fffde1; */
-
-  /* border: 3px solid #5aa360; */
-
   display: flex;
   flex-direction: column;
   justify-self: space-between;

@@ -1,7 +1,7 @@
 .pageWrap {
   width: 100%;
-  height: calc(100% - 200px);
-  margin-bottom: 10px;
+  height: 60%;
+  margin-bottom: 20px;
 }
 
 .selectedObject {
@@ -9,7 +9,7 @@
   height: 30px;
   font-size: 15px;
   line-height: 30px;
-  background-color: #5f1818;
+  background-color: #000000;
   color: #ffffff;
   padding: 0px 5px;
   /* margin-bottom: 5px; */

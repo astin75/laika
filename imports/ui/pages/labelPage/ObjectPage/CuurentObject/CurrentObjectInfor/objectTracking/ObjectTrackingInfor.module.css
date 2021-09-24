@@ -1,0 +1,13 @@
+
+.objectTrackingInforWrap{
+  display : flex;
+  gap : 20px;
+  width: 100%;
+  height : 10%;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  padding: 0 10px;
+  box-sizing: border-box;
+  font-size : 15px;
+}

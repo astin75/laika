@@ -6,6 +6,11 @@ import { gtInfoCollection } from 'imports/db/collections';
 
 function AddObject({ currentImageInfo, setObjects }) {
   const addObjectFunc = () => {
+    if (!currentImageInfo) {
+      alert('이미지를 먼저 클릭해주세요');
+      return;
+    }
+
     const RandValue = new Uint32Array(1);
     window.crypto.getRandomValues(RandValue);
 

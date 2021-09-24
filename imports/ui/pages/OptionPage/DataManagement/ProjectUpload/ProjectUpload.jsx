@@ -7,6 +7,7 @@ import Images from 'imports/db/files';
 import { chunk } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import SmallNavigation from 'ui/components/SmallNavigation/SmallNavigation';
 
 import NavigationBar from '../../../../components/NavigationBar/NavigationBar';
 import AddImages from './AddImages/AddImages';
@@ -36,11 +37,15 @@ export default function ProjectUpload() {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  const [globalError, setGlobalError] = useState(true);
+
   const notifications = useNotifications();
-  const showNotification = () =>
+  const showNotification = (color, msg, autoClose) =>
     notifications.showNotification({
-      title: '',
-      message: '프로젝트가 등록 되었습니다.! 🤥',
+      title: msg,
+      message: 'never close unless you click',
+      color: color,
+      autoClose: autoClose,
     });
 
   const switchStyles = {
@@ -54,13 +59,14 @@ export default function ProjectUpload() {
           {
             file,
             chunkSize: 'dynamic',
-            meta:{projectName:projectName}
+            meta: { projectName: projectName },
           },
           false
         );
 
         upload.start();
         resolve();
+        upload.end();
       }, 0)
     );
   };
@@ -68,10 +74,8 @@ export default function ProjectUpload() {
   const onRegister = async () => {
     let RandValue = new Uint32Array(1);
     window.crypto.getRandomValues(RandValue);
+    setProgress(0);
 
-    // console.log(ImgFileInfo)
-    // console.log(RawImgList)
-    // [...ImgFileInfo.fileName, ...ImgFileInfo.fileId,...ImgFileInfo.projectID,...ImgFileInfo.confirmFlag]
     let tempImgFileInfo = [...ImgFileInfo.imgInfo];
     let tempGroundTruthJson = [...GroundTruthJson.List];
     let unConfirmed = 0;
@@ -98,6 +102,7 @@ export default function ProjectUpload() {
           imageIndex++;
         }
       }
+      setProgress(100);
 
       let tempProjectInfo = {
         projectName: projectName[0].projectName,
@@ -116,28 +121,14 @@ export default function ProjectUpload() {
       };
 
       await projectCollection.insert(tempProjectInfo);
-      showNotification();
+      setProjectName([{ masterProjectName: true, projectName: '' }]);
+      setGlobalError(true);
+      showNotification('blue', '프로젝트가 등록 되었습니다.! 🤥', false);
     } catch (e) {
-      //seterrclass로 알려주기
+      console.log('update Error');
+      showNotification('red', '프로젝트 등록 에러.! 🤥', false);
     }
-
-    // console.log('progress', progress, progress > 0 && progress < 100)
-    // console.log('progress > 0 && progress < 100 &&')
   };
-
-  // useEffect(() => {
-  //   // const updateProgress = () => setProgressPercentage(progressPercentage + step)
-  //   if (progressPercentage > 0) {
-  //     if (progressPercentage < 100) {
-  //       setTimeout(() => {
-  //         console.log(count)
-  //         console.log(progressPercentage)
-  //         onRegister()
-  //         setProgressPercentage(progressPercentage + step)
-  //       }, 0)
-  //     }
-  //   }
-  // }, [progressPercentage])
 
   return (
     <>
@@ -151,29 +142,14 @@ export default function ProjectUpload() {
       )}
 
       <div className={styles.container}>
-        <div className={styles.topMenu}>
-          <Button
-            className={styles.topMenuButton}
-            variant="gradient"
-            gradient={{ from: 'indigo', to: 'cyan' }}
-            component={Link}
-            to="/projectListPage"
-          >
-            프로젝트 리스트
-          </Button>
-          <Button
-            className={styles.topMenuButton}
-            variant="gradient"
-            gradient={{ from: 'grape', to: 'pink', deg: 35 }}
-            component={Link}
-            to="/userControlPage"
-          >
-            계정 관리
-          </Button>
-        </div>
+        <SmallNavigation />
 
         <div>
-          <ProjectTitle ProjectName={projectName} setProjectName={setProjectName} />
+          <ProjectTitle
+            ProjectName={projectName}
+            setProjectName={setProjectName}
+            setGlobalError={setGlobalError}
+          />
           <BoundingBoxConfig boxClassList={boxClassList} setBoxClassList={setBoxClassList} />
           <KeypointConfig
             keyPointClassList={keyPointClassList}
@@ -213,6 +189,7 @@ export default function ProjectUpload() {
 
           <div>
             <Button
+              disabled={globalError}
               className={styles.registerButton}
               onClick={async () => {
                 setIsLoading(true);

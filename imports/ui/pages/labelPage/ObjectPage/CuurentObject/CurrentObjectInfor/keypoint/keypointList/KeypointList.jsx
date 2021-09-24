@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import styles from './KeypointList.module.css';
 import { Select, ColorPicker } from '@mantine/core';
 
+//
 const keypointArr = [
   'neck',
   'right_shoulder',

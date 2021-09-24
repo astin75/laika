@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import styles from './KeypointInfor.module.css';
 import { Select, ColorPicker } from '@mantine/core';
 
+import KeypointList from './keypointList/KeypointList';
+
 export default function KeypointInfor({ objectColorValues }) {
   const [keypointInfor, setKeypointInfor] = useState({
     class: '',
@@ -17,6 +19,8 @@ export default function KeypointInfor({ objectColorValues }) {
     { value: 'cat', label: 'Cat' },
     { value: 'rabbit', label: 'Rabbit' },
   ];
+
+  const [keypointListToggle, setKeypointListToggle] = useState(false);
 
   return (
     <div className={styles.keypointWrap}>
@@ -37,41 +41,17 @@ export default function KeypointInfor({ objectColorValues }) {
           <i className="far fa-eye-slash"></i>
         </div>
       )}
-      <div>Keypoint</div>
+      <div className={styles.keypointTitle}>Keypoint</div>
       <div>7</div>
-      <div
-        className={styles.keypointColor}
-        style={{ backgroundColor: `${keypointInfor.color}` }}
-        onClick={() => {
-          setKeypointInfor((pre) => ({
-            ...pre,
-            keypointPallteConfig: !keypointInfor.keypointPallteConfig,
-          }));
-        }}
-      >
-        <div
-          className={styles.keypointColorSelect}
-          style={{ display: keypointInfor.keypointPallteConfig ? 'block' : 'none' }}
-        >
-          <ColorPicker
-            size="xs"
-            withPicker={false}
-            value={keypointInfor.color}
-            onChange={(e) => {
-              setKeypointInfor((pre) => ({ ...pre, color: e, keypointInfor: false }));
-            }}
-            swatches={objectColorValues}
-          />
-        </div>
-      </div>
 
-      <Select
-        size="xs"
-        data={keypointClassInfor}
-        onChange={(e) => {
-          setKeypointInfor((pre) => ({ ...pre, class: e }));
+      <div
+        className={styles.dropdownBtn}
+        onClick={() => {
+          setKeypointListToggle((pre) => !pre);
+          console.log(keypointListToggle);
         }}
-      />
+      ></div>
+      {keypointListToggle ? <KeypointList /> : ''}
     </div>
   );
 }

@@ -19,9 +19,9 @@
   position: relative;
 }
 
-.polygonInforColorSelect{
+.polygonColorSelect{
   position : absolute;
-  top : 25px;
+  top : 15px;
   width: 200px;
   height: 50px;
   background-color: #c2bfbf9f;
@@ -31,5 +31,6 @@
   padding: 0 10px;
   box-sizing: border-box;
   border-radius: 10px;
+  z-index : 1;
   
 }

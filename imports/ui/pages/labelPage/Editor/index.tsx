@@ -12,6 +12,8 @@ import PolygonDrawer from '../CanvasHandler/PolygonDrawer';
 import RectDrawer from '../CanvasHandler/RectDrawer';
 import styles from './editor.module.css';
 
+import EditorOptions from './EditorOptions/EditorOptions';
+
 export enum EditorMode {
   Idle = 'idle',
   Rect = 'rect',
@@ -30,9 +32,7 @@ export default function Editor({ image, mode }: IEditorProps) {
 
   // canvas dispatcher
   const setCanvasDispatcher = useSetRecoilState(canvasViewDispatcherState);
-  const dispatcherRef = useRef<CanvasViewDispatcher>(
-    createCanvasViewDispatcher()
-  );
+  const dispatcherRef = useRef<CanvasViewDispatcher>(createCanvasViewDispatcher());
   const canvasViewDispatcher = useRecoilValue(canvasViewDispatcherState);
 
   useEffect(() => {
@@ -84,6 +84,7 @@ export default function Editor({ image, mode }: IEditorProps) {
 
   return (
     <section className={styles.pageWrap} ref={containerRef}>
+      <EditorOptions />
       {canvasHandler}
     </section>
   );

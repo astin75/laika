@@ -1,3 +1,5 @@
+import eyeIcon from '@iconify/icons-akar-icons/eye';
+import eyeSlashed from '@iconify/icons-akar-icons/eye-slashed';
 import { Icon } from '@iconify/react';
 import { imageInfoCollection } from 'imports/db/collections';
 import { gtInfoCollection } from 'imports/db/collections';
@@ -9,19 +11,8 @@ import {
 import { useTracker } from 'meteor/react-meteor-data';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-<<<<<<< HEAD
 
 import styles from './Objects.module.css';
-=======
-import {
-  annotationDispatcherState,
-  currentAnnotations,
-  selectionIdx,
-} from 'imports/recoil/annotation';
-
-import eyeIcon from '@iconify/icons-akar-icons/eye';
-import eyeSlashed from '@iconify/icons-akar-icons/eye-slashed';
->>>>>>> eb3081c3a3c2928b5773b7d46af86371d44983e5
 
 export default function Objects({ currentImageInfo }) {
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
@@ -39,10 +30,7 @@ export default function Objects({ currentImageInfo }) {
     annotationDispatcher?.setSelectionAnnotation(selection, false);
     annotationDispatcher?.setSelectionAnnotation(idx, true);
     setSelection(idx);
-<<<<<<< HEAD
-=======
     setSelectedObject(idx);
->>>>>>> eb3081c3a3c2928b5773b7d46af86371d44983e5
   };
 
   // console.log(objects);

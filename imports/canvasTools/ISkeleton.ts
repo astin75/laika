@@ -219,6 +219,8 @@ export const drawKeypointOnCanvas = (
   view: ICanvasView,
   colorCode: string
 ) => {
+  if (!region.visible)
+    return;
   const highlightVertex = region.highlightedVertex;
   let drawColor = colorCode;
   region.points.forEach((point, idx) => {

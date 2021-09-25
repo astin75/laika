@@ -89,6 +89,8 @@ export const drawPolygonOnCanvas = (
   view: ICanvasView,
   colorCode: string
 ) => {
+  if (!region.visible)
+    return;
   const highlightVertex = region.highlightedVertex;
   region.points.forEach((point, idx) => {
     const vertex: IPoint = { x: point.x, y: point.y };

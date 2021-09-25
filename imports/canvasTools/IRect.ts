@@ -4,13 +4,13 @@ import { drawCircle, drawRect } from './drawUtils';
 import {
   IPoint,
   transformCanvasPointToImagePoint,
-  transformImagePointToCanvasPoint,
+  transformImagePointToCanvasPoint
 } from './IPoint';
 import {
   getAreaOfRegion,
   getBoundingPointsOfRegion,
   IRegionData,
-  RegionDataType,
+  RegionDataType
 } from './IRegionData';
 
 // TODO: IRect is not used anymore
@@ -25,6 +25,8 @@ export const drawRectOnCanvas = (
   view: ICanvasView,
   colorCode: string
 ) => {
+  if (!region.visible)
+    return;
   const [topLeft] = transformImagePointToCanvasPoint(view, region.boundingPoints[0]);
   const width = region.width * view.scale;
   const height = region.height * view.scale;
@@ -71,7 +73,7 @@ export const makeRectRegion = (pointA: IPoint, pointB: IPoint): IRegionData => {
     type: RegionDataType.Rect,
     visible: true,
     highlighted: false,
-    selected: false,
+    selected: false
   };
   region.area = getAreaOfRegion(region);
 
@@ -168,7 +170,7 @@ export const moveBoundingPointOfRect = (
         x: ((pt.x - region.x) / prevWidth) * newWidth + updatedRegion.x,
         y: ((pt.y - region.y) / prevHeight) * newHeight + updatedRegion.y,
         alias: pt.alias,
-        visible: pt.visible,
+        visible: pt.visible
       };
     });
   }
@@ -179,7 +181,7 @@ export const moveBoundingPointOfRect = (
 export const getTlBrPointOfRect = (region: IRegionData) => {
   return [
     { x: region.x, y: region.y },
-    { x: region.x + region.width, y: region.y + region.height },
+    { x: region.x + region.width, y: region.y + region.height }
   ];
 };
 

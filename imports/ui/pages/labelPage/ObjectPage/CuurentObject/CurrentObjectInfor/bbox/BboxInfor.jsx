@@ -4,6 +4,7 @@ import styles from './BboxInfor.module.css';
 import { Select, ColorPicker } from '@mantine/core';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { annotationDispatcherState, currentAnnotations, selectionIdx } from 'imports/recoil/annotation';
+import _ from 'lodash';
 
 export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
   const [bboxInfor, setBboxInfor] = useState({
@@ -18,8 +19,8 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
   const annotations = useRecoilValue(currentAnnotations);
   const [selection, setSelection] = useRecoilState(selectionIdx);
 
-  const bboxClassInfor = currentProjectInfo.bbox.map((cls) => ({ value: cls, label: cls }))
-  bboxClassInfor.push({value: 'undefined', label: '선택안됨'});
+  const bboxClassInfor = currentProjectInfo.bbox.map((cls) => ({ value: cls, label: cls }));
+  bboxClassInfor.push({ value: 'undefined', label: '선택안됨' });
 
   return (
     <div className={styles.bboxWrap}>
@@ -27,6 +28,9 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
         <div
           onClick={() => {
             setBboxInfor((pre) => ({ ...pre, visible: false }));
+            const newAnnot = _.cloneDeep(annotations[selection]);
+            newAnnot.regions.rect.visible = false;
+            annotationDispatcher?.edit(selection, newAnnot, false);
           }}
         >
           <i className='far fa-eye'></i>
@@ -35,6 +39,9 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
         <div
           onClick={() => {
             setBboxInfor((pre) => ({ ...pre, visible: true }));
+            const newAnnot = _.cloneDeep(annotations[selection]);
+            newAnnot.regions.rect.visible = true;
+            annotationDispatcher?.edit(selection, newAnnot, false);
           }}
         >
           <i className='far fa-eye-slash'></i>

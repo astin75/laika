@@ -42,6 +42,7 @@ export default function AddImages(props) {
       for (count = 0; count < event.target.files.length; count++) {
         if (
           event.target.files[count].name.slice(-3) === 'jpg' ||
+          event.target.files[count].name.slice(-4) === 'jpeg' ||
           event.target.files[count].name.slice(-3) === 'png'
         ) {
           Filecount++;

@@ -220,9 +220,14 @@ export const drawKeypointOnCanvas = (
   colorCode: string
 ) => {
   const highlightVertex = region.highlightedVertex;
+  let drawColor = colorCode;
   region.points.forEach((point, idx) => {
     if (point.visible === 0)
       return;
+    if (point.visible === 1)
+      drawColor = getComplementaryColor(colorCode);
+    else
+      drawColor = colorCode;
     const vertex: IPoint = { x: point.x, y: point.y };
     const nextIdx = idx === region.points.length - 1 ? 0 : idx + 1;
     const nextVertex: IPoint = {
@@ -230,11 +235,11 @@ export const drawKeypointOnCanvas = (
       y: region.points[nextIdx].y
     };
     const [p1] = transformImagePointToCanvasPoint(view, vertex);
-    drawCircle(p1.x, p1.y, 3, context, colorCode);
+    drawCircle(p1.x, p1.y, 3, context, drawColor);
     if (highlightVertex && highlightVertex.idx === idx) {
-      drawCircle(p1.x, p1.y, 6, context, colorCode);
+      drawCircle(p1.x, p1.y, 6, context, drawColor);
     }
-    drawText(p1.x, p1.y - 5, point.alias, context, colorCode);
+    drawText(p1.x, p1.y - 5, point.alias, context, drawColor);
   });
 };
 

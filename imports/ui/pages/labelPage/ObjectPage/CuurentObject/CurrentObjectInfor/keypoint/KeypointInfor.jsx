@@ -14,12 +14,6 @@ export default function KeypointInfor({ objectColorValues, currentProjectInfo })
     keypointPallteConfig: false,
   });
 
-  const keypointClassInfor = [
-    { value: 'dog', label: 'Dog' },
-    { value: 'cat', label: 'Cat' },
-    { value: 'rabbit', label: 'Rabbit' },
-  ];
-
   const [keypointListToggle, setKeypointListToggle] = useState(false);
 
   return (

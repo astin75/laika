@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import styles from './ImageFilesPage.module.css';
 import { Table } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
+
+import styles from './ImageFilesPage.module.css';
 
 export default function ImageFilesPage({ currentImagesInfo, setCurrentImageInfo }) {
   // Error, Done, Have to work
@@ -22,23 +23,23 @@ export default function ImageFilesPage({ currentImagesInfo, setCurrentImageInfo 
     <div className={styles.pageWrap}>
       <div className={styles.imageFilesBigWrap}>
         <div className={styles.imageFilesSmallWrap}>
-          <div className={styles.imageFilesTitle}>Image File List</div>
+          <div className={styles.imageFilesTitle}>이미지 리스트</div>
           {currentImagesInfo
             ? currentImagesInfo.map((e) => (
-              <div
-                key={e._id}
-                className={styles.imageFiles}
-                onClick={() => selectCurrentImage(e)}
-              >
-                <div>{e.fileName}</div>
                 <div
-                  className={styles.imageFileState}
-                  style={{
-                    backgroundColor: e.confirmFlag ? `${imageState[1]}` : `${imageState[0]}`
-                  }}
-                />
-              </div>
-            ))
+                  key={e._id}
+                  className={styles.imageFiles}
+                  onClick={() => selectCurrentImage(e)}
+                >
+                  <div>{e.fileName}</div>
+                  <div
+                    className={styles.imageFileState}
+                    style={{
+                      backgroundColor: e.confirmFlag ? `${imageState[1]}` : `${imageState[0]}`,
+                    }}
+                  />
+                </div>
+              ))
             : ''}
         </div>
       </div>

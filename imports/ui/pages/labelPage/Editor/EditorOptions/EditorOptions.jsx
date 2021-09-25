@@ -4,6 +4,7 @@ import styles from './EditorOptions.module.css';
 import { useRecoilValue } from 'recoil';
 import { canvasViewDispatcherState } from 'imports/recoil/canvas';
 import { annotationDispatcherState } from 'imports/recoil/annotation';
+import { EditorMode } from 'ui/pages/labelPage/Editor';
 // import { Table } from '@mantine/core';
 
 export default function EditorOptions({ mode, setMode }) {
@@ -22,7 +23,9 @@ export default function EditorOptions({ mode, setMode }) {
       }}>
         <i className='fas fa-search-minus' style={{ fontSize: '15px' }} />
       </div>
-      <div className={styles.options}>
+      <div className={styles.options} onClick={() => {
+        setMode(EditorMode.Idle)
+      }}>
         <Icon icon='icon-park:move-one' style={{ fontSize: '15px' }} />
       </div>
       <div className={styles.options} onClick={()=>{

@@ -1,17 +1,15 @@
-import { ActionIcon, Badge, Button, Col, Grid, TextInput } from '@mantine/core'
-import { useNotifications } from '@mantine/notifications'
-import RemovableBadge from 'imports/ui/components/RemovableBadge'
-import React, { createRef, useEffect, useRef, useState } from 'react'
-
-import StateList from '../StateList/StateList'
+import { Button, Col, Grid, TextInput } from '@mantine/core';
+import { useNotifications } from '@mantine/notifications';
+import RemovableBadge from 'imports/ui/components/RemovableBadge';
+import React, { useState } from 'react';
 
 export default function AddState({ objectStateBox, setObjectStateBox }) {
-  const [objectState, setObjectState] = useState({ stateName: '', action1: '', action2: '' })
-  const notification = useNotifications()
+  const [objectState, setObjectState] = useState({ stateName: '', action1: '', action2: '' });
+  const notification = useNotifications();
 
   const handleChange = (e) => {
-    setObjectState({ ...objectState, [e.target.name]: e.target.value })
-  }
+    setObjectState({ ...objectState, [e.target.name]: e.target.value });
+  };
 
   const onAdd = () => {
     if (objectStateBox.length > 1) {
@@ -19,11 +17,11 @@ export default function AddState({ objectStateBox, setObjectStateBox }) {
         title: '에러!',
         message: '최대 2개까지 추가 가능합니다! 🤥',
         color: 'red',
-      })
-      return
+      });
+      return;
     }
 
-    const { stateName, action1, action2 } = objectState
+    const { stateName, action1, action2 } = objectState;
     if (stateName && action1 && action2) {
       if (
         Object.values(objectStateBox).some((objectState) => objectState.stateName === stateName)
@@ -32,27 +30,27 @@ export default function AddState({ objectStateBox, setObjectStateBox }) {
           title: '에러!',
           message: '같은 이름의 상태값이 있습니다. 🤥',
           color: 'red',
-        })
-        return
+        });
+        return;
       }
 
-      setObjectStateBox([...objectStateBox, objectState])
-      setObjectState({ stateName: '', action1: '', action2: '' })
+      setObjectStateBox([...objectStateBox, objectState]);
+      setObjectState({ stateName: '', action1: '', action2: '' });
     } else {
       notification.showNotification({
         title: '에러!',
         message: '상태 값을 채워 주세요.! 🤥',
         color: 'red',
-      })
+      });
     }
-  }
+  };
 
   const onRemove = (idx) => {
-    const list = objectStateBox.filter((_, index) => index !== idx)
-    setObjectStateBox(list)
-  }
+    const list = objectStateBox.filter((_, index) => index !== idx);
+    setObjectStateBox(list);
+  };
 
-  const isDisabled = objectStateBox.length === 2
+  const isDisabled = objectStateBox.length === 2;
 
   return (
     <>
@@ -92,15 +90,12 @@ export default function AddState({ objectStateBox, setObjectStateBox }) {
           <Button color="green" onClick={onAdd} disabled={isDisabled}>
             추가하기
           </Button>
-
         </Col>
-
       </Grid>
-      <Grid >
+      <Grid>
         <Col span={6}>
           <small className="text-muted">객체 상태를 추가 할 수 있습니다. </small>
         </Col>
-
       </Grid>
 
       {objectStateBox.length > 0 && (
@@ -119,5 +114,5 @@ export default function AddState({ objectStateBox, setObjectStateBox }) {
         </Grid>
       )}
     </>
-  )
+  );
 }

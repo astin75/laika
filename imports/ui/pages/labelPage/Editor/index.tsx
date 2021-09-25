@@ -13,6 +13,7 @@ import RectDrawer from '../CanvasHandler/RectDrawer';
 import styles from './editor.module.css';
 
 import EditorOptions from './EditorOptions/EditorOptions';
+import KeyPointDrawer from '../CanvasHandler/KeyPointDrawer';
 
 export enum EditorMode {
   Idle = 'idle',
@@ -26,9 +27,10 @@ interface IEditorProps {
   image: HTMLImageElement | undefined;
   mode: EditorMode;
   setMode: (mode: EditorMode) => void;
+  projectInfo: any;
 }
 
-export default function Editor({ image, mode, setMode }: IEditorProps) {
+export default function Editor({ image, mode, setMode, projectInfo }: IEditorProps) {
   const containerRef = useRef<HTMLElement>(null);
 
   // canvas dispatcher
@@ -76,7 +78,9 @@ export default function Editor({ image, mode, setMode }: IEditorProps) {
       // 폴리곤 찍는 놈
       canvasHandler = <PolygonDrawer frame={image} onWheel={handleWheel} />;
       break;
-    //TODO: 스켈레톤, 폴리라인 넣어야 함
+    case EditorMode.Skeleton:
+      canvasHandler = <KeyPointDrawer frame={image} onWheel={handleWheel} projectInfo={projectInfo} />;
+      break;
     default:
       // 드래그하면 캔버스 움직임
       canvasHandler = <CanvasMover frame={image} onWheel={handleWheel} />;

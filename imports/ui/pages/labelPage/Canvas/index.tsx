@@ -12,6 +12,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { getRandomHexColor } from '../../../../common/utils';
 import { drawRectOnCanvas } from '../../../../canvasTools/IRect';
 import { drawPolygonOnCanvas } from '../../../../canvasTools/IPolygon';
+import { drawKeypointOnCanvas } from '../../../../canvasTools/ISkeleton';
 
 interface ICanvasProps {
   frame: HTMLImageElement | undefined;
@@ -25,14 +26,14 @@ interface ICanvasProps {
 
 // Mouse Event 연결 및 Region Draw 함수 호출 컴포넌트
 export default function Canvas({
-  frame,
-  onMouseDown,
-  onMouseMove,
-  onMouseUp,
-  onMouseOut,
-  onWheel,
-  style,
-}: ICanvasProps) {
+                                 frame,
+                                 onMouseDown,
+                                 onMouseMove,
+                                 onMouseUp,
+                                 onMouseOut,
+                                 onWheel,
+                                 style
+                               }: ICanvasProps) {
   const view = useRecoilValue(canvasView);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>();
@@ -74,6 +75,15 @@ export default function Canvas({
             view,
             annot.color
           );
+
+        if (annot.regions.keypoint) {
+          drawKeypointOnCanvas(
+            annot.regions.keypoint,
+            context,
+            view,
+            annot.color
+          );
+        }
       });
     }
   };
@@ -105,5 +115,5 @@ Canvas.defaultProps = {
   onMouseUp: () => undefined,
   onMouseOut: () => undefined,
   onWheel: () => undefined,
-  style: undefined,
+  style: undefined
 };

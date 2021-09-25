@@ -7,7 +7,7 @@ export interface IAnnotation {
   className: string;
   regions: {
     rect?: IRegionData;
-    skeleton?: IRegionData;
+    keypoint?: IRegionData;
     polygon?: IRegionData;
   };
   color: string;
@@ -29,6 +29,11 @@ const redoStack = atom<IAnnotation[][]>({
 export const selectionIdx = atom<undefined | number>({
   key: 'selectionIdx',
   default: undefined
+});
+
+export const keypointIdx = atom<number>({
+  key: 'keypointIdx',
+  default: 0
 });
 
 export const createAnnotationDispatcher = () => {
@@ -103,6 +108,28 @@ export const createAnnotationDispatcher = () => {
           } else {
             if (newAnnot.regions.polygon) {
               newAnnot.regions.polygon.highlightedVertex = undefined;
+            }
+          }
+          return newAnnot;
+        }
+      );
+      updateList[updateList.length - 1] = lastList;
+      return updateList;
+    });
+  });
+
+  const highlightKeypoint = useRecoilCallback<[number | undefined, IVertexInfo | undefined],
+    void>(({ set }) => (idx, vertex) => {
+    set(undoStack, (undoList) => {
+      const updateList: IAnnotation[][] = _.cloneDeep(undoList);
+      const lastList = updateList[updateList.length - 1].map(
+        (annot, annotIdx) => {
+          const newAnnot = { ...annot };
+          if (annotIdx === idx) {
+            newAnnot.regions.keypoint.highlightedVertex = vertex;
+          } else {
+            if (newAnnot.regions.keypoint) {
+              newAnnot.regions.keypoint.highlightedVertex = undefined;
             }
           }
           return newAnnot;
@@ -232,6 +259,7 @@ export const createAnnotationDispatcher = () => {
     toggleSelectionAnnotation,
     setSelectionAnnotation,
     highlightPolygon,
+    highlightKeypoint,
     undo,
     redo,
     del,

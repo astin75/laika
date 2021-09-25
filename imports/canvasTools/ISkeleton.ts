@@ -1,21 +1,71 @@
 import { ICanvasView } from '../recoil/canvas';
-import { drawText, drawCircle, drawLine } from './drawUtils';
+import { drawText, drawCircle, drawLine, drawPath } from './drawUtils';
 import { getComplementaryColor } from '../common/utils';
-
-import { IPoint, transformImagePointToCanvasPoint } from './IPoint';
+import _ from 'lodash';
+import { IPoint, transformCanvasPointToImagePoint, transformImagePointToCanvasPoint } from './IPoint';
 import { drawRectOnCanvas } from './IRect';
 import {
-  getAreaOfRegion,
+  getAreaOfRegion, getBoundingPointsOfRegion,
   IKeypoint,
   IRegionData,
-  RegionDataType,
+  RegionDataType
 } from './IRegionData';
+import { getAreaOfPolygon } from './IPolygon';
+
+export const appendKeypoint = (
+  region: IRegionData | undefined,
+  point: IPoint,
+  pointIdx: number,
+  projectInfo: any
+): IRegionData => {
+  const keypoint: IKeypoint = {
+    visible: 2,
+    alias: projectInfo.keypoint[pointIdx],
+    x: point.x,
+    y: point.y
+  };
+  if (region === undefined) {
+    const defaultPoints: IKeypoint[] = projectInfo.keypoint.map((name) => {
+      return {
+        visible: 0,
+        alias: name,
+        x: 0,
+        y: 0
+      };
+    });
+    defaultPoints[pointIdx] = keypoint;
+    return {
+      x: point.x,
+      y: point.y,
+      width: 0,
+      height: 0,
+      boundingPoints: getBoundingPointsOfRegion(point.x, point.y, 0, 0),
+      points: defaultPoints,
+      area: 0,
+      type: RegionDataType.Skeleton,
+      visible: true,
+      highlighted: false,
+      selected: false
+    };
+  }
+
+  const newRegion: IRegionData = _.cloneDeep(region);
+  newRegion.points[pointIdx] = keypoint;
+  const xCoords = region.points.map((point) => point.x);
+  const yCoords = region.points.map((point) => point.x);
+  newRegion.x = Math.min(...xCoords);
+  newRegion.y = Math.min(...yCoords);
+  newRegion.width = Math.max(...xCoords) - newRegion.x;
+  newRegion.height = Math.max(...yCoords) - newRegion.y;
+  newRegion.area = getAreaOfRegion(region);
+  return newRegion;
+};
 
 export const drawSkeletonOnCanvas = (
   region: IRegionData,
   context: CanvasRenderingContext2D,
   view: ICanvasView,
-  colorCode: string,
+  colorCode: string
 ) => {
   // Bounding Rect Draw
   drawRectOnCanvas(region, context, view, colorCode);
@@ -24,7 +74,7 @@ export const drawSkeletonOnCanvas = (
   if (region.highlightedVertex?.type === 'boundingPoint') {
     const drawPoints = transformImagePointToCanvasPoint(
       view,
-      ...region.boundingPoints,
+      ...region.boundingPoints
     );
     drawPoints.forEach((point, idx) => {
       if (idx === region.highlightedVertex?.idx) {
@@ -33,7 +83,7 @@ export const drawSkeletonOnCanvas = (
           point.y,
           8,
           context,
-          getComplementaryColor(colorCode),
+          getComplementaryColor(colorCode)
         );
       } else {
         drawCircle(point.x, point.y, 6, context, colorCode);
@@ -44,7 +94,7 @@ export const drawSkeletonOnCanvas = (
   // connection lines
   const drawKeyPoints = transformImagePointToCanvasPoint(
     view,
-    ...region.points!,
+    ...region.points!
   );
   region.connections!.forEach((conn) => {
     if (region.points![conn[0]].visible && region.points![conn[1]].visible) {
@@ -71,7 +121,7 @@ export const drawSkeletonOnCanvas = (
           kpt.y - 5,
           region.points![idx].alias,
           context,
-          getComplementaryColor(colorCode),
+          getComplementaryColor(colorCode)
         );
     } else if (
       idx === region.highlightedVertex?.idx &&
@@ -85,7 +135,7 @@ export const drawSkeletonOnCanvas = (
           kpt.y - 5,
           region.points![idx].alias,
           context,
-          colorCode,
+          colorCode
         );
     } else if (visibility === 2) {
       drawCircle(kpt.x, kpt.y, 6, context, colorCode);
@@ -95,7 +145,7 @@ export const drawSkeletonOnCanvas = (
           kpt.y - 5,
           region.points![idx].alias,
           context,
-          colorCode,
+          colorCode
         );
     } else {
       drawCircle(kpt.x, kpt.y, 6, context, getComplementaryColor(colorCode));
@@ -105,7 +155,7 @@ export const drawSkeletonOnCanvas = (
           kpt.y - 5,
           region.points![idx].alias,
           context,
-          getComplementaryColor(colorCode),
+          getComplementaryColor(colorCode)
         );
     }
   });
@@ -162,3 +212,51 @@ export const drawSkeletonOnCanvas = (
 //
 //   return region;
 // };
+
+export const drawKeypointOnCanvas = (
+  region: IRegionData,
+  context: CanvasRenderingContext2D,
+  view: ICanvasView,
+  colorCode: string
+) => {
+  const highlightVertex = region.highlightedVertex;
+  region.points.forEach((point, idx) => {
+    if (point.visible === 0)
+      return;
+    const vertex: IPoint = { x: point.x, y: point.y };
+    const nextIdx = idx === region.points.length - 1 ? 0 : idx + 1;
+    const nextVertex: IPoint = {
+      x: region.points[nextIdx].x,
+      y: region.points[nextIdx].y
+    };
+    const [p1] = transformImagePointToCanvasPoint(view, vertex);
+    drawCircle(p1.x, p1.y, 3, context, colorCode);
+    if (highlightVertex && highlightVertex.idx === idx) {
+      drawCircle(p1.x, p1.y, 6, context, colorCode);
+    }
+    drawText(p1.x, p1.y - 5, point.alias, context, colorCode);
+  });
+};
+
+export const moveKeypointVertex = (
+  region: IRegionData,
+  pointIdx: number,
+  point: IPoint,
+  view: ICanvasView
+): IRegionData => {
+  const newRegion: IRegionData = _.cloneDeep(region);
+  const [transformed] = transformCanvasPointToImagePoint(view, point);
+  newRegion.points[pointIdx] = {
+    ...newRegion.points[pointIdx],
+    x: transformed.x,
+    y: transformed.y
+  };
+  const xCoords = newRegion.points.map((point) => point.x);
+  const yCoords = newRegion.points.map((point) => point.x);
+  newRegion.x = Math.min(...xCoords);
+  newRegion.y = Math.min(...yCoords);
+  newRegion.width = Math.max(...xCoords) - newRegion.x;
+  newRegion.height = Math.max(...yCoords) - newRegion.y;
+  newRegion.area = getAreaOfRegion(region);
+  return newRegion;
+};

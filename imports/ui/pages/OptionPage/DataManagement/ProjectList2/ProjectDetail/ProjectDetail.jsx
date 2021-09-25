@@ -138,7 +138,7 @@ export default function ProjectDetail({
             {user ? (
               <MultiSelect
                 data={userData}
-                placeholder="Pick members on this Project"
+                placeholder={selectedProject.workers.map((e) => ` ${e}`)}
                 onChange={(e) => setSelectedUsers(e)}
               />
             ) : (
@@ -149,12 +149,12 @@ export default function ProjectDetail({
           <div className={styles.projectDetails}>
             <div className={styles.detailTitle}>Project Progress</div>
             <Progress
-              value={
-                ((selectedProject.totalFileSize.length -
-                  (selectedProject.totalFileSize.length - selectedProject.totalUnConfirmSize)) /
-                  selectedProject.totalFileSize.length) *
-                100
-              }
+              value={parseInt(
+                ((selectedProject.totalFileSize -
+                  (selectedProject.totalFileSize - selectedProject.totalUnConfirmSize)) /
+                  selectedProject.totalFileSize) *
+                  100
+              )}
             />
           </div>
 

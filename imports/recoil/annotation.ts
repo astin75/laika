@@ -13,7 +13,7 @@ export interface IAnnotation {
   color: string;
   key: string; // this value is for unique React Key Value
   selected: boolean;
-  meta?: any; // custom meta data
+  meta: {}; // custom meta data
 }
 
 export const undoStack = atom<IAnnotation[][]>({
@@ -38,7 +38,8 @@ export const createAnnotationDispatcher = () => {
       regions: {},
       color: getRandomHexColor(),
       selected: false,
-      key: makeRandomId()
+      key: makeRandomId(),
+      meta: {}
     };
     set(undoStack, (undoList) => {
       const updateList = _.cloneDeep(undoList);

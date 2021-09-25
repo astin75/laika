@@ -14,6 +14,7 @@ import {
   createAnnotationDispatcher,
 } from '../../../recoil/annotation';
 
+import Images from 'imports/db/files'
 import queryString from 'query-string';
 import { useTracker } from 'meteor/react-meteor-data';
 import { imageInfoCollection } from 'imports/db/collections';
@@ -53,16 +54,19 @@ export default function LabelingPage() {
     }
   }, [currentProjectInfo]);
 
-  // ----------------------------------------------------------------
-  // TODO: DB에서 이미지 꺼내와야 함
   const [image, setImage] = useState<HTMLImageElement>(undefined);
   useEffect(() => {
-    const img = new Image();
-    img.src = '/poster.jpg';
-    img.onload = () => {
-      setImage(img);
-    };
-  }, []);
+    if(currentImageInfo){
+      const img = new Image();
+      img.src = Images.findOne({'meta.fileId':currentImageInfo.fileId}).link();
+      img.onload = () => {
+        setImage(img);
+      };
+
+    }
+  }, [currentImageInfo])
+
+  // ----------------------------------------------------------------
 
   // TODO: 우측? 상단? 에서 Rect, Polygon 버튼 누르면 변경되면 됨
   const [mode, setMode] = useState<EditorMode>(EditorMode.Idle);

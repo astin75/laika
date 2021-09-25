@@ -23,7 +23,7 @@ const objectColorValues = [
   '#40c057',
   '#82c91e',
   '#fab005',
-  '#fd7e14',
+  '#fd7e14'
 ];
 
 export default function CurrentObjectInfor({ currentProjectInfo }) {
@@ -32,18 +32,17 @@ export default function CurrentObjectInfor({ currentProjectInfo }) {
   return (
     <div className={styles.currentObjectInforWrap}>
       {currentProjectInfo.bbox.length > 0 ? (
-        <BboxInfor objectColorValues={objectColorValues} currentProjectInfo={currentProjectInfo}/>
+        <BboxInfor objectColorValues={objectColorValues} currentProjectInfo={currentProjectInfo} />
       ) : (
         ''
       )}
       {currentProjectInfo.polygon ? <PolygonInfor objectColorValues={objectColorValues} /> : ''}
       {currentProjectInfo.keypoint.length > 0 ? (
-        <KeypointInfor objectColorValues={objectColorValues} currentProjectInfo={currentProjectInfo}/>
+        <KeypointInfor objectColorValues={objectColorValues} currentProjectInfo={currentProjectInfo} />
       ) : (
         ''
       )}
-      {currentProjectInfo.stateList.length > 0 ? <StateInfor idx={1} /> : ''}
-      {currentProjectInfo.stateList.length > 1 ? <StateInfor idx={2} /> : ''}
+      {currentProjectInfo.stateList.map((stat) => (<StateInfor state={stat} key={stat.stateName}/>))}
       <ObjectTrackingInfor />
     </div>
   );

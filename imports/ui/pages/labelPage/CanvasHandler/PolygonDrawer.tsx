@@ -83,7 +83,6 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
           mousePoint,
           view
         );
-        console.log(annotations[selection]);
         annotationDispatcher.edit(selection, updatedAnnot, true);
         break;
       }

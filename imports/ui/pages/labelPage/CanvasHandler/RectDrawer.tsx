@@ -138,6 +138,8 @@ export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
     }
   };
 
+  console.log(annotations)
+
   const handleMouseUp = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
     switch (state) {

@@ -32,7 +32,7 @@ export default function CurrentObjectInfor({ currentProjectInfo }) {
   return (
     <div className={styles.currentObjectInforWrap}>
       {currentProjectInfo.bbox.length > 0 ? (
-        <BboxInfor objectColorValues={objectColorValues} />
+        <BboxInfor objectColorValues={objectColorValues} currentProjectInfo={currentProjectInfo}/>
       ) : (
         ''
       )}
@@ -42,7 +42,6 @@ export default function CurrentObjectInfor({ currentProjectInfo }) {
       ) : (
         ''
       )}
-
       {currentProjectInfo.stateList.length > 0 ? <StateInfor idx={1} /> : ''}
       {currentProjectInfo.stateList.length > 1 ? <StateInfor idx={2} /> : ''}
       <ObjectTrackingInfor />

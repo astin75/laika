@@ -47,7 +47,7 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
           updateAnnotation.regions.polygon,
           transformed
         );
-        annotationDispatcher?.edit(selection, updateAnnotation, true);
+        annotationDispatcher?.edit(selection, updateAnnotation, false);
         break;
       }
       case 'onPoint': {
@@ -83,7 +83,6 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
           mousePoint,
           view
         );
-        console.log(annotations[selection]);
         annotationDispatcher.edit(selection, updatedAnnot, true);
         break;
       }

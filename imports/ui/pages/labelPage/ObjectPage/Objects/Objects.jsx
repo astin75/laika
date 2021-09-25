@@ -5,11 +5,25 @@ import { useTracker } from 'meteor/react-meteor-data';
 
 import { imageInfoCollection } from 'imports/db/collections';
 import { gtInfoCollection } from 'imports/db/collections';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { annotationDispatcherState, currentAnnotations, selectionIdx } from 'imports/recoil/annotation';
 
-export default function Objects({ objects, setCurrentObject, setObjects, currentImageInfo }) {
-  const deleteObejctbtn = (currentObjectId) => {
-    setObjects(objects.filter((e) => e.objectId !== currentObjectId));
+export default function Objects({currentImageInfo }) {
+  const annotationDispatcher = useRecoilValue(annotationDispatcherState);
+  const annotations = useRecoilValue(currentAnnotations);
+  const [selection, setSelection] = useRecoilState(selectionIdx);
+
+  const deleteAnnotation = (idx) => {
+    // annotationDispatcher?.setSelectionAnnotation(idx, true);
+    // annotationDispatcher?.del();
+    annotationDispatcher?.remove(idx);
   };
+
+  const selectAnnotation = (idx) => {
+    annotationDispatcher?.setSelectionAnnotation(selection, false);
+    annotationDispatcher?.setSelectionAnnotation(idx, true);
+    setSelection(idx);
+  }
 
   // console.log(objects);
 
@@ -18,12 +32,12 @@ export default function Objects({ objects, setCurrentObject, setObjects, current
       <div className={styles.objectListTitle}>Objects</div>
       <div className={styles.objectListWrap}>
         {currentImageInfo !== null
-          ? objects.map((object, idx) => (
-              <div key={object.objectId} className={styles.object}>
-                <div className={styles.objectTitle} onClick={() => setCurrentObject(object)}>
-                  object {object.objectId}
+          ? annotations.map((annot, idx) => (
+              <div key={annot.key} className={styles.object}>
+                <div className={styles.objectTitle} onClick={() => selectAnnotation(idx)}>
+                  object {annot.key}
                 </div>
-                <Icon icon="bi:trash" onClick={() => deleteObejctbtn(object.objectId)} />
+                <Icon icon="bi:trash" onClick={() => deleteAnnotation(idx)} />
               </div>
             ))
           : ''}

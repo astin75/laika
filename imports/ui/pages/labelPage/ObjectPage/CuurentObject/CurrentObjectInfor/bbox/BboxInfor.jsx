@@ -2,21 +2,25 @@ import React, { useState } from 'react';
 
 import styles from './BboxInfor.module.css';
 import { Select, ColorPicker } from '@mantine/core';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { annotationDispatcherState, currentAnnotations, selectionIdx } from 'imports/recoil/annotation';
 
-export default function BboxInfor({ objectColorValues }) {
+export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
   const [bboxInfor, setBboxInfor] = useState({
     class: '',
     visible: true,
     color: '#25262b',
     number: '',
-    bboxPallteConfig: false,
+    bboxPallteConfig: false
   });
 
-  const bboxClassInfor = [
-    { value: 'dog', label: 'Dog' },
-    { value: 'cat', label: 'Cat' },
-    { value: 'rabbit', label: 'Rabbit' },
-  ];
+  const annotationDispatcher = useRecoilValue(annotationDispatcherState);
+  const annotations = useRecoilValue(currentAnnotations);
+  const [selection, setSelection] = useRecoilState(selectionIdx);
+
+  console.log(currentProjectInfo);
+  const bboxClassInfor = currentProjectInfo.bbox.map((cls) => ({ value: cls, label: cls }))
+  bboxClassInfor.push({value: 'undefined', label: '선택안됨'});
 
   return (
     <div className={styles.bboxWrap}>
@@ -26,7 +30,7 @@ export default function BboxInfor({ objectColorValues }) {
             setBboxInfor((pre) => ({ ...pre, visible: false }));
           }}
         >
-          <i className="far fa-eye"></i>
+          <i className='far fa-eye'></i>
         </div>
       ) : (
         <div
@@ -34,7 +38,7 @@ export default function BboxInfor({ objectColorValues }) {
             setBboxInfor((pre) => ({ ...pre, visible: true }));
           }}
         >
-          <i className="far fa-eye-slash"></i>
+          <i className='far fa-eye-slash'></i>
         </div>
       )}
       <div>Box</div>
@@ -44,7 +48,7 @@ export default function BboxInfor({ objectColorValues }) {
         onClick={() => {
           setBboxInfor((pre) => ({
             ...pre,
-            bboxPallteConfig: !bboxInfor.bboxPallteConfig,
+            bboxPallteConfig: !bboxInfor.bboxPallteConfig
           }));
         }}
       >
@@ -53,7 +57,7 @@ export default function BboxInfor({ objectColorValues }) {
           style={{ display: bboxInfor.bboxPallteConfig ? 'block' : 'none' }}
         >
           <ColorPicker
-            size="xs"
+            size='xs'
             withPicker={false}
             value={bboxInfor.color}
             onChange={(e) => {
@@ -65,9 +69,12 @@ export default function BboxInfor({ objectColorValues }) {
       </div>
 
       <Select
-        size="xs"
+        size='xs'
         data={bboxClassInfor}
+        value={annotations[selection].className}
         onChange={(e) => {
+          const currentAnnot = { ...annotations[selection] };
+          annotationDispatcher?.edit(selection, { ...currentAnnot, className: e }, false);
           setBboxInfor((pre) => ({ ...pre, class: e }));
         }}
         style={{ width: '80px' }}

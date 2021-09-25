@@ -164,7 +164,6 @@ export const createAnnotationDispatcher = () => {
           const idx = await snapshot.getPromise(selectionIdx);
           if (idx >= undoList[undoList.length - 1].length){
             set(selectionIdx, undefined);
-            console.log(idx, undoList[undoList.length - 1].length)
           }
           set(undoStack, undoList);
           set(redoStack, (redoList) => [...redoList, lastAnnotations]);
@@ -197,6 +196,7 @@ export const createAnnotationDispatcher = () => {
   });
 
   const reset = useRecoilCallback<[], void>(({ set }) => () => {
+    set(selectionIdx, undefined);
     set(undoStack, [[]]);
     set(redoStack, [[]]);
   });

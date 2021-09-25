@@ -7,11 +7,11 @@ import HeaderPage from './HeaderPage/HeaderPage';
 import styles from './LabelingPage.module.css';
 import Editor, { EditorMode } from './Editor';
 import TmpBar from './TmpBar';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   AnnotationDispatcher,
   annotationDispatcherState,
-  createAnnotationDispatcher
+  createAnnotationDispatcher, currentAnnotations
 } from '../../../recoil/annotation';
 
 import Images from 'imports/db/files';
@@ -32,6 +32,7 @@ export default function LabelingPage() {
   const [currentImagesInfo, setCurrentImagesInfo] = useState(null);
   const [currentImageInfo, setCurrentImageInfo] = useState(null);
   const [currentGtInfo, setCurrentGtInfo] = useState(null);
+  const prevImageInfo = useRef(undefined);
 
   useEffect(() => {
     if (projectList.length !== 0) {
@@ -54,6 +55,7 @@ export default function LabelingPage() {
     }
   }, [currentProjectInfo]);
 
+  // 이미지 로드
   const [image, setImage] = useState<HTMLImageElement>(undefined);
   useEffect(() => {
     if (currentImageInfo) {
@@ -62,6 +64,22 @@ export default function LabelingPage() {
       img.onload = () => {
         setImage(img);
       };
+    }
+  }, [currentImageInfo]);
+
+  // DB 저장
+  useEffect(() => {
+    // first image
+    if (currentImageInfo) {
+      if (!prevImageInfo.current) {
+        prevImageInfo.current = currentImageInfo;
+      } else {
+        const toSave = gtInfoCollection.findOne({ ImgFileId: prevImageInfo.current.fileId });
+        toSave.annotations = annotations;
+        annotationDispatcher?.reset();
+        gtInfoCollection.update({ _id: toSave._id }, { $set: toSave });
+        prevImageInfo.current = currentImageInfo;
+      }
     }
   }, [currentImageInfo]);
 
@@ -75,6 +93,8 @@ export default function LabelingPage() {
   useEffect(() => {
     setAnnotationDispatcher(dispatcherRef.current);
   }, []);
+  const annotations = useRecoilValue(currentAnnotations);
+  const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   // ----------------------------------------------------------------
 
   return (
@@ -89,7 +109,8 @@ export default function LabelingPage() {
         {/* 라벨링 작업하는 중앙 캔버스 */}
         <Editor image={image} mode={mode} setMode={setMode} />
         {/* 클릭한 이미지에 대한 Object 페이지 */}
-        <ObjectPage currentProjectInfo={currentProjectInfo} currentImageInfo={currentImageInfo} mode={mode} setMode={setMode} />
+        <ObjectPage currentProjectInfo={currentProjectInfo} currentImageInfo={currentImageInfo} mode={mode}
+                    setMode={setMode} />
       </div>
     </div>
   );

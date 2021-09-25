@@ -2,7 +2,6 @@ import _ from 'lodash';
 import { atom, selector, useRecoilCallback } from 'recoil';
 import { IRegionData, IVertexInfo } from '../canvasTools/IRegionData';
 import { getRandomHexColor, makeRandomId } from '../common/utils';
-import { RegionDataType } from './../canvasTools/IRegionData';
 
 export interface IAnnotation {
   className: string;
@@ -209,6 +208,18 @@ export const createAnnotationDispatcher = () => {
       }
   );
 
+  const remove = useRecoilCallback<[ number ], void>(
+    ({set, snapshot}) =>
+      async (idx:number) => {
+        const undoList = _.cloneDeep(await snapshot.getPromise(undoStack));
+        const updatedAnnotations = undoList[undoList.length - 1].filter(
+          (annot, annotIdx) => annotIdx !== idx
+        );
+        undoList.push(updatedAnnotations);
+        set(undoStack, undoList);
+      }
+  )
+
   return {
     insert,
     edit,
@@ -220,6 +231,7 @@ export const createAnnotationDispatcher = () => {
     redo,
     del,
     reset,
+    remove,
     initFromData,
   };
 };

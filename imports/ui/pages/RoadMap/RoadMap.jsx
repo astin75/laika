@@ -1,7 +1,7 @@
 import { Button, LoadingOverlay, Overlay, Select, Table, Text, Timeline } from '@mantine/core';
 import saveAs from 'file-saver';
 //-----------------------------------------------
-import { imageInfoCollection, userProfileCollection } from 'imports/db/collections';
+import { imageInfoCollection } from 'imports/db/collections';
 import { gtInfoCollection } from 'imports/db/collections';
 import { projectCollection } from 'imports/db/collections';
 import Images from 'imports/db/files';
@@ -9,7 +9,7 @@ import JSZip from 'jszip';
 import JSZipUtils from 'jszip-utils';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
-import React, { createRef, useRef, useState } from 'react';
+import React, { useState } from 'react';
 //----------------------------------------------
 import NavigationBar from 'ui/components/NavigationBar/NavigationBar';
 import styles from 'ui/pages/OptionPage/DataManagement/UserControl/UserControl.module.css';
@@ -56,7 +56,7 @@ export default function RoadMap() {
         let filename = i + '.json';
         let filename1 = i + '.jpg';
         let blob = new Blob([JSON.stringify(gtValue, null, 4)], { type: 'text/json' });
-        console.log(Images.findOne(rawImgs[i]._id).link());
+
         let webUrl = String(Images.findOne(rawImgs[i]._id).link());
         let imgBlob = fetch(webUrl).then((res) => res.blob());
         zip.file(filename1, imgBlob, { binary: true });
@@ -66,8 +66,7 @@ export default function RoadMap() {
       let filename = 0 + '.json';
       let filename1 = 0 + '.jpg';
       let blob = new Blob([JSON.stringify(gt, null, 4)], { type: 'text/json' });
-      console.log(gt);
-      console.log(Images.findOne(rawImgs[0]._id).link());
+
       let webUrl = String(Images.findOne(rawImgs[0]._id).link());
       let imgBlob = fetch(webUrl).then((res) => res.blob());
       zip.file(filename1, imgBlob, { binary: true });
@@ -99,10 +98,10 @@ export default function RoadMap() {
     for (count = 0; count < gtinfo.length; count++) {
       gtInfoCollection.remove(gtinfo[count]._id);
       imageInfoCollection.remove(imginfo[count]._id);
-      Images.remove(rawImg[count]._id);
+      Images.remove({ _id: rawImg[count]._id });
     }
 
-    projectCollection.remove(prjectInfo[0]._id);
+    //projectCollection.remove(prjectInfo[0]._id);
   };
 
   return (

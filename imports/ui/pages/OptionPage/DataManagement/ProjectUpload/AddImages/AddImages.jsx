@@ -59,7 +59,7 @@ export default function AddImages(props) {
           tempGroundTruthJson.List.push({
             projectName: false,
             masterProjectName: false,
-            projectId: false,
+            projectID: false,
             bbox: [],
             keypoint: [],
             stateList: [],

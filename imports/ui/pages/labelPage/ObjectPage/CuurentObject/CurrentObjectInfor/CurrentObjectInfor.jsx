@@ -26,8 +26,8 @@ const objectColorValues = [
   '#fd7e14',
 ];
 
-export default function CurrentObjectInfor({ currentObject, currentProjectInfo }) {
-  console.log(currentProjectInfo);
+export default function CurrentObjectInfor({ currentProjectInfo }) {
+  // console.log(currentProjectInfo);
 
   return (
     <div className={styles.currentObjectInforWrap}>

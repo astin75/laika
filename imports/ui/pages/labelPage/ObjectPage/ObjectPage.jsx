@@ -5,10 +5,7 @@ import Objects from './Objects/Objects';
 import ObjectOptions from './ObjectOptions/ObjectOptions';
 import CurrentObject from './CuurentObject/CurrentObject';
 
-export default function ObjectPage({ currentProjectInfo, currentImageInfo }) {
-  const [currentObject, setCurrentObject] = useState(null);
-  const [objects, setObjects] = useState([]);
-
+export default function ObjectPage({ currentProjectInfo, currentImageInfo, mode, setMode }) {
 
   return (
     <div className={styles.pageBigWrap}>
@@ -17,7 +14,7 @@ export default function ObjectPage({ currentProjectInfo, currentImageInfo }) {
         <ObjectOptions currentImageInfo={currentImageInfo} />
 
         {/* 현재 클릭한 Object의 정보를 표시하는 페이지 */}
-        <CurrentObject currentObject={currentObject} currentProjectInfo={currentProjectInfo} />
+        <CurrentObject currentProjectInfo={currentProjectInfo} mode={mode} setMode={setMode} />
 
         {/* 내가 추가한 object들의 리스트 정리 페이지 */}
         <Objects

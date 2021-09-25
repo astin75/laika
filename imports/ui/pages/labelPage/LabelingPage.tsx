@@ -11,10 +11,10 @@ import { useSetRecoilState } from 'recoil';
 import {
   AnnotationDispatcher,
   annotationDispatcherState,
-  createAnnotationDispatcher,
+  createAnnotationDispatcher
 } from '../../../recoil/annotation';
 
-import Images from 'imports/db/files'
+import Images from 'imports/db/files';
 import queryString from 'query-string';
 import { useTracker } from 'meteor/react-meteor-data';
 import { imageInfoCollection } from 'imports/db/collections';
@@ -56,19 +56,17 @@ export default function LabelingPage() {
 
   const [image, setImage] = useState<HTMLImageElement>(undefined);
   useEffect(() => {
-    if(currentImageInfo){
+    if (currentImageInfo) {
       const img = new Image();
-      img.src = Images.findOne({'meta.fileId':currentImageInfo.fileId}).link();
+      img.src = Images.findOne({ 'meta.fileId': currentImageInfo.fileId }).link();
       img.onload = () => {
         setImage(img);
       };
-
     }
-  }, [currentImageInfo])
+  }, [currentImageInfo]);
 
   // ----------------------------------------------------------------
 
-  // TODO: 우측? 상단? 에서 Rect, Polygon 버튼 누르면 변경되면 됨
   const [mode, setMode] = useState<EditorMode>(EditorMode.Idle);
 
   // Annotation Dispatcher 초기화
@@ -90,11 +88,8 @@ export default function LabelingPage() {
         />
         {/* 라벨링 작업하는 중앙 캔버스 */}
         <Editor image={image} mode={mode} />
-        {/* 임시로 데이터 확인하려고 넣은 우측바 */}
-        {/* <TmpBar mode={mode} onModeChange={setMode} /> */}
-
         {/* 클릭한 이미지에 대한 Object 페이지 */}
-        <ObjectPage currentProjectInfo={currentProjectInfo} currentImageInfo={currentImageInfo} />
+        <ObjectPage currentProjectInfo={currentProjectInfo} currentImageInfo={currentImageInfo} mode={mode} setMode={setMode} />
       </div>
     </div>
   );

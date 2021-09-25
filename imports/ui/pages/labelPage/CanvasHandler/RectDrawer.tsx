@@ -1,19 +1,19 @@
 import {
   getNormOfPoint,
   IPoint,
-  transformCanvasPointToImagePoint,
+  transformCanvasPointToImagePoint
 } from '../../../../canvasTools/IPoint';
 import {
   isPointInRect,
   makeRectRegion,
-  moveBoundingPointOfRect,
+  moveBoundingPointOfRect
 } from '../../../../canvasTools/IRect';
 import Canvas from '../Canvas';
 import {
   annotationDispatcherState,
   currentAnnotations,
   IAnnotation,
-  selectionIdx,
+  selectionIdx
 } from '../../../../recoil/annotation';
 import { canvasView } from '../../../../recoil/canvas';
 import _ from 'lodash';
@@ -24,7 +24,7 @@ import RectEditor from './RectEditor';
 import {
   findNearestBoundingPoint,
   findNearestPoint,
-  IVertexInfo,
+  IVertexInfo
 } from '../../../../canvasTools/IRegionData';
 
 type HandlerState =
@@ -49,7 +49,7 @@ export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
     if (e.button !== 0) return;
     const mousePoint: IPoint = {
       x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
+      y: e.nativeEvent.offsetY
     };
 
     switch (state) {
@@ -70,11 +70,11 @@ export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
     if (e.button !== 0) return;
     const mousePoint: IPoint = {
       x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
+      y: e.nativeEvent.offsetY
     };
     const movementOffset: IPoint = {
       x: e.movementX,
-      y: e.movementY,
+      y: e.movementY
     };
     const [pointA, pointB] = transformCanvasPointToImagePoint(
       view,
@@ -84,7 +84,7 @@ export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
 
     switch (state) {
       case 'idle':
-      case 'onPoint':
+      case 'onPoint': {
         const region = annotations[selection]?.regions.rect;
         if (region === undefined) break;
         let nearestPoint = undefined;
@@ -100,11 +100,11 @@ export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
         if (nearestPoint !== undefined)
           vertex = {
             idx: nearestPoint,
-            type: 'boundingPoint',
+            type: 'boundingPoint'
           };
         annotationDispatcher.highlightRect(selection, vertex);
         break;
-
+      }
       case 'drawHolding': {
         if (!(getNormOfPoint(movementOffset) > 0)) break;
         setState('draw');
@@ -123,6 +123,7 @@ export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
       }
       case 'movePoint': {
         const updatedAnnot: IAnnotation = _.cloneDeep(annotations[selection]);
+        if (!updatedAnnot.regions.rect.highlightedVertex) break;
         updatedAnnot.regions.rect = moveBoundingPointOfRect(
           updatedAnnot.regions.rect,
           updatedAnnot.regions.rect.highlightedVertex.idx,
@@ -130,6 +131,7 @@ export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
           view
         );
         annotationDispatcher.edit(selection, updatedAnnot, true);
+        break;
       }
       default:
         break;

@@ -5,7 +5,7 @@ import { Select, ColorPicker } from '@mantine/core';
 
 import KeypointList from './keypointList/KeypointList';
 
-export default function KeypointInfor({ objectColorValues }) {
+export default function KeypointInfor({ objectColorValues, currentProjectInfo }) {
   const [keypointInfor, setKeypointInfor] = useState({
     class: '',
     visible: true,
@@ -49,7 +49,7 @@ export default function KeypointInfor({ objectColorValues }) {
           setKeypointListToggle((pre) => !pre);
         }}
       ></div>
-      {keypointListToggle ? <KeypointList /> : ''}
+      {keypointListToggle ? <KeypointList currentProjectInfo={currentProjectInfo}/> : ''}
     </div>
   );
 }

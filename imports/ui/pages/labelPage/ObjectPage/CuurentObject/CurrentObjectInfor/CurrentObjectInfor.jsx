@@ -38,7 +38,7 @@ export default function CurrentObjectInfor({ currentProjectInfo }) {
       )}
       {currentProjectInfo.polygon ? <PolygonInfor objectColorValues={objectColorValues} /> : ''}
       {currentProjectInfo.keypoint.length > 0 ? (
-        <KeypointInfor objectColorValues={objectColorValues} />
+        <KeypointInfor objectColorValues={objectColorValues} currentProjectInfo={currentProjectInfo}/>
       ) : (
         ''
       )}

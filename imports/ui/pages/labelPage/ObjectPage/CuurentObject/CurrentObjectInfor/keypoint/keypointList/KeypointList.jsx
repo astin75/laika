@@ -4,18 +4,11 @@ import styles from './KeypointList.module.css';
 import { Select, ColorPicker } from '@mantine/core';
 
 //
-const keypointArr = [
-  'neck',
-  'right_shoulder',
-  'left_shoulder',
-  'right_knee',
-  'left_knee',
-  'right-hip',
-  'left-hip',
-];
 
-export default function KeypointList() {
-  const keypointClassList = ['cat', 'dog', 'cow'];
+
+export default function KeypointList({currentProjectInfo}) {
+  const keypointClassList = ['visible', 'invisible'];
+  const keypointArr = currentProjectInfo.keypoint;
   const [keypointClass, setKeyPointClass] = useState('');
 
   return (

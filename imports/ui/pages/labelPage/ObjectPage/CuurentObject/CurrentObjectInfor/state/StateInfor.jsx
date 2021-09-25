@@ -2,21 +2,31 @@ import React, { useState } from 'react';
 
 import styles from './StateInfor.module.css';
 import { Select, ColorPicker } from '@mantine/core';
+import { useRecoilValue } from 'recoil';
+import { annotationDispatcherState, currentAnnotations, selectionIdx } from 'imports/recoil/annotation';
+import _ from 'lodash';
 
-export default function StateInfor({ idx }) {
-  const [stateInfor, setStateInfor] = useState('');
+export default function StateInfor({ state }) {
+  const annotations = useRecoilValue(currentAnnotations);
+  const selection = useRecoilValue(selectionIdx);
+  const annotationDispatcher = useRecoilValue(annotationDispatcherState);
 
-  const stateClassInfor = [
-    { value: 'dog', label: 'Dog' },
-    { value: 'cat', label: 'Cat' },
-    { value: 'rabbit', label: 'Rabbit' },
-  ];
+  const stateClassInfor = [state.action1, state.action2, '선택안됨'];
+
+  const updateAnnotationState = (e) => {
+    const newAnnot = _.cloneDeep(annotations[selection]);
+    newAnnot.meta[state.stateName] = e;
+    annotationDispatcher?.edit(selection, newAnnot, false);
+  };
 
   return (
     <div className={styles.stateInforWrap}>
-      <div>State{idx}</div>
+      <div>{state.stateName}</div>
 
-      <Select size="xs" data={stateClassInfor} onChange={setStateInfor} style={{ width: '80px' }} />
+      <Select size='xs' data={stateClassInfor} value={annotations[selection].meta[state.stateName] ?? '선택안됨'}
+              onChange={(e) => {
+                updateAnnotationState(e);
+              }} style={{ width: '80px' }} />
     </div>
   );
 }

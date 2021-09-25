@@ -5,7 +5,7 @@ import { IPoint } from '../../../../canvasTools/IPoint';
 import {
   CanvasViewDispatcher,
   canvasViewDispatcherState,
-  createCanvasViewDispatcher,
+  createCanvasViewDispatcher
 } from '../../../../recoil/canvas';
 import CanvasMover from '../CanvasHandler/CanvasMover';
 import PolygonDrawer from '../CanvasHandler/PolygonDrawer';
@@ -13,6 +13,7 @@ import RectDrawer from '../CanvasHandler/RectDrawer';
 import styles from './editor.module.css';
 
 import EditorOptions from './EditorOptions/EditorOptions';
+import KeyPointDrawer from '../CanvasHandler/KeyPointDrawer';
 
 export enum EditorMode {
   Idle = 'idle',
@@ -25,9 +26,11 @@ export enum EditorMode {
 interface IEditorProps {
   image: HTMLImageElement | undefined;
   mode: EditorMode;
+  setMode: (mode: EditorMode) => void;
+  projectInfo: any;
 }
 
-export default function Editor({ image, mode }: IEditorProps) {
+export default function Editor({ image, mode, setMode, projectInfo }: IEditorProps) {
   const containerRef = useRef<HTMLElement>(null);
 
   // canvas dispatcher
@@ -44,7 +47,7 @@ export default function Editor({ image, mode }: IEditorProps) {
     const direction = e.deltaY > 0 ? -1 : 1;
     const mousePosition: IPoint = {
       x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
+      y: e.nativeEvent.offsetY
     };
     canvasViewDispatcher?.zoomCanvas(direction, mousePosition);
   };
@@ -75,7 +78,9 @@ export default function Editor({ image, mode }: IEditorProps) {
       // 폴리곤 찍는 놈
       canvasHandler = <PolygonDrawer frame={image} onWheel={handleWheel} />;
       break;
-    //TODO: 스켈레톤, 폴리라인 넣어야 함
+    case EditorMode.Skeleton:
+      canvasHandler = <KeyPointDrawer frame={image} onWheel={handleWheel} projectInfo={projectInfo} />;
+      break;
     default:
       // 드래그하면 캔버스 움직임
       canvasHandler = <CanvasMover frame={image} onWheel={handleWheel} />;
@@ -84,7 +89,7 @@ export default function Editor({ image, mode }: IEditorProps) {
 
   return (
     <section className={styles.pageWrap} ref={containerRef}>
-      <EditorOptions />
+      <EditorOptions mode={mode} setMode={setMode} />
       {canvasHandler}
     </section>
   );

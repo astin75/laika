@@ -1,10 +1,10 @@
-import { useTracker } from 'meteor/react-meteor-data'
-import React from 'react'
-import { Link } from 'react-router-dom'
-import FloatNav from 'ui/components/FloatNav'
+import { useTracker } from 'meteor/react-meteor-data';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import FloatNav from 'ui/components/FloatNav';
 
 export default function Index() {
-  const user = useTracker(() => Meteor.user())
+  const user = useTracker(() => Meteor.user());
   return (
     <>
       <div className="branding">
@@ -72,5 +72,5 @@ export default function Index() {
         <FloatNav />
       </main>
     </>
-  )
+  );
 }

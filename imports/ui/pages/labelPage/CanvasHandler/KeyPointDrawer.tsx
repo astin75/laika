@@ -4,31 +4,37 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   getNormOfPoint,
   IPoint,
-  transformCanvasPointToImagePoint,
+  transformCanvasPointToImagePoint
 } from '../../../../canvasTools/IPoint';
 import { appendPointToPolygon, movePolygonVertex } from '../../../../canvasTools/IPolygon';
 import {
   findNearestKeyPoint,
   findNearestPoint,
-  IVertexInfo,
+  IVertexInfo
 } from '../../../../canvasTools/IRegionData';
 import {
   annotationDispatcherState,
   currentAnnotations,
-  IAnnotation,
-  selectionIdx,
+  IAnnotation, keypointIdx,
+  selectionIdx
 } from '../../../../recoil/annotation';
 import { canvasView } from '../../../../recoil/canvas';
 import Canvas from '../Canvas';
 import { ICanvasHandlerProps } from './ICanvasHandler';
+import { appendKeypoint, moveKeypointVertex } from '../../../../canvasTools/ISkeleton';
 
 type HandlerState = 'idle' | 'onPoint' | 'holding' | 'movePoint';
 
-export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
+interface IKeypointDrawerProps {
+  projectInfo: any;
+}
+
+export default function KeyPointDrawer({ frame, onWheel, projectInfo }: ICanvasHandlerProps & IKeypointDrawerProps) {
   const [state, setState] = useState<HandlerState>('idle');
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const annotations = useRecoilValue(currentAnnotations);
   const [selection, setSelection] = useRecoilState(selectionIdx);
+  const [curKeypoint, setCurKeypoint] = useRecoilState(keypointIdx);
 
   const view = useRecoilValue(canvasView);
 
@@ -36,18 +42,26 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
     if (e.button !== 0) return;
     const mousePoint: IPoint = {
       x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
+      y: e.nativeEvent.offsetY
     };
     const [transformed] = transformCanvasPointToImagePoint(view, mousePoint);
 
     switch (state) {
       case 'idle': {
+        if (curKeypoint === projectInfo.keypoint.length)
+          break;
+        if (annotations[selection].regions.keypoint.points[curKeypoint]?.visible !== 0)
+          return;
         const updateAnnotation: IAnnotation = _.cloneDeep(annotations[selection]);
-        updateAnnotation.regions.polygon = appendPointToPolygon(
-          updateAnnotation.regions.polygon,
-          transformed
+        updateAnnotation.regions.keypoint = appendKeypoint(
+          updateAnnotation.regions.keypoint,
+          transformed,
+          curKeypoint,
+          projectInfo
         );
         annotationDispatcher?.edit(selection, updateAnnotation, false);
+        if(updateAnnotation.regions.keypoint.points[curKeypoint + 1]?.visible === 0)
+          setCurKeypoint((prev) => prev + 1);
         break;
       }
       case 'onPoint': {
@@ -63,11 +77,11 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
     if (e.button !== 0) return;
     const mousePoint: IPoint = {
       x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
+      y: e.nativeEvent.offsetY
     };
     const movementOffset: IPoint = {
       x: e.movementX,
-      y: e.movementY,
+      y: e.movementY
     };
 
     switch (state) {
@@ -77,9 +91,9 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
         break;
       case 'movePoint': {
         const updatedAnnot: IAnnotation = _.cloneDeep(annotations[selection]);
-        updatedAnnot.regions.polygon = movePolygonVertex(
-          annotations[selection].regions.polygon,
-          annotations[selection].regions.polygon.highlightedVertex.idx,
+        updatedAnnot.regions.keypoint = moveKeypointVertex(
+          annotations[selection].regions.keypoint,
+          annotations[selection].regions.keypoint.highlightedVertex.idx,
           mousePoint,
           view
         );
@@ -88,19 +102,19 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
       }
       default: {
         let vertex: IVertexInfo = undefined;
-        const region = annotations[selection]?.regions.polygon;
+        const region = annotations[selection]?.regions.keypoint;
         if (region === undefined) break;
         const nearestPoint = findNearestPoint(mousePoint, region, view, 10);
         if (nearestPoint !== undefined) {
           setState('onPoint');
           vertex = {
             idx: nearestPoint,
-            type: 'boundingPoint',
+            type: 'boundingPoint'
           };
         } else {
           setState('idle');
         }
-        annotationDispatcher?.highlightPolygon(selection, vertex);
+        annotationDispatcher?.highlightKeypoint(selection, vertex);
         break;
       }
     }

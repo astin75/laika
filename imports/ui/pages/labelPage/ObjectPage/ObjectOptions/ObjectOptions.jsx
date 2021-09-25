@@ -7,7 +7,7 @@ import { gtInfoCollection } from 'imports/db/collections';
 import { useRecoilValue } from 'recoil';
 import { annotationDispatcherState } from 'imports/recoil/annotation';
 
-function AddObject({ currentImageInfo }) {
+function AddObject({ currentImageInfo, currentProjectInfo }) {
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
 
   const addObjectFunc = () => {
@@ -16,7 +16,7 @@ function AddObject({ currentImageInfo }) {
       alert('이미지를 먼저 클릭해주세요');
       return;
     }
-    annotationDispatcher?.insert();
+    annotationDispatcher?.insert(currentProjectInfo.keypoint.length > 0, currentProjectInfo);
   };
 
   return (
@@ -45,10 +45,10 @@ function CancleObject() {
   );
 }
 
-export default function ObjectOptions({ currentImageInfo }) {
+export default function ObjectOptions({ currentImageInfo, currentProjectInfo}) {
   return (
     <div className={styles.pageWrap}>
-      <AddObject currentImageInfo={currentImageInfo}/>
+      <AddObject currentImageInfo={currentImageInfo} currentProjectInfo={currentProjectInfo}/>
       <div style={{ display: 'flex', gap: '10px' }}>
         {/* <ConfirmObject /> */}
         <Icon icon="emojione:white-heavy-check-mark" style={{ width: '21px', height: '21px' }} />

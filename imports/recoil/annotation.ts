@@ -1,6 +1,12 @@
 import _ from 'lodash';
 import { atom, selector, useRecoilCallback } from 'recoil';
-import { IRegionData, IVertexInfo } from '../canvasTools/IRegionData';
+import {
+  getBoundingPointsOfRegion,
+  IKeypoint,
+  IRegionData,
+  IVertexInfo,
+  RegionDataType
+} from '../canvasTools/IRegionData';
 import { getRandomHexColor, makeRandomId } from '../common/utils';
 
 export interface IAnnotation {
@@ -37,7 +43,7 @@ export const keypointIdx = atom<number>({
 });
 
 export const createAnnotationDispatcher = () => {
-  const insert = useRecoilCallback<[], void>(({ set }) => () => {
+  const insert = useRecoilCallback<[boolean, any], void>(({ set }) => (initKeypoint: boolean, projectInfo) => {
     const newAnnotation: IAnnotation = {
       className: 'undefined',
       regions: {},
@@ -46,6 +52,29 @@ export const createAnnotationDispatcher = () => {
       key: makeRandomId(),
       meta: {}
     };
+    if (initKeypoint) {
+      const defaultPoints: IKeypoint[] = projectInfo.keypoint.map((name) => {
+        return {
+          visible: 0,
+          alias: name,
+          x: 0,
+          y: 0
+        };
+      });
+      newAnnotation.regions.keypoint = {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        boundingPoints: getBoundingPointsOfRegion(0, 0, 0, 0),
+        points: defaultPoints,
+        area: 0,
+        type: RegionDataType.Skeleton,
+        visible: true,
+        highlighted: false,
+        selected: false
+      };
+    }
     set(undoStack, (undoList) => {
       const updateList = _.cloneDeep(undoList);
       updateList.push([...undoList[undoList.length - 1], newAnnotation]);

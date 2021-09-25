@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styles from './KeypointList.module.css';
 import { Select, ColorPicker } from '@mantine/core';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { annotationDispatcherState, currentAnnotations, selectionIdx } from 'imports/recoil/annotation';
+import { annotationDispatcherState, currentAnnotations, keypointIdx, selectionIdx } from 'imports/recoil/annotation';
 import _ from 'lodash';
 //
 
@@ -14,6 +14,7 @@ export default function KeypointList({ currentProjectInfo }) {
   const annotations = useRecoilValue(currentAnnotations);
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const [selection, setSelection] = useRecoilState(selectionIdx);
+  const [curKeypoint, setCurKeypoint] = useRecoilState(keypointIdx);
 
   const getSelectValue = (idx) => {
     switch (annotations[selection].regions.keypoint.points[idx].visible) {
@@ -45,7 +46,7 @@ export default function KeypointList({ currentProjectInfo }) {
   return (
     <div className={styles.listWrap}>
       {keypointArr.map((e, idx) => (
-        <div key={e} className={styles.list}>
+        <div key={e} className={styles.list} onClick={() => setCurKeypoint(idx)}>
           <i className='fas fa-map-marker-alt'></i>
           <div className={styles.listTitle}>{e}</div>
 

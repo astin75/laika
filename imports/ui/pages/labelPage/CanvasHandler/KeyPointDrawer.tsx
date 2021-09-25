@@ -50,6 +50,8 @@ export default function KeyPointDrawer({ frame, onWheel, projectInfo }: ICanvasH
       case 'idle': {
         if (curKeypoint === projectInfo.keypoint.length)
           break;
+        if (annotations[selection].regions.keypoint.points[curKeypoint]?.visible !== 0)
+          return;
         const updateAnnotation: IAnnotation = _.cloneDeep(annotations[selection]);
         updateAnnotation.regions.keypoint = appendKeypoint(
           updateAnnotation.regions.keypoint,
@@ -58,7 +60,8 @@ export default function KeyPointDrawer({ frame, onWheel, projectInfo }: ICanvasH
           projectInfo
         );
         annotationDispatcher?.edit(selection, updateAnnotation, false);
-        setCurKeypoint((prev) => prev + 1);
+        if(updateAnnotation.regions.keypoint.points[curKeypoint + 1]?.visible === 0)
+          setCurKeypoint((prev) => prev + 1);
         break;
       }
       case 'onPoint': {

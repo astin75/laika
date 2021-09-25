@@ -6,7 +6,6 @@ import HeaderPage from './HeaderPage/HeaderPage';
 
 import styles from './LabelingPage.module.css';
 import Editor, { EditorMode } from './Editor';
-import TmpBar from './TmpBar';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   AnnotationDispatcher,
@@ -59,10 +58,16 @@ export default function LabelingPage() {
   const [image, setImage] = useState<HTMLImageElement>(undefined);
   useEffect(() => {
     if (currentImageInfo) {
+      // DB 로드
+      const prevData = gtInfoCollection.findOne({ ImgFileId: currentImageInfo.fileId })?.annotations;
+
       const img = new Image();
       img.src = Images.findOne({ 'meta.fileId': currentImageInfo.fileId }).link();
       img.onload = () => {
         setImage(img);
+        if (prevData) {
+          annotationDispatcher?.initFromData(prevData);
+        }
       };
     }
   }, [currentImageInfo]);
@@ -107,7 +112,7 @@ export default function LabelingPage() {
           setCurrentImageInfo={setCurrentImageInfo}
         />
         {/* 라벨링 작업하는 중앙 캔버스 */}
-        <Editor image={image} mode={mode} setMode={setMode} />
+        <Editor image={image} mode={mode} setMode={setMode} projectInfo={currentProjectInfo} />
         {/* 클릭한 이미지에 대한 Object 페이지 */}
         <ObjectPage currentProjectInfo={currentProjectInfo} currentImageInfo={currentImageInfo} mode={mode}
                     setMode={setMode} />

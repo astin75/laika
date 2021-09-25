@@ -1,19 +1,25 @@
 import _ from 'lodash';
 import { atom, selector, useRecoilCallback } from 'recoil';
-import { IRegionData, IVertexInfo } from '../canvasTools/IRegionData';
+import {
+  getBoundingPointsOfRegion,
+  IKeypoint,
+  IRegionData,
+  IVertexInfo,
+  RegionDataType
+} from '../canvasTools/IRegionData';
 import { getRandomHexColor, makeRandomId } from '../common/utils';
 
 export interface IAnnotation {
   className: string;
   regions: {
     rect?: IRegionData;
-    skeleton?: IRegionData;
+    keypoint?: IRegionData;
     polygon?: IRegionData;
   };
   color: string;
   key: string; // this value is for unique React Key Value
   selected: boolean;
-  meta?: any; // custom meta data
+  meta: {}; // custom meta data
 }
 
 export const undoStack = atom<IAnnotation[][]>({
@@ -31,15 +37,44 @@ export const selectionIdx = atom<undefined | number>({
   default: undefined
 });
 
+export const keypointIdx = atom<number>({
+  key: 'keypointIdx',
+  default: 0
+});
+
 export const createAnnotationDispatcher = () => {
-  const insert = useRecoilCallback<[], void>(({ set }) => () => {
+  const insert = useRecoilCallback<[boolean, any], void>(({ set }) => (initKeypoint: boolean, projectInfo) => {
     const newAnnotation: IAnnotation = {
       className: 'undefined',
       regions: {},
       color: getRandomHexColor(),
       selected: false,
-      key: makeRandomId()
+      key: makeRandomId(),
+      meta: {}
     };
+    if (initKeypoint) {
+      const defaultPoints: IKeypoint[] = projectInfo.keypoint.map((name) => {
+        return {
+          visible: 0,
+          alias: name,
+          x: 0,
+          y: 0
+        };
+      });
+      newAnnotation.regions.keypoint = {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        boundingPoints: getBoundingPointsOfRegion(0, 0, 0, 0),
+        points: defaultPoints,
+        area: 0,
+        type: RegionDataType.Skeleton,
+        visible: true,
+        highlighted: false,
+        selected: false
+      };
+    }
     set(undoStack, (undoList) => {
       const updateList = _.cloneDeep(undoList);
       updateList.push([...undoList[undoList.length - 1], newAnnotation]);
@@ -102,6 +137,28 @@ export const createAnnotationDispatcher = () => {
           } else {
             if (newAnnot.regions.polygon) {
               newAnnot.regions.polygon.highlightedVertex = undefined;
+            }
+          }
+          return newAnnot;
+        }
+      );
+      updateList[updateList.length - 1] = lastList;
+      return updateList;
+    });
+  });
+
+  const highlightKeypoint = useRecoilCallback<[number | undefined, IVertexInfo | undefined],
+    void>(({ set }) => (idx, vertex) => {
+    set(undoStack, (undoList) => {
+      const updateList: IAnnotation[][] = _.cloneDeep(undoList);
+      const lastList = updateList[updateList.length - 1].map(
+        (annot, annotIdx) => {
+          const newAnnot = { ...annot };
+          if (annotIdx === idx) {
+            newAnnot.regions.keypoint.highlightedVertex = vertex;
+          } else {
+            if (newAnnot.regions.keypoint) {
+              newAnnot.regions.keypoint.highlightedVertex = undefined;
             }
           }
           return newAnnot;
@@ -231,6 +288,7 @@ export const createAnnotationDispatcher = () => {
     toggleSelectionAnnotation,
     setSelectionAnnotation,
     highlightPolygon,
+    highlightKeypoint,
     undo,
     redo,
     del,

@@ -4,6 +4,9 @@ import styles from './KeypointInfor.module.css';
 import { Select, ColorPicker } from '@mantine/core';
 
 import KeypointList from './keypointList/KeypointList';
+import _ from 'lodash';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { annotationDispatcherState, currentAnnotations, selectionIdx } from 'imports/recoil/annotation';
 
 export default function KeypointInfor({ objectColorValues, currentProjectInfo }) {
   const [keypointInfor, setKeypointInfor] = useState({
@@ -14,13 +17,10 @@ export default function KeypointInfor({ objectColorValues, currentProjectInfo })
     keypointPallteConfig: false,
   });
 
-  const keypointClassInfor = [
-    { value: 'dog', label: 'Dog' },
-    { value: 'cat', label: 'Cat' },
-    { value: 'rabbit', label: 'Rabbit' },
-  ];
-
   const [keypointListToggle, setKeypointListToggle] = useState(false);
+  const annotationDispatcher = useRecoilValue(annotationDispatcherState);
+  const annotations = useRecoilValue(currentAnnotations);
+  const [selection, setSelection] = useRecoilState(selectionIdx);
 
   return (
     <div className={styles.keypointWrap}>
@@ -28,6 +28,9 @@ export default function KeypointInfor({ objectColorValues, currentProjectInfo })
         <div
           onClick={() => {
             setKeypointInfor((pre) => ({ ...pre, visible: false }));
+            const newAnnot = _.cloneDeep(annotations[selection]);
+            newAnnot.regions.keypoint.visible = false;
+            annotationDispatcher?.edit(selection, newAnnot, false);
           }}
         >
           <i className="far fa-eye"></i>
@@ -36,6 +39,9 @@ export default function KeypointInfor({ objectColorValues, currentProjectInfo })
         <div
           onClick={() => {
             setKeypointInfor((pre) => ({ ...pre, visible: true }));
+            const newAnnot = _.cloneDeep(annotations[selection]);
+            newAnnot.regions.keypoint.visible = true;
+            annotationDispatcher?.edit(selection, newAnnot, false);
           }}
         >
           <i className="far fa-eye-slash"></i>

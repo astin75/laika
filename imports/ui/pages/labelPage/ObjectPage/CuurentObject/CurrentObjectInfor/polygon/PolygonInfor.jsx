@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 
 import styles from './PolygonInfor.module.css';
 import { Select, ColorPicker } from '@mantine/core';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { annotationDispatcherState, currentAnnotations, selectionIdx } from 'imports/recoil/annotation';
+import _ from 'lodash';
 
 export default function PolygonInfor({ objectColorValues }) {
   const [polygonInfor, setPolygonInfor] = useState({
@@ -11,6 +14,10 @@ export default function PolygonInfor({ objectColorValues }) {
     number: '',
     polygonPallteConfig: false,
   });
+
+  const annotationDispatcher = useRecoilValue(annotationDispatcherState);
+  const annotations = useRecoilValue(currentAnnotations);
+  const [selection, setSelection] = useRecoilState(selectionIdx);
 
   const polygonClassInfor = [
     { value: 'dog', label: 'Dog' },
@@ -24,6 +31,9 @@ export default function PolygonInfor({ objectColorValues }) {
         <div
           onClick={() => {
             setPolygonInfor((pre) => ({ ...pre, visible: false }));
+            const newAnnot = _.cloneDeep(annotations[selection]);
+            newAnnot.regions.polygon.visible = false;
+            annotationDispatcher?.edit(selection, newAnnot, false);
           }}
         >
           <i className="far fa-eye"></i>
@@ -32,6 +42,9 @@ export default function PolygonInfor({ objectColorValues }) {
         <div
           onClick={() => {
             setPolygonInfor((pre) => ({ ...pre, visible: true }));
+            const newAnnot = _.cloneDeep(annotations[selection]);
+            newAnnot.regions.polygon.visible = true;
+            annotationDispatcher?.edit(selection, newAnnot, false);
           }}
         >
           <i className="far fa-eye-slash"></i>
@@ -64,14 +77,14 @@ export default function PolygonInfor({ objectColorValues }) {
         </div>
       </div>
 
-      <Select
-        size="xs"
-        data={polygonClassInfor}
-        onChange={(e) => {
-          setPolygonInfor((pre) => ({ ...pre, class: e }));
-        }}
-        style={{ width: '80px' }}
-      />
+      {/*<Select*/}
+      {/*  size="xs"*/}
+      {/*  data={polygonClassInfor}*/}
+      {/*  onChange={(e) => {*/}
+      {/*    setPolygonInfor((pre) => ({ ...pre, class: e }));*/}
+      {/*  }}*/}
+      {/*  style={{ width: '80px' }}*/}
+      {/*/>*/}
     </div>
   );
 }

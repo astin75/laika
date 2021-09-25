@@ -5,7 +5,7 @@ import { IPoint } from '../../../../canvasTools/IPoint';
 import {
   CanvasViewDispatcher,
   canvasViewDispatcherState,
-  createCanvasViewDispatcher,
+  createCanvasViewDispatcher
 } from '../../../../recoil/canvas';
 import CanvasMover from '../CanvasHandler/CanvasMover';
 import PolygonDrawer from '../CanvasHandler/PolygonDrawer';
@@ -25,9 +25,10 @@ export enum EditorMode {
 interface IEditorProps {
   image: HTMLImageElement | undefined;
   mode: EditorMode;
+  setMode: (mode: EditorMode) => void;
 }
 
-export default function Editor({ image, mode }: IEditorProps) {
+export default function Editor({ image, mode, setMode }: IEditorProps) {
   const containerRef = useRef<HTMLElement>(null);
 
   // canvas dispatcher
@@ -44,7 +45,7 @@ export default function Editor({ image, mode }: IEditorProps) {
     const direction = e.deltaY > 0 ? -1 : 1;
     const mousePosition: IPoint = {
       x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
+      y: e.nativeEvent.offsetY
     };
     canvasViewDispatcher?.zoomCanvas(direction, mousePosition);
   };
@@ -84,7 +85,7 @@ export default function Editor({ image, mode }: IEditorProps) {
 
   return (
     <section className={styles.pageWrap} ref={containerRef}>
-      <EditorOptions />
+      <EditorOptions mode={mode} setMode={setMode} />
       {canvasHandler}
     </section>
   );

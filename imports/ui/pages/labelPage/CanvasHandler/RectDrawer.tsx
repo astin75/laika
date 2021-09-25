@@ -108,10 +108,22 @@ export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
       case 'drawHolding': {
         if (!(getNormOfPoint(movementOffset) > 0)) break;
         setState('draw');
+        const updateAnnotation = _.cloneDeep(annotations[selection]);
+        updateAnnotation.regions.rect = makeRectRegion(pointA, pointB);
+        annotationDispatcher?.edit(selection, updateAnnotation, false);
         break;
       }
       case 'moveHolding': {
         if (!(getNormOfPoint(movementOffset) > 0)) break;
+        const updatedAnnot: IAnnotation = _.cloneDeep(annotations[selection]);
+        if (!updatedAnnot.regions.rect.highlightedVertex) break;
+        updatedAnnot.regions.rect = moveBoundingPointOfRect(
+          updatedAnnot.regions.rect,
+          updatedAnnot.regions.rect.highlightedVertex.idx,
+          mousePoint,
+          view
+        );
+        annotationDispatcher.edit(selection, updatedAnnot, false);
         setState('movePoint');
         break;
       }
@@ -137,8 +149,6 @@ export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
         break;
     }
   };
-
-  console.log(annotations)
 
   const handleMouseUp = (e: React.MouseEvent) => {
     if (e.button !== 0) return;

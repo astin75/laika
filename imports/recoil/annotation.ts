@@ -18,17 +18,17 @@ export interface IAnnotation {
 
 export const undoStack = atom<IAnnotation[][]>({
   key: 'undoStack',
-  default: [[]],
+  default: [[]]
 });
 
 const redoStack = atom<IAnnotation[][]>({
   key: 'redoStack',
-  default: [[]],
+  default: [[]]
 });
 
 export const selectionIdx = atom<undefined | number>({
   key: 'selectionIdx',
-  default: undefined,
+  default: undefined
 });
 
 export const createAnnotationDispatcher = () => {
@@ -38,7 +38,7 @@ export const createAnnotationDispatcher = () => {
       regions: {},
       color: getRandomHexColor(),
       selected: false,
-      key: makeRandomId(),
+      key: makeRandomId()
     };
     set(undoStack, (undoList) => {
       const updateList = _.cloneDeep(undoList);
@@ -66,10 +66,8 @@ export const createAnnotationDispatcher = () => {
       }
   );
 
-  const highlightRect = useRecoilCallback<
-    [number | undefined, IVertexInfo | undefined],
-    void
-  >(({ set }) => (idx, vertex) => {
+  const highlightRect = useRecoilCallback<[number | undefined, IVertexInfo | undefined],
+    void>(({ set }) => (idx, vertex) => {
     set(undoStack, (undoList) => {
       const updateList: IAnnotation[][] = _.cloneDeep(undoList);
       const lastList = updateList[updateList.length - 1].map(
@@ -92,10 +90,8 @@ export const createAnnotationDispatcher = () => {
     });
   });
 
-  const highlightPolygon = useRecoilCallback<
-    [number | undefined, IVertexInfo | undefined],
-    void
-  >(({ set }) => (idx, vertex) => {
+  const highlightPolygon = useRecoilCallback<[number | undefined, IVertexInfo | undefined],
+    void>(({ set }) => (idx, vertex) => {
     set(undoStack, (undoList) => {
       const updateList: IAnnotation[][] = _.cloneDeep(undoList);
       const lastList = updateList[updateList.length - 1].map(
@@ -158,13 +154,18 @@ export const createAnnotationDispatcher = () => {
 
   const undo = useRecoilCallback<[], void>(
     (
-        { set, snapshot } //
-      ) =>
+      { set, snapshot } //
+    ) =>
       async () => {
         const undoList = _.cloneDeep(await snapshot.getPromise(undoStack));
         if (undoList.length <= 1) return;
         const lastAnnotations = undoList.pop();
         if (lastAnnotations) {
+          const idx = await snapshot.getPromise(selectionIdx);
+          if (idx >= undoList[undoList.length - 1].length){
+            set(selectionIdx, undefined);
+            console.log(idx, undoList[undoList.length - 1].length)
+          }
           set(undoStack, undoList);
           set(redoStack, (redoList) => [...redoList, lastAnnotations]);
         }
@@ -173,8 +174,8 @@ export const createAnnotationDispatcher = () => {
 
   const redo = useRecoilCallback<[], void>(
     (
-        { set, snapshot } //
-      ) =>
+      { set, snapshot } //
+    ) =>
       async () => {
         const redoList = _.cloneDeep(await snapshot.getPromise(redoStack));
         if (redoList.length <= 1) return;
@@ -208,9 +209,9 @@ export const createAnnotationDispatcher = () => {
       }
   );
 
-  const remove = useRecoilCallback<[ number ], void>(
-    ({set, snapshot}) =>
-      async (idx:number) => {
+  const remove = useRecoilCallback<[number], void>(
+    ({ set, snapshot }) =>
+      async (idx: number) => {
         const undoList = _.cloneDeep(await snapshot.getPromise(undoStack));
         const updatedAnnotations = undoList[undoList.length - 1].filter(
           (annot, annotIdx) => annotIdx !== idx
@@ -218,7 +219,7 @@ export const createAnnotationDispatcher = () => {
         undoList.push(updatedAnnotations);
         set(undoStack, undoList);
       }
-  )
+  );
 
   return {
     insert,
@@ -232,18 +233,16 @@ export const createAnnotationDispatcher = () => {
     del,
     reset,
     remove,
-    initFromData,
+    initFromData
   };
 };
 
-export type AnnotationDispatcher = ReturnType<
-  typeof createAnnotationDispatcher
->;
+export type AnnotationDispatcher = ReturnType<typeof createAnnotationDispatcher>;
 
 export const annotationDispatcherState = atom<AnnotationDispatcher | undefined>(
   {
     key: 'annotationDispatcherState',
-    default: undefined,
+    default: undefined
   }
 );
 
@@ -252,16 +251,14 @@ export const currentAnnotations = selector<IAnnotation[]>({
   get: ({ get }) => {
     const undoList = get(undoStack);
     return undoList[undoList.length - 1];
-  },
+  }
 });
 
-export const currentHighligtedAnnotation = selector<
-  | {
-      idx: number;
-      annot: IAnnotation;
-    }
-  | undefined
->({
+export const currentHighligtedAnnotation = selector<| {
+  idx: number;
+  annot: IAnnotation;
+}
+  | undefined>({
   key: 'currentHighligtedAnnotation',
   get: ({ get }) => {
     const annotations = get(currentAnnotations);
@@ -270,7 +267,7 @@ export const currentHighligtedAnnotation = selector<
       return { idx, annot: annotations[idx] };
     }
     return undefined;
-  },
+  }
 });
 
 export const isAnnotationsValid = selector<boolean>({
@@ -282,5 +279,5 @@ export const isAnnotationsValid = selector<boolean>({
       (ret, annot) => annot.className !== 'undefined' && ret,
       true
     );
-  },
+  }
 });

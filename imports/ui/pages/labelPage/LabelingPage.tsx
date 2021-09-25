@@ -87,7 +87,7 @@ export default function LabelingPage() {
           setCurrentImageInfo={setCurrentImageInfo}
         />
         {/* 라벨링 작업하는 중앙 캔버스 */}
-        <Editor image={image} mode={mode} />
+        <Editor image={image} mode={mode} setMode={setMode} />
         {/* 클릭한 이미지에 대한 Object 페이지 */}
         <ObjectPage currentProjectInfo={currentProjectInfo} currentImageInfo={currentImageInfo} mode={mode} setMode={setMode} />
       </div>

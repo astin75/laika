@@ -25,20 +25,20 @@ export default function ImageFilesPage({ currentImagesInfo, setCurrentImageInfo 
           <div className={styles.imageFilesTitle}>Image File List</div>
           {currentImagesInfo
             ? currentImagesInfo.map((e) => (
+              <div
+                key={e._id}
+                className={styles.imageFiles}
+                onClick={() => selectCurrentImage(e)}
+              >
+                <div>{e.fileName}</div>
                 <div
-                  key={e._id}
-                  className={styles.imageFiles}
-                  onClick={() => selectCurrentImage(e)}
-                >
-                  <div>{e.fileName}</div>
-                  <div
-                    className={styles.imageFileState}
-                    style={{
-                      backgroundColor: e.confirmFlag ? `${imageState[1]}` : `${imageState[0]}`,
-                    }}
-                  ></div>
-                </div>
-              ))
+                  className={styles.imageFileState}
+                  style={{
+                    backgroundColor: e.confirmFlag ? `${imageState[1]}` : `${imageState[0]}`
+                  }}
+                />
+              </div>
+            ))
             : ''}
         </div>
       </div>

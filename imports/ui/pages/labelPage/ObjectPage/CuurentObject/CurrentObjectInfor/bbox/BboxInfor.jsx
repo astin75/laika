@@ -18,7 +18,6 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
   const annotations = useRecoilValue(currentAnnotations);
   const [selection, setSelection] = useRecoilState(selectionIdx);
 
-  console.log(currentProjectInfo);
   const bboxClassInfor = currentProjectInfo.bbox.map((cls) => ({ value: cls, label: cls }))
   bboxClassInfor.push({value: 'undefined', label: '선택안됨'});
 

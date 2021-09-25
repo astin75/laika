@@ -100,7 +100,7 @@ export const createAnnotationDispatcher = () => {
           if (annotIdx === idx) {
             newAnnot.regions.polygon.highlightedVertex = vertex;
           } else {
-            if (newAnnot.regions.rect) {
+            if (newAnnot.regions.polygon) {
               newAnnot.regions.polygon.highlightedVertex = undefined;
             }
           }
@@ -162,7 +162,7 @@ export const createAnnotationDispatcher = () => {
         const lastAnnotations = undoList.pop();
         if (lastAnnotations) {
           const idx = await snapshot.getPromise(selectionIdx);
-          if (idx >= undoList[undoList.length - 1].length){
+          if (idx >= undoList[undoList.length - 1].length) {
             set(selectionIdx, undefined);
           }
           set(undoStack, undoList);
@@ -217,6 +217,9 @@ export const createAnnotationDispatcher = () => {
           (annot, annotIdx) => annotIdx !== idx
         );
         undoList.push(updatedAnnotations);
+        if (idx >= undoList[undoList.length - 1].length) {
+          set(selectionIdx, undefined);
+        }
         set(undoStack, undoList);
       }
   );

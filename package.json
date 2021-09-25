@@ -11,6 +11,7 @@
   "dependencies": {
     "@babel/runtime": "^7.14.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
+    "@iconify/icons-akar-icons": "^1.1.23",
     "@mantine/core": "^2.5.1",
     "@mantine/dates": "^2.5.1",
     "@mantine/hooks": "^2.5.1",

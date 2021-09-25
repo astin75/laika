@@ -45,3 +45,8 @@
 .keypointTitle{
   width : 20%;
 }
+
+.keypointleftWrap{
+  display : flex;
+  gap : 50px;
+}

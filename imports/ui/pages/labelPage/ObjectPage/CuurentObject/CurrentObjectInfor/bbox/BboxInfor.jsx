@@ -3,8 +3,16 @@ import React, { useState } from 'react';
 import styles from './BboxInfor.module.css';
 import { Select, ColorPicker } from '@mantine/core';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { annotationDispatcherState, currentAnnotations, selectionIdx } from 'imports/recoil/annotation';
+import {
+  annotationDispatcherState,
+  currentAnnotations,
+  selectionIdx,
+} from 'imports/recoil/annotation';
 import _ from 'lodash';
+
+import { Icon } from '@iconify/react';
+import eyeIcon from '@iconify/icons-akar-icons/eye';
+import eyeSlashed from '@iconify/icons-akar-icons/eye-slashed';
 
 export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
   const [bboxInfor, setBboxInfor] = useState({
@@ -12,7 +20,7 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
     visible: true,
     color: '#25262b',
     number: '',
-    bboxPallteConfig: false
+    bboxPallteConfig: false,
   });
 
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
@@ -24,58 +32,62 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
 
   return (
     <div className={styles.bboxWrap}>
-      {bboxInfor.visible === true ? (
-        <div
-          onClick={() => {
-            setBboxInfor((pre) => ({ ...pre, visible: false }));
-            const newAnnot = _.cloneDeep(annotations[selection]);
-            newAnnot.regions.rect.visible = false;
-            annotationDispatcher?.edit(selection, newAnnot, false);
-          }}
-        >
-          <i className='far fa-eye'></i>
-        </div>
-      ) : (
-        <div
-          onClick={() => {
-            setBboxInfor((pre) => ({ ...pre, visible: true }));
-            const newAnnot = _.cloneDeep(annotations[selection]);
-            newAnnot.regions.rect.visible = true;
-            annotationDispatcher?.edit(selection, newAnnot, false);
-          }}
-        >
-          <i className='far fa-eye-slash'></i>
-        </div>
-      )}
-      <div>Box</div>
-      <div
-        className={styles.bboxColor}
-        style={{ backgroundColor: `${bboxInfor.color}` }}
-        onClick={() => {
-          setBboxInfor((pre) => ({
-            ...pre,
-            bboxPallteConfig: !bboxInfor.bboxPallteConfig
-          }));
-        }}
-      >
-        <div
-          className={styles.bboxColorSelect}
-          style={{ display: bboxInfor.bboxPallteConfig ? 'block' : 'none' }}
-        >
-          <ColorPicker
-            size='xs'
-            withPicker={false}
-            value={bboxInfor.color}
-            onChange={(e) => {
-              setBboxInfor((pre) => ({ ...pre, color: e, bboxInfor: false }));
+      <div className={styles.bboxleftWrap}>
+        {bboxInfor.visible === true ? (
+          <div
+            onClick={() => {
+              setBboxInfor((pre) => ({ ...pre, visible: false }));
+              const newAnnot = _.cloneDeep(annotations[selection]);
+              newAnnot.regions.rect.visible = false;
+              annotationDispatcher?.edit(selection, newAnnot, false);
             }}
-            swatches={objectColorValues}
-          />
+          >
+            <Icon icon={eyeIcon} style={{ fontSize: '20px' }} />
+          </div>
+        ) : (
+          <div
+            onClick={() => {
+              setBboxInfor((pre) => ({ ...pre, visible: true }));
+              const newAnnot = _.cloneDeep(annotations[selection]);
+              newAnnot.regions.rect.visible = true;
+              annotationDispatcher?.edit(selection, newAnnot, false);
+            }}
+          >
+            <Icon icon={eyeSlashed} style={{ fontSize: '20px' }} />
+          </div>
+        )}
+        <div
+          className={styles.bboxColor}
+          style={{ backgroundColor: `${bboxInfor.color}` }}
+          onClick={() => {
+            setBboxInfor((pre) => ({
+              ...pre,
+              bboxPallteConfig: !bboxInfor.bboxPallteConfig,
+            }));
+          }}
+        >
+          <div
+            className={styles.bboxColorSelect}
+            style={{ display: bboxInfor.bboxPallteConfig ? 'block' : 'none' }}
+          >
+            <ColorPicker
+              size="xs"
+              withPicker={false}
+              value={bboxInfor.color}
+              onChange={(e) => {
+                setBboxInfor((pre) => ({ ...pre, color: e, bboxInfor: false }));
+              }}
+              swatches={objectColorValues}
+              swatchesPerRow={2}
+              style={{ width: '40px' }}
+            />
+          </div>
         </div>
+        <div>Box</div>
       </div>
 
       <Select
-        size='xs'
+        size="xs"
         data={bboxClassInfor}
         value={annotations[selection].className}
         onChange={(e) => {

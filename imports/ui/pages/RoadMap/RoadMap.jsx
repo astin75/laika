@@ -1,7 +1,7 @@
 import { Button, LoadingOverlay, Overlay, Select, Table, Text, Timeline } from '@mantine/core';
 import saveAs from 'file-saver';
 //-----------------------------------------------
-import { imageInfoCollection, userProfileCollection } from 'imports/db/collections';
+import { imageInfoCollection } from 'imports/db/collections';
 import { gtInfoCollection } from 'imports/db/collections';
 import { projectCollection } from 'imports/db/collections';
 import Images from 'imports/db/files';
@@ -9,7 +9,7 @@ import JSZip from 'jszip';
 import JSZipUtils from 'jszip-utils';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
-import React, { createRef, useRef, useState } from 'react';
+import React, { useState } from 'react';
 //----------------------------------------------
 import NavigationBar from 'ui/components/NavigationBar/NavigationBar';
 import styles from 'ui/pages/OptionPage/DataManagement/UserControl/UserControl.module.css';
@@ -51,17 +51,27 @@ export default function RoadMap() {
     // });
 
     // GT DB를 array -> json 으로 변경 후 -> blob 으로 변경뒤 zip.file로 push
-    gt.forEach(function (gtValue, i) {
-      let filename = i + '.json';
-      let filename1 = i + '.jpg';
+    if (gt.length > 1) {
+      gt.forEach(function (gtValue, i) {
+        let filename = i + '.json';
+        let filename1 = i + '.jpg';
+        let blob = new Blob([JSON.stringify(gtValue, null, 4)], { type: 'text/json' });
 
-      let blob = new Blob([JSON.stringify(gtValue, null, 4)], { type: 'text/json' });
+        let webUrl = String(Images.findOne(rawImgs[i]._id).link());
+        let imgBlob = fetch(webUrl).then((res) => res.blob());
+        zip.file(filename1, imgBlob, { binary: true });
+        zip.file(filename, blob, { binary: true });
+      });
+    } else {
+      let filename = 0 + '.json';
+      let filename1 = 0 + '.jpg';
+      let blob = new Blob([JSON.stringify(gt, null, 4)], { type: 'text/json' });
 
-      let webUrl = String(Images.findOne(rawImgs[i]._id).link());
+      let webUrl = String(Images.findOne(rawImgs[0]._id).link());
       let imgBlob = fetch(webUrl).then((res) => res.blob());
       zip.file(filename1, imgBlob, { binary: true });
       zip.file(filename, blob, { binary: true });
-    });
+    }
 
     // 최종 zip 으로 out~
     zip.generateAsync({ type: 'blob' }).then(function (content) {
@@ -72,7 +82,7 @@ export default function RoadMap() {
 
   const onDownload = (e, projectName) => {
     let gtinfo = gtInfoCollection.find({ projectName: projectName }).fetch();
-    let imgRaw = Images.find({ meta: { projectName: projectName } }).fetch();
+    let imgRaw = Images.find({ 'meta.projectName': projectName }).fetch();
 
     e.preventDefault();
     multiDownloadFile(imgRaw, gtinfo);
@@ -81,14 +91,14 @@ export default function RoadMap() {
   const onDelete = (projectName) => {
     let gtinfo = gtInfoCollection.find({ projectName: projectName }).fetch();
     let imginfo = imageInfoCollection.find({ projectName: projectName }).fetch();
-    let rawImg = Images.find({ meta: { projectName: projectName } }).fetch();
+    let rawImg = Images.find({ 'meta.projectName': projectName }).fetch();
     let prjectInfo = projectCollection.find({ projectName: projectName }).fetch();
     let count = 0;
 
     for (count = 0; count < gtinfo.length; count++) {
       gtInfoCollection.remove(gtinfo[count]._id);
       imageInfoCollection.remove(imginfo[count]._id);
-      Images.remove(rawImg[count]._id);
+      Images.remove({ _id: rawImg[count]._id });
     }
 
     projectCollection.remove(prjectInfo[0]._id);

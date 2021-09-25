@@ -5,7 +5,7 @@ import { gtInfoCollection } from 'imports/db/collections';
 import { projectCollection } from 'imports/db/collections';
 import Images from 'imports/db/files';
 import { chunk } from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SmallNavigation from 'ui/components/SmallNavigation/SmallNavigation';
 
@@ -66,7 +66,6 @@ export default function ProjectUpload() {
 
         upload.start();
         resolve();
-        upload.end();
       }, 0)
     );
   };
@@ -107,7 +106,22 @@ export default function ProjectUpload() {
         }
       }
       setProgress(100);
-
+      let colorHex = [
+        '#25262b',
+        '#868e96',
+        '#fa5252',
+        '#e64980',
+        '#be4bdb',
+        '#7950f2',
+        '#4c6ef5',
+        '#228be6',
+        '#15aabf',
+        '#12b886',
+        '#40c057',
+        '#82c91e',
+        '#fab005',
+        '#fd7e14',
+      ];
       let tempProjectInfo = {
         projectName: projectName[0].projectName,
         masterProjectName: projectName[0].masterProjectName,
@@ -120,6 +134,7 @@ export default function ProjectUpload() {
         stateList: objectStateBox,
         polygon: checkedPolygon,
         objectId: checkedObjectIdFlag,
+        color: colorHex.slice(0, boxClassList.length),
         totalFileSize: fileCount,
         totalUnConfirmSize: unConfirmed,
       };

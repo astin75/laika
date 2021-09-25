@@ -101,7 +101,7 @@ export default function RoadMap() {
       Images.remove({ _id: rawImg[count]._id });
     }
 
-    //projectCollection.remove(prjectInfo[0]._id);
+    projectCollection.remove(prjectInfo[0]._id);
   };
 
   return (

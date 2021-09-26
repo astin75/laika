@@ -66,7 +66,7 @@ export default function Canvas({
       // annotation draw
       annotations.forEach(async (annot) => {
         if (annot.regions.rect)
-          drawRectOnCanvas(annot.regions.rect, context, view, annot.color);
+          drawRectOnCanvas(annot.regions.rect, context, view, annot.color, annot.className);
 
         if (annot.regions.polygon)
           drawPolygonOnCanvas(

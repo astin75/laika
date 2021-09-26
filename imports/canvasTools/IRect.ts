@@ -1,6 +1,6 @@
 import { clamp, getRandomHexColor } from '../common/utils';
 import { ICanvasView } from '../recoil/canvas';
-import { drawCircle, drawRect } from './drawUtils';
+import { drawCircle, drawRect, drawText } from './drawUtils';
 import {
   IPoint,
   transformCanvasPointToImagePoint,
@@ -23,7 +23,8 @@ export const drawRectOnCanvas = (
   region: IRegionData,
   context: CanvasRenderingContext2D,
   view: ICanvasView,
-  colorCode: string
+  colorCode: string,
+  name?: string
 ) => {
   if (!region.visible)
     return;
@@ -44,6 +45,9 @@ export const drawRectOnCanvas = (
     fillAlpha,
     region.highlighted || region.selected
   );
+  if (name)
+    drawText(topLeft.x, topLeft.y - 10,
+      name, context, colorCode);
 
   if (region.highlightedVertex !== undefined) {
     const vertex = region.boundingPoints[region.highlightedVertex.idx];

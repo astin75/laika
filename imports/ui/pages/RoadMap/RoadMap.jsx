@@ -45,12 +45,8 @@ export default function RoadMap() {
     let zip = new JSZip();
     let zipFilename = 'Pictures.zip';
 
-    // 이미지 DB 리스트 link -> blob 으로 변경뒤 zip.file로 push
-    // rawImgs.forEach(function (link, i) {
-    //
-    // });
-
     // GT DB를 array -> json 으로 변경 후 -> blob 으로 변경뒤 zip.file로 push
+    // 이미지 DB 리스트 link -> blob 으로 변경뒤 zip.file로 push
     if (gt.length > 1) {
       gt.forEach(function (gtValue, i) {
         let filename = i + '.json';

@@ -52,7 +52,7 @@ export default function AddImages(props) {
             projectName: false,
             masterProjectName: false,
             projectID: false,
-            confirmFlag: false,
+            confirmFlag: 'ready',
           });
 
           tempRawImgList.rawFile.push(event.target.files[count]);

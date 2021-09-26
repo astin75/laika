@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import styles from './ProjectDetail.module.css';
-import dayjs from 'dayjs';
-import { Button, MultiSelect, Progress, Mark } from '@mantine/core';
+import { Icon } from '@iconify/react';
+import { Badge, Button, MultiSelect, Progress } from '@mantine/core';
 import { DateRangePicker } from '@mantine/dates';
-
-import { Meteor } from 'meteor/meteor';
-import { useTracker } from 'meteor/react-meteor-data';
+import dayjs from 'dayjs';
+import saveAs from 'file-saver';
 import { projectCollection } from 'imports/db/collections';
 import { userProfileCollection } from 'imports/db/collections';
+import { imageInfoCollection } from 'imports/db/collections';
+import { gtInfoCollection } from 'imports/db/collections';
+import Images from 'imports/db/files';
+import JSZip from 'jszip';
+import { Meteor } from 'meteor/meteor';
+import { useTracker } from 'meteor/react-meteor-data';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+import styles from './ProjectDetail.module.css';
 
 const useConfirm = (message = '', onConfirm, onCancel) => {
   if (!onConfirm || typeof onConfirm !== 'function') {
@@ -32,6 +38,8 @@ export default function ProjectDetail({
   setSelectedProject,
   toggleCurrentProjectDetail,
   setToggleCurrentProjectDetail,
+  setIsLoading,
+  projectInfoImage,
 }) {
   // console.log(selectedProject);
   const user = useTracker(() => Meteor.users.find({}).fetch());
@@ -75,12 +83,63 @@ export default function ProjectDetail({
     setToggleCurrentProjectDetail(false);
   };
 
+  const multiDownloadFile = (rawImgs, gt) => {
+    let zip = new JSZip();
+    let zipFilename = 'output.zip';
+
+    // GT DB를 array -> json 으로 변경 후 -> blob 으로 변경뒤 zip.file로 push
+    // 이미지 DB 리스트 link -> blob 으로 변경뒤 zip.file로 push
+    if (gt.length > 1) {
+      gt.forEach(function (gtValue, i) {
+        let filename = i + '.json';
+        let filename1 = i + '.jpg';
+        let blob = new Blob([JSON.stringify(gtValue, null, 4)], { type: 'text/json' });
+
+        let webUrl = String(Images.findOne(rawImgs[i]._id).link());
+        let imgBlob = fetch(webUrl).then((res) => res.blob());
+        zip.file(filename1, imgBlob, { binary: true });
+        zip.file(filename, blob, { binary: true });
+      });
+    } else {
+      let filename = 0 + '.json';
+      let filename1 = 0 + '.jpg';
+      let blob = new Blob([JSON.stringify(gt, null, 4)], { type: 'text/json' });
+
+      let webUrl = String(Images.findOne(rawImgs[0]._id).link());
+      let imgBlob = fetch(webUrl).then((res) => res.blob());
+      zip.file(filename1, imgBlob, { binary: true });
+      zip.file(filename, blob, { binary: true });
+    }
+
+    // 최종 zip 으로 out~
+    zip.generateAsync({ type: 'blob' }).then(function (content) {
+      saveAs(content, zipFilename);
+      setIsLoading(false);
+    });
+  };
+
+  const onDownload = (e) => {
+    let gtinfo = gtInfoCollection.find({ projectName: selectedProject.projectName }).fetch();
+    let imgRaw = Images.find({ 'meta.projectName': selectedProject.projectName }).fetch();
+
+    e.preventDefault();
+    multiDownloadFile(imgRaw, gtinfo);
+  };
+
   const deleteProject = () => {
-    // console.log('Deleting the world...')
-    const currentProject = projectCollection
-      .find({ projectName: selectedProject.projectName })
-      .fetch();
-    projectCollection.remove(currentProject[0]._id);
+    let gtinfo = gtInfoCollection.find({ projectName: selectedProject.projectName }).fetch();
+    let imginfo = imageInfoCollection.find({ projectName: selectedProject.projectName }).fetch();
+    let rawImg = Images.find({ 'meta.projectName': selectedProject.projectName }).fetch();
+    let prjectInfo = projectCollection.find({ projectName: selectedProject.projectName }).fetch();
+    let count = 0;
+
+    for (count = 0; count < gtinfo.length; count++) {
+      gtInfoCollection.remove(gtinfo[count]._id);
+      imageInfoCollection.remove(imginfo[count]._id);
+      Images.remove({ _id: rawImg[count]._id });
+    }
+
+    projectCollection.remove(prjectInfo[0]._id);
     setSelectedProject(null);
   };
   const abort = () => {
@@ -99,42 +158,65 @@ export default function ProjectDetail({
       }}
       className={styles.container}
     >
-      <div className={styles.top}></div>
+      <div className={styles.top}>
+        <img src={projectInfoImage} />
+      </div>
       {selectedProject ? (
         <div className={styles.bottom}>
           <div className={styles.selectedObjects}>
-            {selectedProject.bbox.length > 0 ? (
-              <Button color="grape" radius="xl" size="xs">
-                bBox
-              </Button>
+            {selectedProject.objectId === true ? (
+              <Badge variant="filled" color="red" size="sm">
+                ID
+              </Badge>
             ) : (
               ''
             )}
-            {selectedProject.keypoint.length > 0 ? (
-              <Button color="orange" radius="xl" size="xs">
-                keyPoint
-              </Button>
+            {selectedProject.stateList.length > 0 ? (
+              <Badge variant="filled" color="pink" size="sm">
+                action
+              </Badge>
             ) : (
               ''
             )}
             {selectedProject.polygon === true ? (
-              <Button color="indigo" radius="xl" size="xs">
+              <Badge variant="filled" color="indigo" size="sm">
                 polygon
-              </Button>
+              </Badge>
+            ) : (
+              ''
+            )}
+            {selectedProject.keypoint.length > 0 ? (
+              <Badge variant="filled" size="sm">
+                keyPoint
+              </Badge>
+            ) : (
+              ''
+            )}
+            {selectedProject.bbox.length > 0 ? (
+              <Badge variant="filled" color="teal" size="sm">
+                bBox
+              </Badge>
             ) : (
               ''
             )}
           </div>
           <div className={styles.projectDetails}>
-            <div className={styles.detailTitle}>Project Name</div>
-            <div>{selectedProject.projectName}</div>
+            <div className={styles.detailTitle}>프로젝트명</div>
+            <div>
+              {selectedProject.projectName}
+              {selectedProject.masterProjectName.length > 0 ? (
+                <>/ 마스터프로젝트 : {selectedProject.masterProjectName}</>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
           <div className={styles.projectDetails}>
-            <div className={styles.detailTitle}>Project Schedule </div>
+            <div className={styles.detailTitle}>프로젝트 기간 </div>
             <DateRangePicker placeholder="Pick dates range" value={value} onChange={setValue} />
           </div>
           <div className={styles.projectDetails}>
-            <div className={styles.detailTitle}>Project Member </div>
+            <div className={styles.detailTitle}>프로젝트 라벨러 </div>
             {user ? (
               <MultiSelect
                 data={userData}
@@ -147,7 +229,16 @@ export default function ProjectDetail({
           </div>
 
           <div className={styles.projectDetails}>
-            <div className={styles.detailTitle}>Project Progress</div>
+            <div className={styles.detailTitle}>
+              진행 상황 &nbsp;
+              {parseInt(
+                ((selectedProject.totalFileSize -
+                  (selectedProject.totalFileSize - selectedProject.totalUnConfirmSize)) /
+                  selectedProject.totalFileSize) *
+                  100
+              )}{' '}
+              % ( {selectedProject.totalUnConfirmSize} / {selectedProject.totalFileSize})
+            </div>
             <Progress
               value={parseInt(
                 ((selectedProject.totalFileSize -
@@ -161,7 +252,17 @@ export default function ProjectDetail({
           <div className={styles.projectOptions}>
             <Button
               variant="link"
-              color="gray"
+              leftIcon={<Icon icon="mdi:tray-arrow-down" />}
+              style={{ width: '30px', height: '30px' }}
+              size="lg"
+              onClick={(event) => {
+                setIsLoading(true);
+                onDownload(event);
+              }}
+            ></Button>
+            <Button
+              variant="link"
+              color="grape"
               leftIcon={<i className="fas fa-save"></i>}
               size="lg"
               onClick={updateProjectDetail}
@@ -173,13 +274,13 @@ export default function ProjectDetail({
                 pathname: '/labelingPage',
                 search: `?projectName=${selectedProject.projectName}`,
               }}
-              color="gray"
+              color="teal"
               leftIcon={<i className="fas fa-sign-in-alt"></i>}
               size="lg"
             ></Button>
             <Button
               variant="link"
-              color="gray"
+              color="red"
               leftIcon={<i className="fas fa-trash"></i>}
               size="lg"
               onClick={confirmDelete}

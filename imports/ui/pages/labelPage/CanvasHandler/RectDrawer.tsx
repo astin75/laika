@@ -182,7 +182,6 @@ export default function RectDrawer({ frame, onWheel, projectInfo }: ICanvasHandl
         }
       }
     }
-
   };
 
   useEffect(() => {

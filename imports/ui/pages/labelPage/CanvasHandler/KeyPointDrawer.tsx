@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   getNormOfPoint,
@@ -57,7 +57,7 @@ export default function KeyPointDrawer({ frame, onWheel, projectInfo }: ICanvasH
           projectInfo
         );
         annotationDispatcher?.edit(selection, updateAnnotation, false);
-        if(updateAnnotation.regions.keypoint.points[curKeypoint + 1]?.visible === 0)
+        if (updateAnnotation.regions.keypoint.points[curKeypoint + 1]?.visible === 0)
           setCurKeypoint((prev) => prev + 1);
         break;
       }
@@ -134,6 +134,25 @@ export default function KeyPointDrawer({ frame, onWheel, projectInfo }: ICanvasH
         break;
     }
   };
+
+  const keyDownHandler = (e) => {
+    // visibility 선택
+    if (e.code.includes('Digit')) {
+      const num = Number(e.key) - 1;
+      if (selection !== undefined && num >= 0 && num <= 2) {
+        const newAnnot = _.cloneDeep(annotations[selection]);
+        newAnnot.regions.keypoint.points[curKeypoint].visible = num;
+        annotationDispatcher?.edit(selection, newAnnot, false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    };
+  });
 
   return (
     <Canvas

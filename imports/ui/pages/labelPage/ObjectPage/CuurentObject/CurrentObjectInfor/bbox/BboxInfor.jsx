@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   annotationDispatcherState,
   currentAnnotations,
-  selectionIdx,
+  selectionIdx
 } from 'imports/recoil/annotation';
 import _ from 'lodash';
 
@@ -20,7 +20,7 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
     visible: true,
     color: '#25262b',
     number: '',
-    bboxPallteConfig: false,
+    bboxPallteConfig: false
   });
 
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
@@ -62,7 +62,7 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
           onClick={() => {
             setBboxInfor((pre) => ({
               ...pre,
-              bboxPallteConfig: !bboxInfor.bboxPallteConfig,
+              bboxPallteConfig: !bboxInfor.bboxPallteConfig
             }));
           }}
         >
@@ -71,7 +71,7 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
             style={{ display: bboxInfor.bboxPallteConfig ? 'block' : 'none' }}
           >
             <ColorPicker
-              size="xs"
+              size='xs'
               withPicker={false}
               value={bboxInfor.color}
               onChange={(e) => {
@@ -87,11 +87,18 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
       </div>
 
       <Select
-        size="xs"
+        size='xs'
         data={bboxClassInfor}
         value={annotations[selection].className}
         onChange={(e) => {
           const currentAnnot = { ...annotations[selection] };
+          const classIdx = currentProjectInfo.bbox.findIndex((cls) => cls === e);
+          console.log(classIdx)
+          if (classIdx > -1){
+
+            currentAnnot.color = currentProjectInfo.color[classIdx];
+            console.log('color', currentProjectInfo.color[classIdx])
+          }
           annotationDispatcher?.edit(selection, { ...currentAnnot, className: e }, false);
           setBboxInfor((pre) => ({ ...pre, class: e }));
         }}

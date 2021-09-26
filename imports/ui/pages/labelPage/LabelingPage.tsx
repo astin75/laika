@@ -10,16 +10,14 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   AnnotationDispatcher,
   annotationDispatcherState,
-  createAnnotationDispatcher, currentAnnotations
+  createAnnotationDispatcher,
+  currentAnnotations
 } from '../../../recoil/annotation';
 
 import Images from 'imports/db/files';
 import queryString from 'query-string';
 import { useTracker } from 'meteor/react-meteor-data';
-import { imageInfoCollection } from 'imports/db/collections';
-import { gtInfoCollection } from 'imports/db/collections';
-
-import { projectCollection } from 'imports/db/collections';
+import { gtInfoCollection, imageInfoCollection, projectCollection } from 'imports/db/collections';
 
 export default function LabelingPage() {
   const query = queryString.parse(location.search);
@@ -101,6 +99,33 @@ export default function LabelingPage() {
   const annotations = useRecoilValue(currentAnnotations);
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   // ----------------------------------------------------------------
+  const keyDownHandler = (e) => {
+    if (e.ctrlKey) {
+      switch (e.key) {
+        case '1':
+          setMode(EditorMode.Idle);
+          break;
+        case '2':
+          setMode(EditorMode.Rect);
+          break;
+        case '3':
+          setMode(EditorMode.Skeleton);
+          break;
+        case '4':
+          setMode(EditorMode.Polygon);
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    };
+  });
 
   return (
     <div className={styles.main}>

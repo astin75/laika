@@ -37,6 +37,13 @@ export default function EditorOptions({ mode, setMode }) {
     };
   });
 
+  useEffect(() => {
+    if (mode === EditorMode.Idle)
+      setSelectedOptions('moveOne');
+    else
+      setSelectedOptions('')
+  }, [mode]);
+
 
   const setAllVisible = () => {
     annotations.forEach((annot, idx) => {

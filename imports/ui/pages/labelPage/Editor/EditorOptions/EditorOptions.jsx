@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import styles from './EditorOptions.module.css';
 import { useRecoilValue } from 'recoil';
 import { canvasViewDispatcherState } from 'imports/recoil/canvas';
-import { annotationDispatcherState } from 'imports/recoil/annotation';
+import { annotationDispatcherState, currentAnnotations, selectionIdx } from 'imports/recoil/annotation';
 import { EditorMode } from 'ui/pages/labelPage/Editor';
+import _ from 'lodash';
 
 import eyeIcon from '@iconify/icons-akar-icons/eye';
 import eyeSlashed from '@iconify/icons-akar-icons/eye-slashed';
@@ -13,9 +14,63 @@ import eyeSlashed from '@iconify/icons-akar-icons/eye-slashed';
 export default function EditorOptions({ mode, setMode }) {
   const canvasViewDispatcher = useRecoilValue(canvasViewDispatcherState);
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
+  const annotations = useRecoilValue(currentAnnotations);
 
   const [allObjectVisibleToggle, setAllObjectVisibleToggle] = useState(true);
   const [selectedOptions, setSelectedOptions] = useState('');
+
+  const keyDownHandler = (e) => {
+    if (e.key === 's') {
+      setAllObjectVisibleToggle((prev) => {
+        if (prev)
+          setAllInvisible();
+        else
+          setAllVisible();
+        return !prev;
+      });
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('keydown', keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    };
+  });
+
+  useEffect(() => {
+    if (mode === EditorMode.Idle)
+      setSelectedOptions('moveOne');
+    else
+      setSelectedOptions('')
+  }, [mode]);
+
+
+  const setAllVisible = () => {
+    annotations.forEach((annot, idx) => {
+      const newAnnot = _.cloneDeep(annot);
+      if (newAnnot.regions.rect)
+        newAnnot.regions.rect.visible = true;
+      if (newAnnot.regions.polygon)
+        newAnnot.regions.polygon.visible = true;
+      if (newAnnot.regions.keypoint)
+        newAnnot.regions.keypoint.visible = true;
+      annotationDispatcher?.edit(idx, newAnnot, true);
+    });
+  };
+
+  const setAllInvisible = () => {
+    annotations.forEach((annot, idx) => {
+      const newAnnot = _.cloneDeep(annot);
+      if (newAnnot.regions.rect)
+        newAnnot.regions.rect.visible = false;
+      if (newAnnot.regions.polygon)
+        newAnnot.regions.polygon.visible = false;
+      if (newAnnot.regions.keypoint)
+        newAnnot.regions.keypoint.visible = false;
+      annotationDispatcher?.edit(idx, newAnnot, true);
+    });
+  };
+
   return (
     <div className={styles.pageWrap}>
       <div
@@ -26,7 +81,7 @@ export default function EditorOptions({ mode, setMode }) {
         }}
         style={{ backgroundColor: selectedOptions == 'searchPlus' ? 'rgba(0, 227, 180)' : '' }}
       >
-        <i className="fas  fa-search-plus" style={{ fontSize: '15px' }} />
+        <i className='fas  fa-search-plus' style={{ fontSize: '15px' }} />
       </div>
       <div
         className={styles.options}
@@ -36,7 +91,7 @@ export default function EditorOptions({ mode, setMode }) {
         }}
         style={{ backgroundColor: selectedOptions == 'searchMinus' ? 'rgba(0, 227, 180)' : '' }}
       >
-        <i className="fas fa-search-minus" style={{ fontSize: '15px' }} />
+        <i className='fas fa-search-minus' style={{ fontSize: '15px' }} />
       </div>
       <div
         className={styles.options}
@@ -46,7 +101,7 @@ export default function EditorOptions({ mode, setMode }) {
         }}
         style={{ backgroundColor: selectedOptions == 'moveOne' ? 'rgba(0, 227, 180)' : '' }}
       >
-        <Icon icon="icon-park:move-one" style={{ fontSize: '15px' }} />
+        <Icon icon='icon-park:move-one' style={{ fontSize: '15px' }} />
       </div>
       <div
         className={styles.options}
@@ -56,7 +111,7 @@ export default function EditorOptions({ mode, setMode }) {
         }}
         style={{ backgroundColor: selectedOptions == 'undo' ? 'rgba(0, 227, 180)' : '' }}
       >
-        <Icon icon="mdi:undo-variant" style={{ fontSize: '20px' }} />
+        <Icon icon='mdi:undo-variant' style={{ fontSize: '20px' }} />
       </div>
       <div
         className={styles.options}
@@ -66,7 +121,7 @@ export default function EditorOptions({ mode, setMode }) {
         }}
         style={{ backgroundColor: selectedOptions == 'redo' ? 'rgba(0, 227, 180)' : '' }}
       >
-        <Icon icon="mdi:redo-variant" style={{ fontSize: '20px' }} />
+        <Icon icon='mdi:redo-variant' style={{ fontSize: '20px' }} />
       </div>
 
       {allObjectVisibleToggle ? (
@@ -75,9 +130,10 @@ export default function EditorOptions({ mode, setMode }) {
           onClick={() => {
             setAllObjectVisibleToggle(false);
             setSelectedOptions('allObjectVisible');
+            setAllInvisible();
           }}
           style={{
-            backgroundColor: selectedOptions == 'allObjectVisible' ? 'rgba(0, 227, 180)' : '',
+            backgroundColor: selectedOptions == 'allObjectVisible' ? 'rgba(0, 227, 180)' : ''
           }}
         >
           <Icon icon={eyeIcon} style={{ fontSize: '20px' }} />
@@ -88,9 +144,10 @@ export default function EditorOptions({ mode, setMode }) {
           onClick={() => {
             setAllObjectVisibleToggle(true);
             setSelectedOptions('allObjectUnvisible');
+            setAllVisible();
           }}
           style={{
-            backgroundColor: selectedOptions == 'allObjectUnvisible' ? 'rgba(0, 227, 180)' : '',
+            backgroundColor: selectedOptions == 'allObjectUnvisible' ? 'rgba(0, 227, 180)' : ''
           }}
         >
           <Icon icon={eyeSlashed} style={{ fontSize: '20px' }} />

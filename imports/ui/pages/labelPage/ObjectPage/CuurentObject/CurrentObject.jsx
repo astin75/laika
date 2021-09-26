@@ -19,7 +19,7 @@ export default function CurrentObject({ currentProjectInfo, mode, setMode }) {
 
       {/* 현재 내가 클릭한 object의 infor*/}
       {selection !== undefined ? (
-        <CurrentObjectInfor currentProjectInfo={currentProjectInfo} />
+        <CurrentObjectInfor currentProjectInfo={currentProjectInfo} setMode={setMode}/>
       ) : (
         ''
       )}

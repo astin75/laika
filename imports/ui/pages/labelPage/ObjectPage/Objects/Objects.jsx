@@ -11,7 +11,7 @@ import {
 import { useTracker } from 'meteor/react-meteor-data';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-
+import _ from 'lodash'
 import styles from './Objects.module.css';
 import { canvasViewDispatcherState } from 'imports/recoil/canvas';
 
@@ -35,10 +35,32 @@ export default function Objects({ currentImageInfo }) {
     if (annotations[idx].regions.rect)
       annotationDispatcher?.highlightRect(idx, undefined);
     setSelectedObject(idx);
-    canvasViewDispatcher?.refreshCanvas()
+    canvasViewDispatcher?.refreshCanvas();
   };
 
   // console.log(objects);
+
+  const setVisible = (idx) => {
+    const newAnnot = _.cloneDeep(annotations[idx])
+    if(newAnnot.regions.rect)
+      newAnnot.regions.rect.visible = true
+    if(newAnnot.regions.polygon)
+      newAnnot.regions.polygon.visible = true
+    if(newAnnot.regions.keypoint)
+      newAnnot.regions.keypoint.visible = true
+    annotationDispatcher?.edit(idx, newAnnot, true)
+  };
+
+  const setInvisible = (idx) => {
+    const newAnnot = _.cloneDeep(annotations[idx])
+    if(newAnnot.regions.rect)
+      newAnnot.regions.rect.visible = false
+    if(newAnnot.regions.polygon)
+      newAnnot.regions.polygon.visible = false
+    if(newAnnot.regions.keypoint)
+      newAnnot.regions.keypoint.visible = false
+    annotationDispatcher?.edit(idx, newAnnot, true)
+  };
 
   return (
     <div className={styles.pageWrap}>
@@ -53,8 +75,8 @@ export default function Objects({ currentImageInfo }) {
                 backgroundColor: idx == selectedObject ? `rgba(0, 227, 180)` : ''
               }}
             >
-              <Icon icon={eyeIcon} style={{ fontSize: '20px' }} />
-              <Icon icon={eyeSlashed} style={{ fontSize: '20px' }} />
+              <Icon icon={eyeIcon} style={{ fontSize: '20px' }} onClick={() => setVisible(idx)} />
+              <Icon icon={eyeSlashed} style={{ fontSize: '20px' }} onClick={() => setInvisible(idx)} />
 
               <div className={styles.objectTitle} onClick={() => selectAnnotation(idx)}>
                 object {annot.key}

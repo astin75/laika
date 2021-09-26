@@ -43,6 +43,12 @@ export default function KeypointList({ currentProjectInfo }) {
     annotationDispatcher?.edit(selection, newAnnot, false);
   };
 
+  const setInvisible = (idx) => {
+    const newAnnot = _.cloneDeep(annotations[selection]);
+    newAnnot.regions.keypoint.points[idx].visible = 0;
+    annotationDispatcher?.edit(selection, newAnnot, false);
+  };
+
   return (
     <div className={styles.listWrap}>
       {keypointArr.map((e, idx) => (
@@ -51,7 +57,9 @@ export default function KeypointList({ currentProjectInfo }) {
           <div className={styles.listTitle}>{e}</div>
 
           <div className={styles.listOptionList}>
-            <i className='fas fa-trash-alt'></i>
+            <div onClick={() => setInvisible(idx)}>
+              <i className='fas fa-trash-alt' />
+            </div>
 
             <Select
               size='xs'

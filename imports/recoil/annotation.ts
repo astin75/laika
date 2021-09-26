@@ -109,11 +109,11 @@ export const createAnnotationDispatcher = () => {
         (annot, annotIdx) => {
           const newAnnot = { ...annot };
           if (annotIdx === idx) {
-            // newAnnot.regions.rect.highlighted = true;
+            newAnnot.regions.rect.highlighted = true;
             newAnnot.regions.rect.highlightedVertex = vertex;
           } else {
             if (newAnnot.regions.rect) {
-              // newAnnot.regions.rect.highlighted = false;
+              newAnnot.regions.rect.highlighted = false;
               newAnnot.regions.rect.highlightedVertex = undefined;
             }
           }

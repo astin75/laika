@@ -34,7 +34,6 @@ export const drawRectOnCanvas = (
   let fillAlpha = 1;
   if (region.highlighted) fillAlpha = 0.1;
   if (region.selected) fillAlpha = 0.3;
-
   drawRect(
     topLeft.x,
     topLeft.y,

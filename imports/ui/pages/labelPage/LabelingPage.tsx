@@ -100,6 +100,7 @@ export default function LabelingPage() {
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   // ----------------------------------------------------------------
   const keyDownHandler = (e) => {
+    // 모드 선택
     if (e.ctrlKey) {
       switch (e.key) {
         case '1':
@@ -118,6 +119,21 @@ export default function LabelingPage() {
           break;
       }
     }
+    // 파일 넘기기
+    if (e.key === 'a') {
+      let curIdx = currentImagesInfo.findIndex((e) => e === currentImageInfo);
+      if (curIdx > 0) {
+        curIdx -= 1;
+        setCurrentImageInfo(currentImagesInfo[curIdx]);
+      }
+    }
+    if (e.key === 'd') {
+      let curIdx = currentImagesInfo.findIndex((e) => e === currentImageInfo);
+      if (curIdx < currentImagesInfo.length - 1) {
+        curIdx += 1;
+        setCurrentImageInfo(currentImagesInfo[curIdx]);
+      }
+    }
   };
 
   useEffect(() => {
@@ -134,6 +150,7 @@ export default function LabelingPage() {
         {/* 현재 프로젝트에서 업로드한 이미지 페이지 */}
         <ImageFilesPage
           currentImagesInfo={currentImagesInfo}
+          currentImageInfo={currentImageInfo}
           setCurrentImageInfo={setCurrentImageInfo}
         />
         {/* 라벨링 작업하는 중앙 캔버스 */}

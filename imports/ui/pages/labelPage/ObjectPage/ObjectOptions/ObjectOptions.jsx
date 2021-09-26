@@ -6,6 +6,7 @@ import { imageInfoCollection } from 'imports/db/collections';
 import { gtInfoCollection } from 'imports/db/collections';
 import { useRecoilValue } from 'recoil';
 import { annotationDispatcherState } from 'imports/recoil/annotation';
+import { EditorMode } from 'ui/pages/labelPage/Editor';
 
 function AddObject({ currentImageInfo, currentProjectInfo }) {
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
@@ -36,7 +37,7 @@ function ConfirmObject() {
   );
 }
 
-function CancleObject({onClick}) {
+function CancleObject({ onClick }) {
   return (
     <div className={styles.cancleObjectWrap} onClick={onClick}>
       <div className={styles.cancleObjectLeft}></div>
@@ -53,6 +54,23 @@ export default function ObjectOptions({ currentImageInfo, currentProjectInfo }) 
   const setWorking = () => {
     imageInfoCollection.update({ _id: currentImageInfo._id }, { $set: { confirmFlag: 'working' } });
   };
+
+  const keyDownHandler = (e) => {
+    // 파일 넘기기
+    if (e.key === 'o') {
+      setDone();
+    }
+    if (e.key === 'p') {
+      setWorking();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    };
+  });
 
   return (
     <div className={styles.pageWrap}>

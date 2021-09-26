@@ -158,9 +158,7 @@ export default function ProjectDetail({
       }}
       className={styles.container}
     >
-      <div className={styles.top}>
-        <img src={projectInfoImage} />
-      </div>
+      <div className={styles.top}>{projectInfoImage && <img src={projectInfoImage} />}</div>
       {selectedProject ? (
         <div className={styles.bottom}>
           <div className={styles.selectedObjects}>
@@ -240,6 +238,8 @@ export default function ProjectDetail({
               % ( {selectedProject.totalUnConfirmSize} / {selectedProject.totalFileSize})
             </div>
             <Progress
+              size="lg"
+              striped
               value={parseInt(
                 ((selectedProject.totalFileSize -
                   (selectedProject.totalFileSize - selectedProject.totalUnConfirmSize)) /

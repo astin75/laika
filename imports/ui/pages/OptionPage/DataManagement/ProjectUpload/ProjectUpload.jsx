@@ -48,11 +48,11 @@ export default function ProjectUpload() {
       title: msg,
       message: 'never close unless you click',
       color: color,
-      autoClose: autoClose
+      autoClose: autoClose,
     });
 
   const switchStyles = {
-    label: { fontSize: 13 }
+    label: { fontSize: 13 },
   };
 
   const insertImage = (file, projectName, fileId) => {
@@ -62,7 +62,7 @@ export default function ProjectUpload() {
           {
             file,
             chunkSize: 'dynamic',
-            meta: { projectName: projectName, fileId: fileId }
+            meta: { projectName: projectName, fileId: fileId },
           },
           false
         );
@@ -78,11 +78,11 @@ export default function ProjectUpload() {
       {
         file,
         chunkSize: 'dynamic',
-        meta: { projectName: projectName, fileId: fileId }
+        meta: { projectName: projectName, fileId: fileId },
       },
       false
     );
-    upload.on('end', function(err, obj) {
+    upload.on('end', function (err, obj) {
       if (err) {
         alert('Upload Error', err);
       } else {
@@ -124,20 +124,20 @@ export default function ProjectUpload() {
       gtInfoCollection.insert(tempGroundTruthJson[imageIndex]);
     }
     let colorHex = [
+      '#12b886',
+      '#fa5252',
+      '#82c91e',
+      '#fd7e14',
+      '#e64980',
+      '#4c6ef5',
       '#25262b',
       '#868e96',
-      '#fa5252',
-      '#e64980',
       '#be4bdb',
       '#7950f2',
-      '#4c6ef5',
       '#228be6',
       '#15aabf',
-      '#12b886',
       '#40c057',
-      '#82c91e',
       '#fab005',
-      '#fd7e14'
     ];
     let tempProjectInfo = {
       projectName: projectName[0].projectName,
@@ -153,7 +153,7 @@ export default function ProjectUpload() {
       objectId: checkedObjectIdFlag,
       color: colorHex.slice(0, boxClassList.length),
       totalFileSize: fileCount,
-      totalUnConfirmSize: 0
+      totalUnConfirmSize: 0,
     };
 
     projectCollection.insert(tempProjectInfo);
@@ -166,7 +166,8 @@ export default function ProjectUpload() {
       uploadImage(
         RawImgList.rawFile[uploadIdx],
         projectName[0].projectName,
-        ImgFileInfo.imgInfo[uploadIdx].fileId);
+        ImgFileInfo.imgInfo[uploadIdx].fileId
+      );
     }
   }, [startUpload]);
 
@@ -175,9 +176,9 @@ export default function ProjectUpload() {
       uploadImage(
         RawImgList.rawFile[uploadIdx],
         projectName[0].projectName,
-        ImgFileInfo.imgInfo[uploadIdx].fileId);
+        ImgFileInfo.imgInfo[uploadIdx].fileId
+      );
   }, [uploadIdx]);
-
 
   const onRegister = async () => {
     let RandValue = new Uint32Array(1);
@@ -229,7 +230,7 @@ export default function ProjectUpload() {
         '#40c057',
         '#82c91e',
         '#fab005',
-        '#fd7e14'
+        '#fd7e14',
       ];
       let tempProjectInfo = {
         projectName: projectName[0].projectName,
@@ -245,7 +246,7 @@ export default function ProjectUpload() {
         objectId: checkedObjectIdFlag,
         color: colorHex.slice(0, boxClassList.length),
         totalFileSize: fileCount,
-        totalUnConfirmSize: unConfirmed
+        totalUnConfirmSize: unConfirmed,
       };
 
       await projectCollection.insert(tempProjectInfo);
@@ -260,10 +261,10 @@ export default function ProjectUpload() {
   return (
     <>
       {isLoading && (
-        <div className='styles.overlay'>
-          <Overlay opacity={0.5} color='#000' zIndex={5} />
+        <div className="styles.overlay">
+          <Overlay opacity={0.5} color="#000" zIndex={5} />
           <div className={styles.progress}>
-            <Progress value={progress} size='lg' />
+            <Progress value={progress} size="lg" />
           </div>
         </div>
       )}
@@ -287,7 +288,7 @@ export default function ProjectUpload() {
           <Grid style={{ margin: '14px 0' }}>
             <Col span={3}>
               <Switch
-                label='Polygon'
+                label="Polygon"
                 styles={switchStyles}
                 checked={checkedPolygon}
                 onChange={(event) => setCheckedPolygon(event.currentTarget.checked)}
@@ -295,8 +296,9 @@ export default function ProjectUpload() {
             </Col>
             <Col span={3}>
               <Switch
+                disabled={true}
                 styles={switchStyles}
-                label='Object Id'
+                label="Object Id"
                 checked={checkedObjectIdFlag}
                 onChange={(event) => setCheckedObjectIdFlag(event.currentTarget.checked)}
               ></Switch>
@@ -321,8 +323,8 @@ export default function ProjectUpload() {
               onClick={() => {
                 onRegister2();
               }}
-              type='submit'
-              leftIcon={<i className='far fa-check-square'></i>}
+              type="submit"
+              leftIcon={<i className="far fa-check-square"></i>}
             >
               프로젝트 등록하기
             </Button>

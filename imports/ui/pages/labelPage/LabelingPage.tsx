@@ -1,37 +1,43 @@
+import { gtInfoCollection, imageInfoCollection, projectCollection } from 'imports/db/collections';
+import Images from 'imports/db/files';
+import _ from 'lodash';
+import { useTracker } from 'meteor/react-meteor-data';
+import queryString from 'query-string';
 import React, { useEffect, useRef, useState } from 'react';
-
-import ImageFilesPage from './ImageFilesPage/ImageFilesPage';
-import ObjectPage from './ObjectPage/ObjectPage';
-import HeaderPage from './HeaderPage/HeaderPage';
-
-import styles from './LabelingPage.module.css';
-import Editor, { EditorMode } from './Editor';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+
+import {
+  getBoundingPointsOfRegion,
+  IKeypoint,
+  RegionDataType,
+} from '../../../canvasTools/IRegionData';
 import {
   AnnotationDispatcher,
   annotationDispatcherState,
   createAnnotationDispatcher,
   currentAnnotations,
-  selectionIdx
+  selectionIdx,
 } from '../../../recoil/annotation';
-import _ from 'lodash';
-
-import Images from 'imports/db/files';
-import queryString from 'query-string';
-import { useTracker } from 'meteor/react-meteor-data';
-import { gtInfoCollection, imageInfoCollection, projectCollection } from 'imports/db/collections';
-import { getBoundingPointsOfRegion, IKeypoint, RegionDataType } from '../../../canvasTools/IRegionData';
+import Editor, { EditorMode } from './Editor';
+import HeaderPage from './HeaderPage/HeaderPage';
+import ImageFilesPage from './ImageFilesPage/ImageFilesPage';
+import styles from './LabelingPage.module.css';
+import ObjectPage from './ObjectPage/ObjectPage';
 
 export default function LabelingPage() {
   const query = queryString.parse(location.search);
   const projectList = useTracker(() => projectCollection.find({}).fetch());
-  const gtinfor = useTracker(() => imageInfoCollection.find({}).fetch());
-  const imageList = useTracker(() => imageInfoCollection.find({}).fetch());
+  const gtinfor = useTracker(() =>
+    imageInfoCollection.find({ projectName: query.projectName }).fetch()
+  );
+  const imageList = useTracker(() =>
+    imageInfoCollection.find({ projectName: query.projectName }).fetch()
+  );
 
   const [currentProjectInfo, setCurrentProjectInfo] = useState(null);
-  // const [currentImagesInfo, setCurrentImagesInfo] = useState(null);
+  const [currentImagesInfo, setCurrentImagesInfo] = useState(null);
   const [currentImageInfo, setCurrentImageInfo] = useState(null);
-  // const [currentGtInfo, setCurrentGtInfo] = useState(null);
+  const [currentGtInfo, setCurrentGtInfo] = useState(null);
   const prevImageInfo = useRef(undefined);
 
   useEffect(() => {
@@ -60,11 +66,16 @@ export default function LabelingPage() {
   useEffect(() => {
     if (currentImageInfo) {
       // DB 로드
-      const prevData = gtInfoCollection.findOne({ ImgFileId: currentImageInfo.fileId })?.annotations;
+      const prevData = gtInfoCollection.findOne({
+        ImgFileId: currentImageInfo.fileId,
+      })?.annotations;
 
       const img = new Image();
       img.src = Images.findOne({ 'meta.fileId': currentImageInfo.fileId }).link();
-      imageInfoCollection.update({ _id: currentImageInfo._id }, { $set: { confirmFlag: 'working' } });
+      imageInfoCollection.update(
+        { _id: currentImageInfo._id },
+        { $set: { confirmFlag: 'working' } }
+      );
       img.onload = () => {
         setImage(img);
         if (prevData) {
@@ -140,21 +151,38 @@ export default function LabelingPage() {
         setCurrentImageInfo(imageList[curIdx]);
       }
     }
+    //새로운 오브젝트
+    if (e.key === 'n') {
+      if (!currentImageInfo) {
+        alert('이미지를 먼저 클릭해주세요');
+        return;
+      }
+      annotationDispatcher?.insert(currentProjectInfo.keypoint.length > 0, currentProjectInfo);
+
+      let idx = annotations.length + 1;
+
+      // annotationDispatcher?.setSelectionAnnotation(selection, false);
+      // annotationDispatcher?.setSelectionAnnotation(idx, true);
+      // setSelection(idx);
+      // if (annotations[idx].regions.rect) annotationDispatcher?.highlightRect(idx, undefined);
+      // setSelectedObject(idx);
+      // canvasViewDispatcher?.refreshCanvas();
+      // setCurKeypoint(0);
+    }
+
     // 라벨링 지우기
     if (e.key === 'Delete') {
       if (selection !== undefined) {
         const newAnnot = _.cloneDeep(annotations[selection]);
-        if (mode === EditorMode.Rect)
-          newAnnot.regions.rect = undefined;
-        if (mode === EditorMode.Polygon)
-          newAnnot.regions.polygon = undefined;
+        if (mode === EditorMode.Rect) newAnnot.regions.rect = undefined;
+        if (mode === EditorMode.Polygon) newAnnot.regions.polygon = undefined;
         if (mode === EditorMode.Skeleton) {
           const defaultPoints: IKeypoint[] = currentProjectInfo.keypoint.map((name) => {
             return {
               visible: 0,
               alias: name,
               x: 0,
-              y: 0
+              y: 0,
             };
           });
           newAnnot.regions.keypoint = {
@@ -168,7 +196,7 @@ export default function LabelingPage() {
             type: RegionDataType.Skeleton,
             visible: true,
             highlighted: false,
-            selected: false
+            selected: false,
           };
         }
         annotationDispatcher?.edit(selection, newAnnot, false);
@@ -196,8 +224,12 @@ export default function LabelingPage() {
         {/* 라벨링 작업하는 중앙 캔버스 */}
         <Editor image={image} mode={mode} setMode={setMode} projectInfo={currentProjectInfo} />
         {/* 클릭한 이미지에 대한 Object 페이지 */}
-        <ObjectPage currentProjectInfo={currentProjectInfo} currentImageInfo={currentImageInfo} mode={mode}
-                    setMode={setMode} />
+        <ObjectPage
+          currentProjectInfo={currentProjectInfo}
+          currentImageInfo={currentImageInfo}
+          mode={mode}
+          setMode={setMode}
+        />
       </div>
     </div>
   );

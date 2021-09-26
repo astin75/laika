@@ -81,7 +81,7 @@ export default function AddImages(props) {
     <Grid style={{ margin: '14px 0' }}>
       <Col span={3}>
         <Switch
-          disabled={false}
+          disabled={true}
           label="Annotations"
           styles={switchStyles}
           checked={WithGroundTruthFlag}

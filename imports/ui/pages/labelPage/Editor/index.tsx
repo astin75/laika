@@ -72,18 +72,18 @@ export default function Editor({ image, mode, setMode, projectInfo }: IEditorPro
   switch (mode) {
     case EditorMode.Rect:
       // 박스 그리고 수정하는놈
-      canvasHandler = <RectDrawer frame={image} onWheel={handleWheel} />;
+      canvasHandler = <RectDrawer frame={image} onWheel={handleWheel} projectInfo={projectInfo} />;
       break;
     case EditorMode.Polygon:
       // 폴리곤 찍는 놈
-      canvasHandler = <PolygonDrawer frame={image} onWheel={handleWheel} />;
+      canvasHandler = <PolygonDrawer frame={image} onWheel={handleWheel} projectInfo={projectInfo} />;
       break;
     case EditorMode.Skeleton:
       canvasHandler = <KeyPointDrawer frame={image} onWheel={handleWheel} projectInfo={projectInfo} />;
       break;
     default:
       // 드래그하면 캔버스 움직임
-      canvasHandler = <CanvasMover frame={image} onWheel={handleWheel} />;
+      canvasHandler = <CanvasMover frame={image} onWheel={handleWheel} projectInfo={projectInfo} />;
       break;
   }
 

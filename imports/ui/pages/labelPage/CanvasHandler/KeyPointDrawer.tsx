@@ -25,11 +25,8 @@ import { appendKeypoint, moveKeypointVertex } from '../../../../canvasTools/ISke
 
 type HandlerState = 'idle' | 'onPoint' | 'holding' | 'movePoint';
 
-interface IKeypointDrawerProps {
-  projectInfo: any;
-}
 
-export default function KeyPointDrawer({ frame, onWheel, projectInfo }: ICanvasHandlerProps & IKeypointDrawerProps) {
+export default function KeyPointDrawer({ frame, onWheel, projectInfo }: ICanvasHandlerProps) {
   const [state, setState] = useState<HandlerState>('idle');
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const annotations = useRecoilValue(currentAnnotations);

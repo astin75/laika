@@ -17,15 +17,16 @@ import {
 } from '../../../../recoil/annotation';
 import { canvasView } from '../../../../recoil/canvas';
 import _ from 'lodash';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ICanvasHandlerProps } from './ICanvasHandler';
 import RectEditor from './RectEditor';
 import {
   findNearestBoundingPoint,
-  findNearestPoint,
-  IVertexInfo
+  findNearestPoint, getBoundingPointsOfRegion, IKeypoint,
+  IVertexInfo, RegionDataType
 } from '../../../../canvasTools/IRegionData';
+import { EditorMode } from '../Editor';
 
 type HandlerState =
   | 'idle'
@@ -36,7 +37,7 @@ type HandlerState =
   | 'movePoint';
 
 // React Region 생성 Handler
-export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
+export default function RectDrawer({ frame, onWheel, projectInfo }: ICanvasHandlerProps) {
   const [state, setState] = useState<HandlerState>('idle');
   const [startPoint, setStartPoint] = useState<IPoint>({ x: 0, y: 0 });
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
@@ -167,6 +168,29 @@ export default function RectDrawer({ frame, onWheel }: ICanvasHandlerProps) {
         break;
     }
   };
+
+  const keyDownHandler = (e) => {
+    // 클래스 선택
+    if (e.code.includes('Digit')) {
+      const num = Number(e.key) - 1;
+      if (selection !== undefined) {
+        const dstCls = projectInfo.bbox[num];
+        if (dstCls !== undefined) {
+          const newAnnot = _.cloneDeep(annotations[selection]);
+          newAnnot.className = dstCls;
+          annotationDispatcher?.edit(selection, newAnnot, false);
+        }
+      }
+    }
+
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    };
+  });
 
   return (
     <Canvas

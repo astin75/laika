@@ -6,20 +6,21 @@ import HeaderPage from './HeaderPage/HeaderPage';
 
 import styles from './LabelingPage.module.css';
 import Editor, { EditorMode } from './Editor';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   AnnotationDispatcher,
   annotationDispatcherState,
-  createAnnotationDispatcher, currentAnnotations
+  createAnnotationDispatcher,
+  currentAnnotations,
+  selectionIdx
 } from '../../../recoil/annotation';
+import _ from 'lodash';
 
 import Images from 'imports/db/files';
 import queryString from 'query-string';
 import { useTracker } from 'meteor/react-meteor-data';
-import { imageInfoCollection } from 'imports/db/collections';
-import { gtInfoCollection } from 'imports/db/collections';
-
-import { projectCollection } from 'imports/db/collections';
+import { gtInfoCollection, imageInfoCollection, projectCollection } from 'imports/db/collections';
+import { getBoundingPointsOfRegion, IKeypoint, RegionDataType } from '../../../canvasTools/IRegionData';
 
 export default function LabelingPage() {
   const query = queryString.parse(location.search);
@@ -28,9 +29,9 @@ export default function LabelingPage() {
   const imageList = useTracker(() => imageInfoCollection.find({}).fetch());
 
   const [currentProjectInfo, setCurrentProjectInfo] = useState(null);
-  const [currentImagesInfo, setCurrentImagesInfo] = useState(null);
+  // const [currentImagesInfo, setCurrentImagesInfo] = useState(null);
   const [currentImageInfo, setCurrentImageInfo] = useState(null);
-  const [currentGtInfo, setCurrentGtInfo] = useState(null);
+  // const [currentGtInfo, setCurrentGtInfo] = useState(null);
   const prevImageInfo = useRef(undefined);
 
   useEffect(() => {
@@ -41,19 +42,18 @@ export default function LabelingPage() {
     }
   }, [projectList]);
 
-  useEffect(() => {
-    if (currentProjectInfo !== null) {
-      console.log(currentProjectInfo)
-      let currentImagesInfoTmp;
-      currentImagesInfoTmp = imageList.filter((e) => e.projectName === query.projectName);
-      if (currentImagesInfo === null) setCurrentImagesInfo(currentImagesInfoTmp);
-
-      // 임의로 세팅
-      let currentGtInfoTmp;
-      currentGtInfoTmp = gtinfor.filter((e) => e.projectName === query.projectName);
-      if (currentGtInfo === null) setCurrentGtInfo(currentImagesInfoTmp);
-    }
-  }, [currentProjectInfo]);
+  // useEffect(() => {
+  //   if (currentProjectInfo !== null) {
+  //     let currentImagesInfoTmp;
+  //     currentImagesInfoTmp = imageList.filter((e) => e.projectName === query.projectName);
+  //     if (currentImagesInfo === null) setCurrentImagesInfo(currentImagesInfoTmp);
+  //
+  //     // 임의로 세팅
+  //     let currentGtInfoTmp;
+  //     currentGtInfoTmp = gtinfor.filter((e) => e.projectName === query.projectName);
+  //     if (currentGtInfo === null) setCurrentGtInfo(currentImagesInfoTmp);
+  //   }
+  // }, [currentProjectInfo]);
 
   // 이미지 로드
   const [image, setImage] = useState<HTMLImageElement>(undefined);
@@ -64,6 +64,7 @@ export default function LabelingPage() {
 
       const img = new Image();
       img.src = Images.findOne({ 'meta.fileId': currentImageInfo.fileId }).link();
+      imageInfoCollection.update({ _id: currentImageInfo._id }, { $set: { confirmFlag: 'working' } });
       img.onload = () => {
         setImage(img);
         if (prevData) {
@@ -101,7 +102,86 @@ export default function LabelingPage() {
   }, []);
   const annotations = useRecoilValue(currentAnnotations);
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
+  const [selection, setSelection] = useRecoilState(selectionIdx); // 선택된 어노테이션 인덱스 저장
+
   // ----------------------------------------------------------------
+  const keyDownHandler = (e) => {
+    // 모드 선택
+    if (e.ctrlKey) {
+      switch (e.key) {
+        case '1':
+          setMode(EditorMode.Idle);
+          break;
+        case '2':
+          setMode(EditorMode.Rect);
+          break;
+        case '3':
+          setMode(EditorMode.Skeleton);
+          break;
+        case '4':
+          setMode(EditorMode.Polygon);
+          break;
+        default:
+          break;
+      }
+    }
+    // 파일 넘기기
+    if (e.key === 'a') {
+      let curIdx = imageList.findIndex((e) => e._id === currentImageInfo._id);
+      if (curIdx > 0) {
+        curIdx -= 1;
+        setCurrentImageInfo(imageList[curIdx]);
+      }
+    }
+    if (e.key === 'd') {
+      let curIdx = imageList.findIndex((e) => e._id === currentImageInfo._id);
+      if (curIdx < imageList.length - 1) {
+        curIdx += 1;
+        setCurrentImageInfo(imageList[curIdx]);
+      }
+    }
+    // 라벨링 지우기
+    if (e.key === 'Delete') {
+      if (selection !== undefined) {
+        const newAnnot = _.cloneDeep(annotations[selection]);
+        if (mode === EditorMode.Rect)
+          newAnnot.regions.rect = undefined;
+        if (mode === EditorMode.Polygon)
+          newAnnot.regions.polygon = undefined;
+        if (mode === EditorMode.Skeleton) {
+          const defaultPoints: IKeypoint[] = currentProjectInfo.keypoint.map((name) => {
+            return {
+              visible: 0,
+              alias: name,
+              x: 0,
+              y: 0
+            };
+          });
+          newAnnot.regions.keypoint = {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            boundingPoints: getBoundingPointsOfRegion(0, 0, 0, 0),
+            points: defaultPoints,
+            area: 0,
+            type: RegionDataType.Skeleton,
+            visible: true,
+            highlighted: false,
+            selected: false
+          };
+        }
+        annotationDispatcher?.edit(selection, newAnnot, false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    };
+  });
 
   return (
     <div className={styles.main}>
@@ -109,7 +189,8 @@ export default function LabelingPage() {
       <div className={styles.contents}>
         {/* 현재 프로젝트에서 업로드한 이미지 페이지 */}
         <ImageFilesPage
-          currentImagesInfo={currentImagesInfo}
+          currentImagesInfo={imageList}
+          currentImageInfo={currentImageInfo}
           setCurrentImageInfo={setCurrentImageInfo}
         />
         {/* 라벨링 작업하는 중앙 캔버스 */}

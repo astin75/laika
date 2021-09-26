@@ -26,9 +26,9 @@ export default function LabelingPage() {
   const imageList = useTracker(() => imageInfoCollection.find({}).fetch());
 
   const [currentProjectInfo, setCurrentProjectInfo] = useState(null);
-  const [currentImagesInfo, setCurrentImagesInfo] = useState(null);
+  // const [currentImagesInfo, setCurrentImagesInfo] = useState(null);
   const [currentImageInfo, setCurrentImageInfo] = useState(null);
-  const [currentGtInfo, setCurrentGtInfo] = useState(null);
+  // const [currentGtInfo, setCurrentGtInfo] = useState(null);
   const prevImageInfo = useRef(undefined);
 
   useEffect(() => {
@@ -39,18 +39,18 @@ export default function LabelingPage() {
     }
   }, [projectList]);
 
-  useEffect(() => {
-    if (currentProjectInfo !== null) {
-      let currentImagesInfoTmp;
-      currentImagesInfoTmp = imageList.filter((e) => e.projectName === query.projectName);
-      if (currentImagesInfo === null) setCurrentImagesInfo(currentImagesInfoTmp);
-
-      // 임의로 세팅
-      let currentGtInfoTmp;
-      currentGtInfoTmp = gtinfor.filter((e) => e.projectName === query.projectName);
-      if (currentGtInfo === null) setCurrentGtInfo(currentImagesInfoTmp);
-    }
-  }, [currentProjectInfo]);
+  // useEffect(() => {
+  //   if (currentProjectInfo !== null) {
+  //     let currentImagesInfoTmp;
+  //     currentImagesInfoTmp = imageList.filter((e) => e.projectName === query.projectName);
+  //     if (currentImagesInfo === null) setCurrentImagesInfo(currentImagesInfoTmp);
+  //
+  //     // 임의로 세팅
+  //     let currentGtInfoTmp;
+  //     currentGtInfoTmp = gtinfor.filter((e) => e.projectName === query.projectName);
+  //     if (currentGtInfo === null) setCurrentGtInfo(currentImagesInfoTmp);
+  //   }
+  // }, [currentProjectInfo]);
 
   // 이미지 로드
   const [image, setImage] = useState<HTMLImageElement>(undefined);
@@ -61,6 +61,7 @@ export default function LabelingPage() {
 
       const img = new Image();
       img.src = Images.findOne({ 'meta.fileId': currentImageInfo.fileId }).link();
+      imageInfoCollection.update({ _id: currentImageInfo._id }, { $set: { confirmFlag: 'working' } });
       img.onload = () => {
         setImage(img);
         if (prevData) {
@@ -121,17 +122,17 @@ export default function LabelingPage() {
     }
     // 파일 넘기기
     if (e.key === 'a') {
-      let curIdx = currentImagesInfo.findIndex((e) => e === currentImageInfo);
+      let curIdx = imageList.findIndex((e) => e._id === currentImageInfo._id);
       if (curIdx > 0) {
         curIdx -= 1;
-        setCurrentImageInfo(currentImagesInfo[curIdx]);
+        setCurrentImageInfo(imageList[curIdx]);
       }
     }
     if (e.key === 'd') {
-      let curIdx = currentImagesInfo.findIndex((e) => e === currentImageInfo);
-      if (curIdx < currentImagesInfo.length - 1) {
+      let curIdx = imageList.findIndex((e) => e._id === currentImageInfo._id);
+      if (curIdx < imageList.length - 1) {
         curIdx += 1;
-        setCurrentImageInfo(currentImagesInfo[curIdx]);
+        setCurrentImageInfo(imageList[curIdx]);
       }
     }
   };
@@ -149,7 +150,7 @@ export default function LabelingPage() {
       <div className={styles.contents}>
         {/* 현재 프로젝트에서 업로드한 이미지 페이지 */}
         <ImageFilesPage
-          currentImagesInfo={currentImagesInfo}
+          currentImagesInfo={imageList}
           currentImageInfo={currentImageInfo}
           setCurrentImageInfo={setCurrentImageInfo}
         />

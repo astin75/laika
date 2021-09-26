@@ -36,23 +36,32 @@ function ConfirmObject() {
   );
 }
 
-function CancleObject() {
+function CancleObject({onClick}) {
   return (
-    <div className={styles.cancleObjectWrap}>
+    <div className={styles.cancleObjectWrap} onClick={onClick}>
       <div className={styles.cancleObjectLeft}></div>
       <div className={styles.cancleObjectRight}></div>
     </div>
   );
 }
 
-export default function ObjectOptions({ currentImageInfo, currentProjectInfo}) {
+export default function ObjectOptions({ currentImageInfo, currentProjectInfo }) {
+  const setDone = () => {
+    imageInfoCollection.update({ _id: currentImageInfo._id }, { $set: { confirmFlag: 'done' } });
+  };
+
+  const setWorking = () => {
+    imageInfoCollection.update({ _id: currentImageInfo._id }, { $set: { confirmFlag: 'working' } });
+  };
+
   return (
     <div className={styles.pageWrap}>
-      <AddObject currentImageInfo={currentImageInfo} currentProjectInfo={currentProjectInfo}/>
+      <AddObject currentImageInfo={currentImageInfo} currentProjectInfo={currentProjectInfo} />
       <div style={{ display: 'flex', gap: '10px' }}>
         {/* <ConfirmObject /> */}
-        <Icon icon="emojione:white-heavy-check-mark" style={{ width: '21px', height: '21px' }} />
-        <CancleObject />
+        <Icon icon='emojione:white-heavy-check-mark' style={{ width: '21px', height: '21px' }}
+              onClick={() => setDone()} />
+        <CancleObject onClick={() => setWorking()} />
       </div>
     </div>
   );

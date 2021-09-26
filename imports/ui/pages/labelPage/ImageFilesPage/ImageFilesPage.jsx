@@ -28,6 +28,17 @@ export default function ImageFilesPage({ currentImagesInfo, currentImageInfo, se
   //   e.target.style.background = e.confirmFlag ? `${imageState[1]}` : `#ffffff`;
   // };
 
+  const getStateColor = (e) => {
+    switch (e.confirmFlag) {
+      case 'ready':
+        return '#cccccc';
+      case 'working':
+        return '#70a1e2';
+      case 'done':
+        return '#61c46e';
+    }
+  };
+
   return (
     <div className={styles.pageWrap}>
       <div className={styles.imageFilesBigWrap}>
@@ -47,7 +58,7 @@ export default function ImageFilesPage({ currentImagesInfo, currentImageInfo, se
                 <div
                   className={styles.imageFileState}
                   style={{
-                    backgroundColor: e.confirmFlag ? `${imageState[1]}` : `${imageState[0]}`
+                    backgroundColor: getStateColor(e)
                   }}
                 />
               </div>

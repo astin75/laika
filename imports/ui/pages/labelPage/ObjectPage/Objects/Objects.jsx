@@ -5,7 +5,7 @@ import { imageInfoCollection } from 'imports/db/collections';
 import { gtInfoCollection } from 'imports/db/collections';
 import {
   annotationDispatcherState,
-  currentAnnotations,
+  currentAnnotations, keypointIdx,
   selectionIdx
 } from 'imports/recoil/annotation';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -21,6 +21,7 @@ export default function Objects({ currentImageInfo }) {
   const [selection, setSelection] = useRecoilState(selectionIdx);
   const [selectedObject, setSelectedObject] = useState('');
   const canvasViewDispatcher = useRecoilValue(canvasViewDispatcherState);
+  const [curKeypoint, setCurKeypoint] = useRecoilState(keypointIdx);
 
   const deleteAnnotation = (idx) => {
     // annotationDispatcher?.setSelectionAnnotation(idx, true);
@@ -36,6 +37,7 @@ export default function Objects({ currentImageInfo }) {
       annotationDispatcher?.highlightRect(idx, undefined);
     setSelectedObject(idx);
     canvasViewDispatcher?.refreshCanvas();
+    setCurKeypoint(0);
   };
 
   // console.log(objects);

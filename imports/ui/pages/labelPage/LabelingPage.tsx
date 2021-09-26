@@ -6,18 +6,21 @@ import HeaderPage from './HeaderPage/HeaderPage';
 
 import styles from './LabelingPage.module.css';
 import Editor, { EditorMode } from './Editor';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   AnnotationDispatcher,
   annotationDispatcherState,
   createAnnotationDispatcher,
-  currentAnnotations
+  currentAnnotations,
+  selectionIdx
 } from '../../../recoil/annotation';
+import _ from 'lodash';
 
 import Images from 'imports/db/files';
 import queryString from 'query-string';
 import { useTracker } from 'meteor/react-meteor-data';
 import { gtInfoCollection, imageInfoCollection, projectCollection } from 'imports/db/collections';
+import { getBoundingPointsOfRegion, IKeypoint, RegionDataType } from '../../../canvasTools/IRegionData';
 
 export default function LabelingPage() {
   const query = queryString.parse(location.search);
@@ -99,6 +102,8 @@ export default function LabelingPage() {
   }, []);
   const annotations = useRecoilValue(currentAnnotations);
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
+  const [selection, setSelection] = useRecoilState(selectionIdx); // 선택된 어노테이션 인덱스 저장
+
   // ----------------------------------------------------------------
   const keyDownHandler = (e) => {
     // 모드 선택
@@ -133,6 +138,40 @@ export default function LabelingPage() {
       if (curIdx < imageList.length - 1) {
         curIdx += 1;
         setCurrentImageInfo(imageList[curIdx]);
+      }
+    }
+    // 라벨링 지우기
+    if (e.key === 'Delete') {
+      if (selection !== undefined) {
+        const newAnnot = _.cloneDeep(annotations[selection]);
+        if (mode === EditorMode.Rect)
+          newAnnot.regions.rect = undefined;
+        if (mode === EditorMode.Polygon)
+          newAnnot.regions.polygon = undefined;
+        if (mode === EditorMode.Skeleton) {
+          const defaultPoints: IKeypoint[] = currentProjectInfo.keypoint.map((name) => {
+            return {
+              visible: 0,
+              alias: name,
+              x: 0,
+              y: 0
+            };
+          });
+          newAnnot.regions.keypoint = {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            boundingPoints: getBoundingPointsOfRegion(0, 0, 0, 0),
+            points: defaultPoints,
+            area: 0,
+            type: RegionDataType.Skeleton,
+            visible: true,
+            highlighted: false,
+            selected: false
+          };
+        }
+        annotationDispatcher?.edit(selection, newAnnot, false);
       }
     }
   };

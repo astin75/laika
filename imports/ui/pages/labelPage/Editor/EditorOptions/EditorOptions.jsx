@@ -19,6 +19,25 @@ export default function EditorOptions({ mode, setMode }) {
   const [allObjectVisibleToggle, setAllObjectVisibleToggle] = useState(true);
   const [selectedOptions, setSelectedOptions] = useState('');
 
+  const keyDownHandler = (e) => {
+    if (e.key === 's') {
+      setAllObjectVisibleToggle((prev) => {
+        if (prev)
+          setAllInvisible();
+        else
+          setAllVisible();
+        return !prev;
+      });
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('keydown', keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    };
+  });
+
+
   const setAllVisible = () => {
     annotations.forEach((annot, idx) => {
       const newAnnot = _.cloneDeep(annot);

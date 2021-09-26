@@ -26,7 +26,7 @@ const objectColorValues = [
   '#fd7e14'
 ];
 
-export default function CurrentObjectInfor({ currentProjectInfo }) {
+export default function CurrentObjectInfor({ currentProjectInfo, setMode }) {
   // console.log(currentProjectInfo);
 
   return (
@@ -43,7 +43,7 @@ export default function CurrentObjectInfor({ currentProjectInfo }) {
         ''
       )}
       {currentProjectInfo.stateList.map((stat) => (<StateInfor state={stat} key={stat.stateName}/>))}
-      <ObjectTrackingInfor />
+      <ObjectTrackingInfor setMode={setMode}/>
     </div>
   );
 }

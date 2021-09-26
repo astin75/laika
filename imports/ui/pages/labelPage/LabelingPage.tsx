@@ -43,6 +43,7 @@ export default function LabelingPage() {
 
   useEffect(() => {
     if (currentProjectInfo !== null) {
+      console.log(currentProjectInfo)
       let currentImagesInfoTmp;
       currentImagesInfoTmp = imageList.filter((e) => e.projectName === query.projectName);
       if (currentImagesInfo === null) setCurrentImagesInfo(currentImagesInfoTmp);

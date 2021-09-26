@@ -1,8 +1,8 @@
-import {IPoint} from '../canvasTools/IPoint';
-import {IRect} from '../canvasTools/IRect';
+import { IPoint } from '../canvasTools/IPoint';
+import { IRect } from '../canvasTools/IRect';
 import _ from 'lodash';
-import {atom, useRecoilCallback} from 'recoil';
-import {clamp} from '../common/utils';
+import { atom, useRecoilCallback } from 'recoil';
+import { clamp } from '../common/utils';
 
 const scaleFactor = 0.1;
 const maximumScale = 5;
@@ -19,18 +19,18 @@ export interface ICanvasView {
 export const canvasView = atom<ICanvasView>({
   key: 'canvasView',
   default: {
-    offset: {x: 0, y: 0},
+    offset: { x: 0, y: 0 },
     scale: 1.0,
     minimumScale: 1.0,
     canvasMargin: 100,
-    canvasSize: {width: 1, height: 1},
-    frameSize: {width: 1, height: 1},
-  },
+    canvasSize: { width: 1, height: 1 },
+    frameSize: { width: 1, height: 1 }
+  }
 });
 
 export const createCanvasViewDispatcher = () => {
   const resetCanvas = useRecoilCallback<[HTMLImageElement, HTMLElement], void>(
-    ({set}) =>
+    ({ set }) =>
       (frame: HTMLImageElement, container: HTMLElement) => {
         const height = container.offsetHeight;
         const width = container.offsetWidth;
@@ -38,23 +38,23 @@ export const createCanvasViewDispatcher = () => {
         set(canvasView, (view) => {
           const updatedView = {
             ...view,
-            canvasSize: {width, height},
-            frameSize: {width: frame.width, height: frame.height},
-            offset: {x: view.offset.x, y: view.offset.y}, // Nested object readonly 속성 제거
+            canvasSize: { width, height },
+            frameSize: { width: frame.width, height: frame.height },
+            offset: { x: view.offset.x, y: view.offset.y } // Nested object readonly 속성 제거
           };
           updatedView.minimumScale = getMinimumZoomValue(updatedView);
           updatedView.scale = updatedView.minimumScale;
           return fitCanvas(updatedView);
         });
-      },
+      }
   );
 
   const zoomCanvas = useRecoilCallback<[number, IPoint | undefined], void>(
-    ({set}) =>
+    ({ set }) =>
       (direction: number, mousePosition: IPoint | undefined) => {
         set(canvasView, (view) => {
           if (view.scale >= maximumScale && direction > 0) {
-            return {...view, scale: maximumScale};
+            return { ...view, scale: maximumScale };
           }
 
           const delta = direction * scaleFactor;
@@ -71,11 +71,11 @@ export const createCanvasViewDispatcher = () => {
 
           return fitCanvas(updatedView);
         });
-      },
+      }
   );
 
   const shiftCanvas = useRecoilCallback<[IPoint], void>(
-    ({set}) =>
+    ({ set }) =>
       (movement: IPoint) => {
         set(canvasView, (view) => {
           const updatedView = _.cloneDeep(view);
@@ -83,13 +83,21 @@ export const createCanvasViewDispatcher = () => {
           updatedView.offset.y += movement.y;
           return fitCanvas(updatedView);
         });
-      },
+      }
+  );
+
+  const refreshCanvas = useRecoilCallback<[], void>(
+    ({ set }) =>
+      () => {
+        set(canvasView, (view) => view);
+      }
   );
 
   return {
     resetCanvas,
     zoomCanvas,
     shiftCanvas,
+    refreshCanvas
   };
 };
 
@@ -98,8 +106,8 @@ export type CanvasViewDispatcher = ReturnType<typeof createCanvasViewDispatcher>
 export const canvasViewDispatcherState = atom<CanvasViewDispatcher | undefined>(
   {
     key: 'canvasViewDispatcherState',
-    default: undefined,
-  },
+    default: undefined
+  }
 );
 
 const fitCanvas = (view: ICanvasView) => {
@@ -109,7 +117,7 @@ const fitCanvas = (view: ICanvasView) => {
 };
 
 const adjustCanvasToCenter = (view: ICanvasView) => {
-  const newView = {...view};
+  const newView = { ...view };
   const imageHeight = view.frameSize.height * view.scale;
   const imageWidth = view.frameSize.width * view.scale;
   const canvasHeight = view.canvasSize.height;
@@ -124,7 +132,7 @@ const adjustCanvasToCenter = (view: ICanvasView) => {
 };
 
 const limitCanvasOffsetToMargin = (view: ICanvasView) => {
-  const newView = {...view};
+  const newView = { ...view };
   const imageHeight = newView.frameSize.height;
   const imageWidth = newView.frameSize.width;
   const canvasHeight = newView.canvasSize.height;

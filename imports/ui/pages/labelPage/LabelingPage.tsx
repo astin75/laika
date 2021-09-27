@@ -23,37 +23,25 @@ import { gtInfoCollection, imageInfoCollection, projectCollection } from 'import
 import { getBoundingPointsOfRegion, IKeypoint, RegionDataType } from '../../../canvasTools/IRegionData';
 
 export default function LabelingPage() {
-  const query = queryString.parse(location.search);
-  const projectList = useTracker(() => projectCollection.find({}).fetch());
-  const gtinfor = useTracker(() => imageInfoCollection.find({}).fetch());
-  const imageList = useTracker(() => imageInfoCollection.find({}).fetch());
+  const projectList = useTracker(() => projectCollection.find({}).fetch(), []);
+  const imageList = useTracker(() => {
+    const query = queryString.parse(location.search);
+    const projectName = query.projectName;
+    return imageInfoCollection.find({ projectName }).fetch();
+  }, []);
 
   const [currentProjectInfo, setCurrentProjectInfo] = useState(null);
-  // const [currentImagesInfo, setCurrentImagesInfo] = useState(null);
   const [currentImageInfo, setCurrentImageInfo] = useState(null);
-  // const [currentGtInfo, setCurrentGtInfo] = useState(null);
   const prevImageInfo = useRef(undefined);
 
   useEffect(() => {
     if (projectList.length !== 0) {
+      const query = queryString.parse(location.search);
       let currentProjectInfortmp;
       currentProjectInfortmp = projectList.find((e) => e.projectName === query.projectName);
-      if (currentProjectInfo === null) setCurrentProjectInfo(currentProjectInfortmp);
+      setCurrentProjectInfo(currentProjectInfortmp);
     }
   }, [projectList]);
-
-  // useEffect(() => {
-  //   if (currentProjectInfo !== null) {
-  //     let currentImagesInfoTmp;
-  //     currentImagesInfoTmp = imageList.filter((e) => e.projectName === query.projectName);
-  //     if (currentImagesInfo === null) setCurrentImagesInfo(currentImagesInfoTmp);
-  //
-  //     // 임의로 세팅
-  //     let currentGtInfoTmp;
-  //     currentGtInfoTmp = gtinfor.filter((e) => e.projectName === query.projectName);
-  //     if (currentGtInfo === null) setCurrentGtInfo(currentImagesInfoTmp);
-  //   }
-  // }, [currentProjectInfo]);
 
   // 이미지 로드
   const [image, setImage] = useState<HTMLImageElement>(undefined);

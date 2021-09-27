@@ -3,10 +3,8 @@ import styles from './ObjectOptions.module.css';
 
 import { Icon } from '@iconify/react';
 import { imageInfoCollection } from 'imports/db/collections';
-import { gtInfoCollection } from 'imports/db/collections';
 import { useRecoilValue } from 'recoil';
 import { annotationDispatcherState } from 'imports/recoil/annotation';
-import { EditorMode } from 'ui/pages/labelPage/Editor';
 
 function AddObject({ currentImageInfo, currentProjectInfo }) {
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
@@ -19,6 +17,19 @@ function AddObject({ currentImageInfo, currentProjectInfo }) {
     }
     annotationDispatcher?.insert(currentProjectInfo.keypoint.length > 0, currentProjectInfo);
   };
+
+  const keyDownHandler = (e) => {
+    if (e.key === 'n')
+      addObjectFunc();
+  };
+
+  useEffect(() => {
+      document.addEventListener('keydown', keyDownHandler);
+      return () => {
+        document.removeEventListener('keydown', keyDownHandler);
+      };
+    }
+  );
 
   return (
     <div className={styles.addObjectWrap} onClick={addObjectFunc}>

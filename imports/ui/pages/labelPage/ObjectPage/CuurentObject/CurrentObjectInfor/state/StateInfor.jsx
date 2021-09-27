@@ -23,7 +23,7 @@ export default function StateInfor({ state }) {
     <div className={styles.stateInforWrap}>
       <div>{state.stateName}</div>
 
-      <Select size='xs' data={stateClassInfor} value={annotations[selection].meta[state.stateName] ?? '선택안됨'}
+      <Select size='xs' data={stateClassInfor} value={annotations[selection]?.meta[state.stateName] ?? '선택안됨'}
               onChange={(e) => {
                 updateAnnotationState(e);
               }} style={{ width: '80px' }} />

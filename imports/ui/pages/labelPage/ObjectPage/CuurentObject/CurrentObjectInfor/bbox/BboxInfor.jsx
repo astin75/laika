@@ -89,7 +89,7 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
       <Select
         size='xs'
         data={bboxClassInfor}
-        value={annotations[selection].className}
+        value={annotations[selection]?.className}
         onChange={(e) => {
           const currentAnnot = { ...annotations[selection] };
           const classIdx = currentProjectInfo.bbox.findIndex((cls) => cls === e);

@@ -27,7 +27,6 @@ const objectColorValues = [
 ];
 
 export default function CurrentObjectInfor({ currentProjectInfo, setMode }) {
-  console.log(currentProjectInfo);
   return (
     <div className={styles.currentObjectInforWrap}>
       {currentProjectInfo?.bbox.length > 0 ? (

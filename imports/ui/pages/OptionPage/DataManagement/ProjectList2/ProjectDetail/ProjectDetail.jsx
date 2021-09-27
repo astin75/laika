@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { Badge, Button, MultiSelect, Progress } from '@mantine/core';
+import { Badge, Button, Image, MultiSelect, Progress } from '@mantine/core';
 import { DateRangePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
 import saveAs from 'file-saver';
@@ -49,7 +49,6 @@ export default function ProjectDetail({
 
   const userData = [];
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [progressValue, setProgressValue] = useState(0);
 
   if (userList) {
     userList.map((e) => {
@@ -159,7 +158,7 @@ export default function ProjectDetail({
       className={styles.container}
     >
       <div className={styles.top}>
-        <img src={projectInfoImage} />
+        <Image className={styles.detailImg} src={projectInfoImage} />
       </div>
       {selectedProject ? (
         <div className={styles.bottom}>

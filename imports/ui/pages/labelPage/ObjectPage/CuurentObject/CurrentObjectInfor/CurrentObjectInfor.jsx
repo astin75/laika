@@ -27,23 +27,21 @@ const objectColorValues = [
 ];
 
 export default function CurrentObjectInfor({ currentProjectInfo, setMode }) {
-  // console.log(currentProjectInfo);
-
   return (
     <div className={styles.currentObjectInforWrap}>
-      {currentProjectInfo.bbox.length > 0 ? (
+      {currentProjectInfo?.bbox.length > 0 ? (
         <BboxInfor objectColorValues={objectColorValues} currentProjectInfo={currentProjectInfo} />
       ) : (
         ''
       )}
-      {currentProjectInfo.polygon ? <PolygonInfor objectColorValues={objectColorValues} /> : ''}
-      {currentProjectInfo.keypoint.length > 0 ? (
+      {currentProjectInfo?.polygon ? <PolygonInfor objectColorValues={objectColorValues} /> : ''}
+      {currentProjectInfo?.keypoint.length > 0 ? (
         <KeypointInfor objectColorValues={objectColorValues} currentProjectInfo={currentProjectInfo} />
       ) : (
         ''
       )}
-      {currentProjectInfo.stateList.map((stat) => (<StateInfor state={stat} key={stat.stateName}/>))}
-      <ObjectTrackingInfor setMode={setMode}/>
+      {currentProjectInfo?.stateList.map((stat) => (<StateInfor state={stat} key={stat.stateName} />))}
+      {currentProjectInfo?.objectId ? <ObjectTrackingInfor setMode={setMode} /> : <></>}
     </div>
   );
 }

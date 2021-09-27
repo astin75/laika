@@ -97,6 +97,8 @@ export default function RectDrawer({ frame, onWheel, projectInfo }: ICanvasHandl
           } else {
             setState('idle');
           }
+        } else {
+          setState('idle');
         }
         if (nearestPoint !== undefined)
           vertex = {
@@ -178,6 +180,7 @@ export default function RectDrawer({ frame, onWheel, projectInfo }: ICanvasHandl
         if (dstCls !== undefined) {
           const newAnnot = _.cloneDeep(annotations[selection]);
           newAnnot.className = dstCls;
+          newAnnot.color = projectInfo.color[dstCls];
           annotationDispatcher?.edit(selection, newAnnot, false);
         }
       }

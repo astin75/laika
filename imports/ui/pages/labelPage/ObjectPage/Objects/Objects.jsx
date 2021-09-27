@@ -19,14 +19,12 @@ export default function Objects({ currentImageInfo }) {
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const annotations = useRecoilValue(currentAnnotations);
   const [selection, setSelection] = useRecoilState(selectionIdx);
-  const [selectedObject, setSelectedObject] = useState('');
   const canvasViewDispatcher = useRecoilValue(canvasViewDispatcherState);
   const [curKeypoint, setCurKeypoint] = useRecoilState(keypointIdx);
 
   const deleteAnnotation = (idx) => {
-    // annotationDispatcher?.setSelectionAnnotation(idx, true);
-    // annotationDispatcher?.del();
     annotationDispatcher?.remove(idx);
+    setSelection(undefined)
   };
 
   const selectAnnotation = (idx) => {
@@ -35,7 +33,6 @@ export default function Objects({ currentImageInfo }) {
     setSelection(idx);
     if (annotations[idx].regions.rect)
       annotationDispatcher?.highlightRect(idx, undefined);
-    setSelectedObject(idx);
     canvasViewDispatcher?.refreshCanvas();
     setCurKeypoint(0);
   };
@@ -74,14 +71,14 @@ export default function Objects({ currentImageInfo }) {
               key={annot.key}
               className={styles.object}
               style={{
-                backgroundColor: idx == selectedObject ? `rgba(0, 227, 180)` : ''
+                backgroundColor: idx === selection ? `rgba(0, 227, 180)` : ''
               }}
             >
               <Icon icon={eyeIcon} style={{ fontSize: '20px' }} onClick={() => setVisible(idx)} />
               <Icon icon={eyeSlashed} style={{ fontSize: '20px' }} onClick={() => setInvisible(idx)} />
 
               <div className={styles.objectTitle} onClick={() => selectAnnotation(idx)}>
-                object {annot.key}
+                object {idx}
               </div>
               <Icon icon='bi:trash' onClick={() => deleteAnnotation(idx)} />
             </div>

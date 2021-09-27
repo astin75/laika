@@ -78,9 +78,13 @@ export const createAnnotationDispatcher = () => {
     set(undoStack, (undoList) => {
       const updateList = _.cloneDeep(undoList);
       updateList.push([...undoList[undoList.length - 1], newAnnotation]);
+      // insert 시 가장 마지막 추가된 객체 선택으로 변경
+      set(selectionIdx, updateList[updateList.length - 1].length - 1);
       return updateList;
     });
     set(redoStack, [[]]);
+
+
   });
 
   const edit = useRecoilCallback<[number, IAnnotation, boolean], void>(

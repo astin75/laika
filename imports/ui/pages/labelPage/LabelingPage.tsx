@@ -23,37 +23,25 @@ import { gtInfoCollection, imageInfoCollection, projectCollection } from 'import
 import { getBoundingPointsOfRegion, IKeypoint, RegionDataType } from '../../../canvasTools/IRegionData';
 
 export default function LabelingPage() {
-  const query = queryString.parse(location.search);
-  const projectList = useTracker(() => projectCollection.find({}).fetch());
-  const gtinfor = useTracker(() => imageInfoCollection.find({}).fetch());
-  const imageList = useTracker(() => imageInfoCollection.find({}).fetch());
+  const projectList = useTracker(() => projectCollection.find({}).fetch(), []);
+  const imageList = useTracker(() => {
+    const query = queryString.parse(location.search);
+    const projectName = query.projectName;
+    return imageInfoCollection.find({ projectName }).fetch();
+  }, []);
 
   const [currentProjectInfo, setCurrentProjectInfo] = useState(null);
-  // const [currentImagesInfo, setCurrentImagesInfo] = useState(null);
   const [currentImageInfo, setCurrentImageInfo] = useState(null);
-  // const [currentGtInfo, setCurrentGtInfo] = useState(null);
   const prevImageInfo = useRef(undefined);
 
   useEffect(() => {
     if (projectList.length !== 0) {
+      const query = queryString.parse(location.search);
       let currentProjectInfortmp;
       currentProjectInfortmp = projectList.find((e) => e.projectName === query.projectName);
-      if (currentProjectInfo === null) setCurrentProjectInfo(currentProjectInfortmp);
+      setCurrentProjectInfo(currentProjectInfortmp);
     }
   }, [projectList]);
-
-  // useEffect(() => {
-  //   if (currentProjectInfo !== null) {
-  //     let currentImagesInfoTmp;
-  //     currentImagesInfoTmp = imageList.filter((e) => e.projectName === query.projectName);
-  //     if (currentImagesInfo === null) setCurrentImagesInfo(currentImagesInfoTmp);
-  //
-  //     // 임의로 세팅
-  //     let currentGtInfoTmp;
-  //     currentGtInfoTmp = gtinfor.filter((e) => e.projectName === query.projectName);
-  //     if (currentGtInfo === null) setCurrentGtInfo(currentImagesInfoTmp);
-  //   }
-  // }, [currentProjectInfo]);
 
   // 이미지 로드
   const [image, setImage] = useState<HTMLImageElement>(undefined);
@@ -107,23 +95,24 @@ export default function LabelingPage() {
   // ----------------------------------------------------------------
   const keyDownHandler = (e) => {
     // 모드 선택
-    if (e.ctrlKey) {
-      switch (e.key) {
-        case '1':
-          setMode(EditorMode.Idle);
-          break;
-        case '2':
+    switch (e.key) {
+      case 'q':
+        setMode(EditorMode.Idle);
+        break;
+      case 'w':
+        if (currentProjectInfo.bbox.length)
           setMode(EditorMode.Rect);
-          break;
-        case '3':
+        break;
+      case 'e':
+        if (currentProjectInfo.keypoint.length)
           setMode(EditorMode.Skeleton);
-          break;
-        case '4':
+        break;
+      case 'r':
+        if (currentProjectInfo.polygon)
           setMode(EditorMode.Polygon);
-          break;
-        default:
-          break;
-      }
+        break;
+      default:
+        break;
     }
     // 파일 넘기기
     if (e.key === 'a') {

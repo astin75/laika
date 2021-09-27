@@ -178,6 +178,7 @@ export default function RectDrawer({ frame, onWheel, projectInfo }: ICanvasHandl
         if (dstCls !== undefined) {
           const newAnnot = _.cloneDeep(annotations[selection]);
           newAnnot.className = dstCls;
+          newAnnot.color = projectInfo.color[dstCls];
           annotationDispatcher?.edit(selection, newAnnot, false);
         }
       }

@@ -93,10 +93,8 @@ export default function BboxInfor({ objectColorValues, currentProjectInfo }) {
         onChange={(e) => {
           const currentAnnot = { ...annotations[selection] };
           const classIdx = currentProjectInfo.bbox.findIndex((cls) => cls === e);
-          if (classIdx > -1){
-
+          if (classIdx > -1) {
             currentAnnot.color = currentProjectInfo.color[classIdx];
-            console.log('color', currentProjectInfo.color[classIdx])
           }
           annotationDispatcher?.edit(selection, { ...currentAnnot, className: e }, false);
           setBboxInfor((pre) => ({ ...pre, class: e }));

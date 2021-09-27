@@ -80,7 +80,6 @@ export const createAnnotationDispatcher = () => {
       updateList.push([...undoList[undoList.length - 1], newAnnotation]);
       // insert 시 가장 마지막 추가된 객체 선택으로 변경
       set(selectionIdx, updateList[updateList.length - 1].length - 1);
-      console.log(updateList[updateList.length - 1].length - 1);
       return updateList;
     });
     set(redoStack, [[]]);

@@ -12,7 +12,7 @@ export default function CurrentObject({ currentProjectInfo, mode, setMode }) {
   return (
     <div className={styles.pageWrap}>
       <div className={styles.selectedObject}>
-        {selection !== undefined ? `[Object ${annotations[selection]?.key}]` : ''}
+        {selection !== undefined ? `[Object ${selection}]` : ''}
       </div>
       {/* 프로젝트에서 설정한 label 종류 옵션 바*/}
       {currentProjectInfo ? <CurrentObjectOptions currentProjectInfo={currentProjectInfo} mode={mode} setMode={setMode} /> : ''}

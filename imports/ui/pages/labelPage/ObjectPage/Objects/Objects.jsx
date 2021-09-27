@@ -79,7 +79,7 @@ export default function Objects({ currentImageInfo }) {
               <Icon icon={eyeSlashed} style={{ fontSize: '20px' }} onClick={() => setInvisible(idx)} />
 
               <div className={styles.objectTitle} onClick={() => selectAnnotation(idx)}>
-                object {annot.key}
+                object {idx}
               </div>
               <Icon icon='bi:trash' onClick={() => deleteAnnotation(idx)} />
             </div>

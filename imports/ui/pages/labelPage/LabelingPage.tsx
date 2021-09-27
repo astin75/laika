@@ -95,23 +95,24 @@ export default function LabelingPage() {
   // ----------------------------------------------------------------
   const keyDownHandler = (e) => {
     // 모드 선택
-    if (e.ctrlKey) {
-      switch (e.key) {
-        case '1':
-          setMode(EditorMode.Idle);
-          break;
-        case '2':
+    switch (e.key) {
+      case 'q':
+        setMode(EditorMode.Idle);
+        break;
+      case 'w':
+        if (currentProjectInfo.bbox.length)
           setMode(EditorMode.Rect);
-          break;
-        case '3':
+        break;
+      case 'e':
+        if (currentProjectInfo.keypoint.length)
           setMode(EditorMode.Skeleton);
-          break;
-        case '4':
+        break;
+      case 'r':
+        if (currentProjectInfo.polygon)
           setMode(EditorMode.Polygon);
-          break;
-        default:
-          break;
-      }
+        break;
+      default:
+        break;
     }
     // 파일 넘기기
     if (e.key === 'a') {

@@ -19,7 +19,6 @@ export default function Objects({ currentImageInfo }) {
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const annotations = useRecoilValue(currentAnnotations);
   const [selection, setSelection] = useRecoilState(selectionIdx);
-  const [selectedObject, setSelectedObject] = useState('');
   const canvasViewDispatcher = useRecoilValue(canvasViewDispatcherState);
   const [curKeypoint, setCurKeypoint] = useRecoilState(keypointIdx);
 
@@ -35,7 +34,6 @@ export default function Objects({ currentImageInfo }) {
     setSelection(idx);
     if (annotations[idx].regions.rect)
       annotationDispatcher?.highlightRect(idx, undefined);
-    setSelectedObject(idx);
     canvasViewDispatcher?.refreshCanvas();
     setCurKeypoint(0);
   };
@@ -74,7 +72,7 @@ export default function Objects({ currentImageInfo }) {
               key={annot.key}
               className={styles.object}
               style={{
-                backgroundColor: idx == selectedObject ? `rgba(0, 227, 180)` : ''
+                backgroundColor: idx === selection ? `rgba(0, 227, 180)` : ''
               }}
             >
               <Icon icon={eyeIcon} style={{ fontSize: '20px' }} onClick={() => setVisible(idx)} />

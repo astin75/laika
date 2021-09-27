@@ -97,6 +97,8 @@ export default function RectDrawer({ frame, onWheel, projectInfo }: ICanvasHandl
           } else {
             setState('idle');
           }
+        } else {
+          setState('idle');
         }
         if (nearestPoint !== undefined)
           vertex = {

@@ -23,9 +23,8 @@ export default function Objects({ currentImageInfo }) {
   const [curKeypoint, setCurKeypoint] = useRecoilState(keypointIdx);
 
   const deleteAnnotation = (idx) => {
-    // annotationDispatcher?.setSelectionAnnotation(idx, true);
-    // annotationDispatcher?.del();
     annotationDispatcher?.remove(idx);
+    setSelection(undefined)
   };
 
   const selectAnnotation = (idx) => {

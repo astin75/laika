@@ -1,22 +1,22 @@
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   getNormOfPoint,
   IPoint,
-  transformCanvasPointToImagePoint,
+  transformCanvasPointToImagePoint
 } from '../../../../canvasTools/IPoint';
 import { appendPointToPolygon, movePolygonVertex } from '../../../../canvasTools/IPolygon';
 import {
   findNearestKeyPoint,
   findNearestPoint,
-  IVertexInfo,
+  IVertexInfo
 } from '../../../../canvasTools/IRegionData';
 import {
   annotationDispatcherState,
   currentAnnotations,
   IAnnotation,
-  selectionIdx,
+  selectionIdx
 } from '../../../../recoil/annotation';
 import { canvasView } from '../../../../recoil/canvas';
 import Canvas from '../Canvas';
@@ -24,7 +24,7 @@ import { ICanvasHandlerProps } from './ICanvasHandler';
 
 type HandlerState = 'idle' | 'onPoint' | 'holding' | 'movePoint';
 
-export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
+export default function PolygonDrawer({ frame, onWheel, projectInfo }: ICanvasHandlerProps) {
   const [state, setState] = useState<HandlerState>('idle');
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
   const annotations = useRecoilValue(currentAnnotations);
@@ -36,7 +36,7 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
     if (e.button !== 0) return;
     const mousePoint: IPoint = {
       x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
+      y: e.nativeEvent.offsetY
     };
     const [transformed] = transformCanvasPointToImagePoint(view, mousePoint);
 
@@ -63,11 +63,11 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
     if (e.button !== 0) return;
     const mousePoint: IPoint = {
       x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
+      y: e.nativeEvent.offsetY
     };
     const movementOffset: IPoint = {
       x: e.movementX,
-      y: e.movementY,
+      y: e.movementY
     };
 
     switch (state) {
@@ -95,7 +95,7 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
           setState('onPoint');
           vertex = {
             idx: nearestPoint,
-            type: 'boundingPoint',
+            type: 'boundingPoint'
           };
         } else {
           setState('idle');
@@ -123,6 +123,29 @@ export default function PolygonDrawer({ frame, onWheel }: ICanvasHandlerProps) {
         break;
     }
   };
+
+  const keyDownHandler = (e) => {
+    // 클래스 선택
+    if (e.code.includes('Digit')) {
+      const num = Number(e.key) - 1;
+      if (selection !== undefined) {
+        const dstCls = projectInfo.bbox[num];
+        if (dstCls !== undefined) {
+          const newAnnot = _.cloneDeep(annotations[selection]);
+          newAnnot.className = dstCls;
+          newAnnot.color = projectInfo.color[dstCls];
+          annotationDispatcher?.edit(selection, newAnnot, false);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    };
+  });
 
   return (
     <Canvas

@@ -40,12 +40,16 @@ export default function ProjectDetail({
   setToggleCurrentProjectDetail,
   setIsLoading,
   projectInfoImage,
+  setProjectInfoImage,
+  percentage,
 }) {
   // console.log(selectedProject);
   const user = useTracker(() => Meteor.users.find({}).fetch());
   const [value, setValue] = useState([[], []]);
   const projectList = useTracker(() => projectCollection.find({}).fetch());
   const userList = useTracker(() => userProfileCollection.find({}).fetch());
+
+  const [projectProgres, setProjectProgress] = useState(0);
 
   const userData = [];
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -56,6 +60,10 @@ export default function ProjectDetail({
       userData.push(e.userName);
     });
   }
+
+  useEffect(() => {
+    if (projectProgres !== percentage) setProjectProgress(percentage);
+  }, [percentage]);
 
   const updateProjectDetail = () => {
     if (value[0] === null || value[1] === null) {
@@ -141,6 +149,8 @@ export default function ProjectDetail({
 
     projectCollection.remove(prjectInfo[0]._id);
     setSelectedProject(null);
+    setToggleCurrentProjectDetail(false);
+    setProjectInfoImage(false);
   };
   const abort = () => {
     return;
@@ -213,7 +223,15 @@ export default function ProjectDetail({
           </div>
           <div className={styles.projectDetails}>
             <div className={styles.detailTitle}>프로젝트 기간 </div>
-            <DateRangePicker placeholder="Pick dates range" value={value} onChange={setValue} />
+            <DateRangePicker
+              placeholder={
+                selectedProject.startDate
+                  ? `${selectedProject.startDate} - ${selectedProject.endDate}`
+                  : 'Pick dates range'
+              }
+              value={value}
+              onChange={setValue}
+            />
           </div>
           <div className={styles.projectDetails}>
             <div className={styles.detailTitle}>프로젝트 라벨러 </div>
@@ -231,22 +249,10 @@ export default function ProjectDetail({
           <div className={styles.projectDetails}>
             <div className={styles.detailTitle}>
               진행 상황 &nbsp;
-              {parseInt(
-                ((selectedProject.totalFileSize -
-                  (selectedProject.totalFileSize - selectedProject.totalUnConfirmSize)) /
-                  selectedProject.totalFileSize) *
-                  100
-              )}{' '}
-              % ( {selectedProject.totalUnConfirmSize} / {selectedProject.totalFileSize})
+              {projectProgres}% ( {selectedProject.totalUnConfirmSize} /{' '}
+              {selectedProject.totalFileSize})
             </div>
-            <Progress
-              value={parseInt(
-                ((selectedProject.totalFileSize -
-                  (selectedProject.totalFileSize - selectedProject.totalUnConfirmSize)) /
-                  selectedProject.totalFileSize) *
-                  100
-              )}
-            />
+            <Progress value={projectProgres} />
           </div>
 
           <div className={styles.projectOptions}>
@@ -296,6 +302,7 @@ export default function ProjectDetail({
         onClick={() => {
           setSelectedProject(null);
           setToggleCurrentProjectDetail(false);
+          setProjectInfoImage(false);
         }}
       >
         <div className={styles.exitBtnLeftBar}></div>

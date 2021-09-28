@@ -236,6 +236,10 @@ export default function ProjectUpload() {
         '#fab005',
         '#fd7e14',
       ];
+      let polygonFlag = false;
+      if (boxClassList.length > 0) {
+        polygonFlag = true;
+      }
       let tempProjectInfo = {
         projectName: projectName[0].projectName,
         masterProjectName: projectName[0].masterProjectName,
@@ -246,7 +250,7 @@ export default function ProjectUpload() {
         bbox: boxClassList,
         keypoint: keyPointClassList,
         stateList: objectStateBox,
-        polygon: checkedPolygon,
+        polygon: polygonFlag,
         objectId: checkedObjectIdFlag,
         color: colorHex.slice(0, boxClassList.length),
         totalFileSize: fileCount,

@@ -57,6 +57,8 @@ export default function LabelingPage() {
         setImage(img);
         if (prevData) {
           annotationDispatcher?.initFromData(prevData, currentProjectInfo);
+        }else{
+          annotationDispatcher?.reset();
         }
       };
     }

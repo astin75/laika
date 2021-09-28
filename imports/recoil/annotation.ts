@@ -8,6 +8,9 @@ import {
   RegionDataType
 } from '../canvasTools/IRegionData';
 import { getRandomHexColor, makeRandomId } from '../common/utils';
+import { makeRectRegion } from '../canvasTools/IRect';
+import { restorePolygonFromPoints } from '../canvasTools/IPolygon';
+import { restoreKeypointFromData } from '../canvasTools/ISkeleton';
 
 export interface IAnnotation {
   className: string;
@@ -20,6 +23,17 @@ export interface IAnnotation {
   key: string; // this value is for unique React Key Value
   selected: boolean;
   meta: {}; // custom meta data
+}
+
+export interface ISaveAnnotation {
+  className: string;
+  box: false | number[];
+  keypoints: false | number[][];
+  polygon: false | number[][];
+  boundingPoints: false | number[][];
+  state1: string | false;
+  state2: string | false;
+  id: number | false;
 }
 
 export const undoStack = atom<IAnnotation[][]>({
@@ -262,10 +276,55 @@ export const createAnnotationDispatcher = () => {
     set(redoStack, [[]]);
   });
 
-  const initFromData = useRecoilCallback<[IAnnotation[]], void>(
+  const initFromData = useRecoilCallback<[ISaveAnnotation[], any], void>(
     ({ set }) =>
-      (annotations: IAnnotation[]) => {
-        set(undoStack, [annotations]);
+      (annotations: ISaveAnnotation[], projectInfo: any) => {
+        const annots: IAnnotation[] = annotations.map((annot) => {
+          const className = annot.className;
+          const key = makeRandomId();
+          const meta = {};
+          let color = getRandomHexColor();
+          const clsIdx = projectInfo.bbox.findIndex((cls) => cls === className);
+          if (clsIdx > -1)
+            color = projectInfo.color[clsIdx];
+          let rect: IRegionData = undefined;
+          if (annot.box)
+            rect = makeRectRegion(
+              {
+                x: annot.box[0],
+                y: annot.box[1]
+              },
+              {
+                x: annot.box[0] + annot.box[2],
+                y: annot.box[1] + annot.box[3]
+              });
+          let polygon: IRegionData = undefined;
+          if (annot.polygon) {
+            polygon = restorePolygonFromPoints(annot.polygon.map((pt) => ({ x: pt[0], y: pt[1] })));
+          }
+          let keypoint: IRegionData = undefined;
+          if (annot.keypoints) {
+            keypoint = restoreKeypointFromData(annot.keypoints, projectInfo);
+          }
+          if (annot.state1) {
+            meta[projectInfo.stateList[0].stateName] = annot.state1;
+          }
+          if (annot.state2) {
+            meta[projectInfo.stateList[1].stateName] = annot.state2;
+          }
+          if (annot.id !== false) {
+            meta['trackingId'] = annot.id;
+          }
+          return {
+            className,
+            regions: { rect, keypoint, polygon },
+            color,
+            key,
+            selected: false,
+            meta
+          };
+        });
+        set(undoStack, [annots]);
         set(redoStack, [[]]);
       }
   );

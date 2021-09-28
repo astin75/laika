@@ -68,6 +68,47 @@ export const appendKeypoint = (
   return newRegion;
 };
 
+export const restoreKeypointFromData = (
+    points: number[][],
+    projectInfo: any
+  ): IRegionData => {
+    const defaultPoints: IKeypoint[] = projectInfo.keypoint.map((name) => {
+      return {
+        visible: 0,
+        alias: name,
+        x: 0,
+        y: 0
+      };
+    });
+    const newRegion: IRegionData = {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      boundingPoints: getBoundingPointsOfRegion(0, 0, 0, 0),
+      points: defaultPoints,
+      area: 0,
+      type: RegionDataType.Skeleton,
+      visible: true,
+      highlighted: false,
+      selected: false
+    };
+    points.map((pt, idx) => {
+      newRegion.points[idx] = { ...newRegion.points[idx], x: pt[0], y: pt[1], visible: pt[2] };
+    });
+
+    const xCoords = newRegion.points.map((point) => point.x);
+    const yCoords = newRegion.points.map((point) => point.y);
+    newRegion.x = Math.min(...xCoords);
+    newRegion.y = Math.min(...yCoords);
+    newRegion.width = Math.max(...xCoords) - newRegion.x;
+    newRegion.height = Math.max(...yCoords) - newRegion.y;
+    newRegion.area = getAreaOfRegion(newRegion);
+    newRegion.boundingPoints = getBoundingPointsOfRegion(newRegion.x, newRegion.y, newRegion.width, newRegion.height);
+    return newRegion;
+  }
+;
+
 export const drawSkeletonOnCanvas = (
   region: IRegionData,
   context: CanvasRenderingContext2D,
@@ -233,7 +274,7 @@ export const drawKeypointOnCanvas = (
   region.points.forEach((point, idx) => {
     if (point.visible === 0)
       return;
-    // if (point.visible === 1)
+      // if (point.visible === 1)
     //   drawColor = getComplementaryColor(colorCode);
     else
       drawColor = keypointColors[idx];
@@ -266,7 +307,7 @@ export const moveKeypointVertex = (
     y: transformed.y
   };
   const xCoords = newRegion.points.map((point) => point.x);
-  const yCoords = newRegion.points.map((point) => point.x);
+  const yCoords = newRegion.points.map((point) => point.y);
   newRegion.x = Math.min(...xCoords);
   newRegion.y = Math.min(...yCoords);
   newRegion.width = Math.max(...xCoords) - newRegion.x;

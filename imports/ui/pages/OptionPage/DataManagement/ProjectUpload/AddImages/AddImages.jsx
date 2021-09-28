@@ -9,7 +9,7 @@ export default function AddImages(props) {
 
   const [localJson, setLocalJson] = useState('');
   const switchStyles = {
-    label: { fontSize: 13 },
+    label: { fontSize: 13 }
   };
   const onChange = (event) => {
     let tempImgFileInfo = { imgInfo: [] };
@@ -26,7 +26,7 @@ export default function AddImages(props) {
           // fileUploaded.readAsText(event.target.files[count].result);
           // console.log(JSON.parse(fileUploaded));
           let reader = new FileReader();
-          reader.onload = function (event) {
+          reader.onload = function(event) {
             let json = JSON.parse(event.target.result);
 
             let formatted = JSON.stringify(json, null, 2);
@@ -52,7 +52,7 @@ export default function AddImages(props) {
             projectName: false,
             masterProjectName: false,
             projectID: false,
-            confirmFlag: 'ready',
+            confirmFlag: 'ready'
           });
 
           tempRawImgList.rawFile.push(event.target.files[count]);
@@ -60,13 +60,9 @@ export default function AddImages(props) {
             projectName: false,
             masterProjectName: false,
             projectID: false,
-            bbox: [],
-            keypoint: [],
-            stateList: [],
-            polygon: [],
-            objectId: false,
+            annotations: [],
             ImgFileId: RandValue[count],
-            ImgFileName: event.target.files[count].name,
+            ImgFileName: event.target.files[count].name
           });
         }
       }
@@ -82,14 +78,14 @@ export default function AddImages(props) {
       <Col span={3}>
         <Switch
           disabled={false}
-          label="Annotations"
+          label='Annotations'
           styles={switchStyles}
           checked={WithGroundTruthFlag}
           onChange={(event) => setWithGroundTruthFlag(event.currentTarget.checked)}
         ></Switch>
       </Col>
       <Col span={3} className={clsx(styles.fileUpload, 'form-group col-md-4')}>
-        <input type="file" webkitdirectory="" className="custom-file-input" onChange={onChange} />
+        <input type='file' webkitdirectory='' className='custom-file-input' onChange={onChange} />
         <label className={clsx(styles.fileLabel, 'custom-file-label')}>
           파일 : {props.fileCount} 개
         </label>

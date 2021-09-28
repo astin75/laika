@@ -7,6 +7,7 @@ import {
   transformImagePointToCanvasPoint
 } from './IPoint';
 import { getBoundingPointsOfRegion, IKeypoint, IRegionData, RegionDataType } from './IRegionData';
+import { drawWidth } from '../ui/pages/labelPage/Canvas';
 
 export const appendPointToPolygon = (
   region: IRegionData | undefined,
@@ -37,12 +38,13 @@ export const appendPointToPolygon = (
   const newRegion: IRegionData = _.cloneDeep(region);
   newRegion.points.push(keypoint);
   const xCoords = region.points.map((point) => point.x);
-  const yCoords = region.points.map((point) => point.x);
+  const yCoords = region.points.map((point) => point.y);
   newRegion.x = Math.min(...xCoords);
   newRegion.y = Math.min(...yCoords);
   newRegion.width = Math.max(...xCoords) - newRegion.x;
   newRegion.height = Math.max(...yCoords) - newRegion.y;
   newRegion.area = getAreaOfPolygon(region);
+  newRegion.boundingPoints = getBoundingPointsOfRegion(newRegion.x, newRegion.y, newRegion.width, newRegion.height);
   return newRegion;
 };
 
@@ -60,12 +62,40 @@ export const movePolygonVertex = (
     y: transformed.y
   };
   const xCoords = newRegion.points.map((point) => point.x);
+  const yCoords = newRegion.points.map((point) => point.y);
+  newRegion.x = Math.min(...xCoords);
+  newRegion.y = Math.min(...yCoords);
+  newRegion.width = Math.max(...xCoords) - newRegion.x;
+  newRegion.height = Math.max(...yCoords) - newRegion.y;
+  newRegion.area = getAreaOfPolygon(newRegion);
+  return newRegion;
+};
+
+export const restorePolygonFromPoints = (
+  points: IPoint[]
+): IRegionData => {
+  const newRegion: IRegionData = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    boundingPoints: getBoundingPointsOfRegion(0, 0, 0, 0),
+    points: [],
+    area: 0,
+    type: RegionDataType.Polygon,
+    visible: true,
+    highlighted: false,
+    selected: false
+  };
+  newRegion.points = points.map((pt) => ({ x: pt.x, y: pt.y, visible: 2, alias: '0' }));
+  const xCoords = newRegion.points.map((point) => point.x);
   const yCoords = newRegion.points.map((point) => point.x);
   newRegion.x = Math.min(...xCoords);
   newRegion.y = Math.min(...yCoords);
   newRegion.width = Math.max(...xCoords) - newRegion.x;
   newRegion.height = Math.max(...yCoords) - newRegion.y;
-  newRegion.area = getAreaOfPolygon(region);
+  newRegion.area = getAreaOfPolygon(newRegion);
+  newRegion.boundingPoints = getBoundingPointsOfRegion(newRegion.x, newRegion.y, newRegion.width, newRegion.height);
   return newRegion;
 };
 
@@ -100,11 +130,11 @@ export const drawPolygonOnCanvas = (
       y: region.points[nextIdx].y
     };
     const [p1] = transformImagePointToCanvasPoint(view, vertex);
-    drawCircle(p1.x, p1.y, 3, context, colorCode);
+    drawCircle(p1.x, p1.y, 3 * drawWidth, context, colorCode);
     if (highlightVertex && highlightVertex.idx === idx) {
-      drawCircle(p1.x, p1.y, 6, context, colorCode);
+      drawCircle(p1.x, p1.y, 6 * drawWidth, context, colorCode);
     }
-    drawText(p1.x, p1.y - 5, String(idx), context, colorCode);
+    drawText(p1.x, p1.y - 10, String(idx), context, colorCode);
   });
   drawPath(region.points, context, colorCode, view);
 };

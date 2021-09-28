@@ -10,7 +10,15 @@ import {
   IRegionData,
   RegionDataType
 } from './IRegionData';
-import { getAreaOfPolygon } from './IPolygon';
+import { drawWidth } from '../ui/pages/labelPage/Canvas';
+
+export const keypointColors: string[] = [
+  '#e6194b', '#3cb44b', '#ffe119', '#4363d8',
+  '#f58231', '#911eb4', '#46f0f0', '#f032e6',
+  '#bcf60c', '#fabebe', '#008080', '#e6beff',
+  '#9a6324', '#fffac8', '#800000', '#aaffc3',
+  '#808000', '#ffd8b1', '#000075', '#808080'
+];
 
 export const appendKeypoint = (
   region: IRegionData | undefined,
@@ -60,6 +68,47 @@ export const appendKeypoint = (
   newRegion.area = getAreaOfRegion(region);
   return newRegion;
 };
+
+export const restoreKeypointFromData = (
+    points: number[][],
+    projectInfo: any
+  ): IRegionData => {
+    const defaultPoints: IKeypoint[] = projectInfo.keypoint.map((name) => {
+      return {
+        visible: 0,
+        alias: name,
+        x: 0,
+        y: 0
+      };
+    });
+    const newRegion: IRegionData = {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      boundingPoints: getBoundingPointsOfRegion(0, 0, 0, 0),
+      points: defaultPoints,
+      area: 0,
+      type: RegionDataType.Skeleton,
+      visible: true,
+      highlighted: false,
+      selected: false
+    };
+    points.map((pt, idx) => {
+      newRegion.points[idx] = { ...newRegion.points[idx], x: pt[0], y: pt[1], visible: pt[2] };
+    });
+
+    const xCoords = newRegion.points.map((point) => point.x);
+    const yCoords = newRegion.points.map((point) => point.y);
+    newRegion.x = Math.min(...xCoords);
+    newRegion.y = Math.min(...yCoords);
+    newRegion.width = Math.max(...xCoords) - newRegion.x;
+    newRegion.height = Math.max(...yCoords) - newRegion.y;
+    newRegion.area = getAreaOfRegion(newRegion);
+    newRegion.boundingPoints = getBoundingPointsOfRegion(newRegion.x, newRegion.y, newRegion.width, newRegion.height);
+    return newRegion;
+  }
+;
 
 export const drawSkeletonOnCanvas = (
   region: IRegionData,
@@ -226,10 +275,10 @@ export const drawKeypointOnCanvas = (
   region.points.forEach((point, idx) => {
     if (point.visible === 0)
       return;
-    if (point.visible === 1)
-      drawColor = getComplementaryColor(colorCode);
+      // if (point.visible === 1)
+    //   drawColor = getComplementaryColor(colorCode);
     else
-      drawColor = colorCode;
+      drawColor = keypointColors[idx];
     const vertex: IPoint = { x: point.x, y: point.y };
     const nextIdx = idx === region.points.length - 1 ? 0 : idx + 1;
     const nextVertex: IPoint = {
@@ -237,11 +286,11 @@ export const drawKeypointOnCanvas = (
       y: region.points[nextIdx].y
     };
     const [p1] = transformImagePointToCanvasPoint(view, vertex);
-    drawCircle(p1.x, p1.y, 3, context, drawColor);
+    drawCircle(p1.x, p1.y, 3 * drawWidth, context, drawColor);
     if (highlightVertex && highlightVertex.idx === idx) {
-      drawCircle(p1.x, p1.y, 6, context, drawColor);
+      drawCircle(p1.x, p1.y, 6 * drawWidth, context, drawColor);
     }
-    drawText(p1.x, p1.y - 5, point.alias, context, drawColor);
+    drawText(p1.x, p1.y - 10, point.alias, context, drawColor);
   });
 };
 
@@ -259,7 +308,7 @@ export const moveKeypointVertex = (
     y: transformed.y
   };
   const xCoords = newRegion.points.map((point) => point.x);
-  const yCoords = newRegion.points.map((point) => point.x);
+  const yCoords = newRegion.points.map((point) => point.y);
   newRegion.x = Math.min(...xCoords);
   newRegion.y = Math.min(...yCoords);
   newRegion.width = Math.max(...xCoords) - newRegion.x;

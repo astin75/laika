@@ -11,7 +11,7 @@ import {
   AnnotationDispatcher,
   annotationDispatcherState,
   createAnnotationDispatcher,
-  currentAnnotations,
+  currentAnnotations, ISaveAnnotation,
   selectionIdx
 } from '../../../recoil/annotation';
 import _ from 'lodash';
@@ -56,7 +56,9 @@ export default function LabelingPage() {
       img.onload = () => {
         setImage(img);
         if (prevData) {
-          annotationDispatcher?.initFromData(prevData);
+          annotationDispatcher?.initFromData(prevData, currentProjectInfo);
+        }else{
+          annotationDispatcher?.reset();
         }
       };
     }
@@ -70,13 +72,53 @@ export default function LabelingPage() {
         prevImageInfo.current = currentImageInfo;
       } else {
         const toSave = gtInfoCollection.findOne({ ImgFileId: prevImageInfo.current.fileId });
-        toSave.annotations = annotations;
+        toSave.annotations = getSaveAnnotationsFormat();
         annotationDispatcher?.reset();
         gtInfoCollection.update({ _id: toSave._id }, { $set: toSave });
         prevImageInfo.current = currentImageInfo;
       }
     }
   }, [currentImageInfo]);
+
+  const getSaveAnnotationsFormat = () => {
+    const saveFormat: ISaveAnnotation[] = annotations.map((annot) => {
+      let box: boolean | number[] = false;
+      let keypoints: boolean | number[][] = false;
+      let polygon: boolean | number[][] = false;
+      let boundingPoints: boolean | number[][] = false;
+      let state1: boolean | string = false;
+      let state2: boolean | string = false;
+      let id: boolean | number = false;
+      if (annot.regions.rect) {
+        box = [annot.regions.rect.x, annot.regions.rect.y, annot.regions.rect.width, annot.regions.rect.height];
+      }
+      if (annot.regions.keypoint) {
+        keypoints = annot.regions.keypoint.points.map((pt) => [pt.x, pt.y, pt.visible]);
+      }
+      if (annot.regions.polygon) {
+        polygon = annot.regions.polygon.points.map((pt) => [pt.x, pt.y]);
+        boundingPoints = annot.regions.polygon.boundingPoints.map((pt) => [pt.x, pt.y]);
+      }
+      if (currentProjectInfo.stateList[0]) {
+        const state = currentProjectInfo.stateList[0].stateName;
+        if (annot.meta[state])
+          state1 = annot.meta[state];
+      }
+      if (currentProjectInfo.stateList[1]) {
+        const state = currentProjectInfo.stateList[1].stateName;
+        if (annot.meta[state])
+          state2 = annot.meta[state];
+      }
+      if (annot.meta['trackingId'] !== undefined) {
+        id = annot.meta['trackingId'];
+      }
+      return {
+        className: annot.className,
+        box, keypoints, polygon, boundingPoints, state1, state2, id
+      };
+    });
+    return saveFormat;
+  };
 
   // ----------------------------------------------------------------
 

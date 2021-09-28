@@ -24,6 +24,8 @@ interface ICanvasProps {
   style?: React.CSSProperties;
 }
 
+export const drawWidth = 2;
+
 // Mouse Event 연결 및 Region Draw 함수 호출 컴포넌트
 export default function Canvas({
                                  frame,
@@ -62,11 +64,13 @@ export default function Canvas({
       context.scale(view.scale, view.scale);
       context.drawImage(frame, 0, 0);
       context.restore();
+      context.lineWidth = drawWidth;
 
       // annotation draw
       annotations.forEach(async (annot) => {
-        if (annot.regions.rect)
-          drawRectOnCanvas(annot.regions.rect, context, view, annot.color, annot.className);
+        if (annot.regions.rect) {
+          drawRectOnCanvas(annot.regions.rect, context, view, annot.color, annot.className, annot.meta);
+        }
 
         if (annot.regions.polygon)
           drawPolygonOnCanvas(

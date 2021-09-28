@@ -7,6 +7,7 @@ import {
   transformImagePointToCanvasPoint
 } from './IPoint';
 import { getBoundingPointsOfRegion, IKeypoint, IRegionData, RegionDataType } from './IRegionData';
+import { drawWidth } from '../ui/pages/labelPage/Canvas';
 
 export const appendPointToPolygon = (
   region: IRegionData | undefined,
@@ -129,11 +130,11 @@ export const drawPolygonOnCanvas = (
       y: region.points[nextIdx].y
     };
     const [p1] = transformImagePointToCanvasPoint(view, vertex);
-    drawCircle(p1.x, p1.y, 3, context, colorCode);
+    drawCircle(p1.x, p1.y, 3 * drawWidth, context, colorCode);
     if (highlightVertex && highlightVertex.idx === idx) {
-      drawCircle(p1.x, p1.y, 6, context, colorCode);
+      drawCircle(p1.x, p1.y, 6 * drawWidth, context, colorCode);
     }
-    drawText(p1.x, p1.y - 5, String(idx), context, colorCode);
+    drawText(p1.x, p1.y - 10, String(idx), context, colorCode);
   });
   drawPath(region.points, context, colorCode, view);
 };

@@ -133,7 +133,9 @@ export default function PolygonDrawer({ frame, onWheel, projectInfo }: ICanvasHa
         if (dstCls !== undefined) {
           const newAnnot = _.cloneDeep(annotations[selection]);
           newAnnot.className = dstCls;
-          newAnnot.color = projectInfo.color[dstCls];
+          if (num > -1) {
+            newAnnot.color = projectInfo.color[num];
+          }
           annotationDispatcher?.edit(selection, newAnnot, false);
         }
       }

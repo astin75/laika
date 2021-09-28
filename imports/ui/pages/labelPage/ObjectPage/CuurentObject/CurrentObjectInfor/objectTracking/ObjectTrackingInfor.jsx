@@ -36,7 +36,7 @@ export default function ObjectTrackingInfor({ setMode }) {
       <div>Object Tracking ID</div>
       <NumberInput size={'xs'} min={0} style={{ width: '80px' }} onClick={() => disablePropagation()}
                    onChange={(e) => setID(e)}
-                   value={annotations[selection].meta.trackingId ?? 0} />
+                   value={annotations[selection].meta?.trackingId ?? 0} />
     </div>
   );
 }

@@ -24,7 +24,8 @@ export const drawRectOnCanvas = (
   context: CanvasRenderingContext2D,
   view: ICanvasView,
   colorCode: string,
-  name?: string
+  name?: string,
+  meta?: any
 ) => {
   if (!region.visible)
     return;
@@ -45,8 +46,16 @@ export const drawRectOnCanvas = (
     fillAlpha,
     region.highlighted || region.selected
   );
+  let offset = 10 + 16;
+  const keys = Object.keys(meta);
+
+  keys.forEach((k) => {
+    drawText(topLeft.x, topLeft.y - offset, meta[k], context, colorCode);
+    offset += 16;
+  });
+
   if (name)
-    drawText(topLeft.x, topLeft.y - 10,
+    drawText(topLeft.x, topLeft.y - offset,
       name, context, colorCode);
 
   if (region.highlightedVertex !== undefined) {

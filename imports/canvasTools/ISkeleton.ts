@@ -10,6 +10,7 @@ import {
   IRegionData,
   RegionDataType
 } from './IRegionData';
+import { drawWidth } from '../ui/pages/labelPage/Canvas';
 
 export const keypointColors: string[] = [
   '#e6194b', '#3cb44b', '#ffe119', '#4363d8',
@@ -285,11 +286,11 @@ export const drawKeypointOnCanvas = (
       y: region.points[nextIdx].y
     };
     const [p1] = transformImagePointToCanvasPoint(view, vertex);
-    drawCircle(p1.x, p1.y, 3, context, drawColor);
+    drawCircle(p1.x, p1.y, 3 * drawWidth, context, drawColor);
     if (highlightVertex && highlightVertex.idx === idx) {
-      drawCircle(p1.x, p1.y, 6, context, drawColor);
+      drawCircle(p1.x, p1.y, 6 * drawWidth, context, drawColor);
     }
-    drawText(p1.x, p1.y - 5, point.alias, context, drawColor);
+    drawText(p1.x, p1.y - 10, point.alias, context, drawColor);
   });
 };
 

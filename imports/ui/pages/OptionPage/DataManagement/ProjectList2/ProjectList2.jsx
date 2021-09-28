@@ -8,7 +8,7 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { gtInfoCollection, projectCollection } from 'imports/db/collections';
+import { gtInfoCollection, projectCollection, userProfileCollection } from 'imports/db/collections';
 import { imageInfoCollection } from 'imports/db/collections';
 import Images from 'imports/db/files';
 import { Meteor } from 'meteor/meteor';
@@ -24,21 +24,27 @@ import styles from './ProjectList2.module.css';
 export default function ProjectList2() {
   const user = useTracker(() => Meteor.user());
   const projectList = useTracker(() => projectCollection.find({}).fetch());
+  const userList = useTracker(() => userProfileCollection.find({}).fetch());
 
+  const [userRank, setUserRank] = useState('');
   const [selectedProject, setSelectedProject] = useState(null);
   const [toggleCurrentProjectDetail, setToggleCurrentProjectDetail] = useState(false);
   const [IsThereAdmin, setIsThereAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [projectInfoImage, setProjectInfoImage] = useState(false);
 
+  const [percentage, setPercentage] = useState(0);
+
   const projectInfoPicture = (projectName) => {
     let prjectInfo = projectCollection.find({ projectName: projectName }).fetch();
+
     let imgLink = Images.findOne({ 'meta.projectName': projectName }).link();
+
     setProjectInfoImage(imgLink);
   };
-  const getConfirmFileCount = (projectName) => {
-    let prjectInfo = projectCollection.find({ projectName: projectName }).fetch();
-    let imginfo = imageInfoCollection.find({ projectName: projectName }).fetch();
+  const getConfirmFileCount = (e) => {
+    let prjectInfo = projectCollection.find({ projectName: e.projectName }).fetch();
+    let imginfo = imageInfoCollection.find({ projectName: e.projectName }).fetch();
     let count;
     let confirmCount = 0;
     for (count = 0; count < imginfo.length; count++) {
@@ -55,18 +61,29 @@ export default function ProjectList2() {
         },
       }
     );
+
+    setPercentage(
+      parseInt(
+        ((prjectInfo[0].totalFileSize - (prjectInfo[0].totalFileSize - confirmCount)) /
+          prjectInfo[0].totalFileSize) *
+          100
+      )
+    );
+    setSelectedProject(e);
+    console.log(percentage);
   };
 
-  useEffect(() => {
-    if (user) {
-      // console.log('test', user)
-      // if (user.profile.rank === 'admin') {
-      //   setIsThereAdmin(true)
-      // }
-    }
-  }, [user]);
+  if (user && userList) {
+    let userRanktmp;
 
-  // console.log(projectList)
+    if (userList.length > 0) {
+      userRanktmp = userList.filter((e) => e.userName == user.username);
+      // console.log('logined user', userRanktmp[0].rank);
+      if (userRank == '') setUserRank(userRanktmp[0].rank);
+    }
+  }
+
+  // console.log(user, userList);
   return (
     <>
       {isLoading && (
@@ -87,38 +104,44 @@ export default function ProjectList2() {
             </div>
             <div className={styles.listContents}>
               <div className={styles.listContentsWrap}>
-                {projectList
-                  ? projectList.map((e, idx) => (
-                      <div key={e.projectId} className={styles.listContent}>
-                        <div>{idx + 1}</div>
-                        <div className={styles.projectName}>{e.projectName}</div>
-                        <div className={styles.contentOptions}>
-                          <Button
-                            variant="link"
-                            color="gray"
-                            component={Link}
-                            leftIcon={<i className="fas fa-sign-in-alt"></i>}
-                            to={{
-                              pathname: '/labelingPage',
-                              search: `?projectName=${e.projectName}`,
-                            }}
-                            size="lg"
-                          ></Button>
-                          <Button
-                            variant="link"
-                            color="grape"
-                            leftIcon={<i className="fas fa-info-circle"></i>}
-                            size="lg"
-                            onClick={() => {
-                              projectInfoPicture(e.projectName);
-                              getConfirmFileCount(e.projectName);
-                              setSelectedProject(e);
-                              setToggleCurrentProjectDetail(true);
-                            }}
-                          ></Button>
+                {projectList && user
+                  ? projectList
+                      .filter((e) => e.workers == user.username || userRank == 'admin')
+                      .map((e, idx) => (
+                        <div key={e.projectId} className={styles.listContent}>
+                          <div>{idx + 1}</div>
+                          <div className={styles.projectName}>{e.projectName}</div>
+                          <div className={styles.contentOptions}>
+                            <Button
+                              variant="link"
+                              color="gray"
+                              component={Link}
+                              leftIcon={<i className="fas fa-sign-in-alt"></i>}
+                              to={{
+                                pathname: '/labelingPage',
+                                search: `?projectName=${e.projectName}`,
+                              }}
+                              size="lg"
+                            ></Button>
+                            {userRank == 'admin' ? (
+                              <Button
+                                variant="link"
+                                color="grape"
+                                leftIcon={<i className="fas fa-info-circle"></i>}
+                                size="lg"
+                                onClick={() => {
+                                  projectInfoPicture(e.projectName);
+                                  getConfirmFileCount(e);
+
+                                  setToggleCurrentProjectDetail(true);
+                                }}
+                              ></Button>
+                            ) : (
+                              ''
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      ))
                   : ''}
               </div>
             </div>
@@ -132,6 +155,8 @@ export default function ProjectList2() {
           setToggleCurrentProjectDetail={setToggleCurrentProjectDetail}
           setIsLoading={setIsLoading}
           projectInfoImage={projectInfoImage}
+          setProjectInfoImage={setProjectInfoImage}
+          percentage={percentage}
         />
       </main>
     </>

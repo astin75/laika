@@ -5,6 +5,7 @@ import { Select, ColorPicker } from '@mantine/core';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { annotationDispatcherState, currentAnnotations, keypointIdx, selectionIdx } from 'imports/recoil/annotation';
 import _ from 'lodash';
+import { keypointColors } from 'imports/canvasTools/ISkeleton';
 //
 
 
@@ -49,11 +50,25 @@ export default function KeypointList({ currentProjectInfo }) {
     annotationDispatcher?.edit(selection, newAnnot, false);
   };
 
+  const getMarkerColor = (idx) => {
+    if (selection === undefined)
+      return;
+    const currentAnnot = annotations[selection];
+    if (currentAnnot.regions.keypoint?.points[idx].visible === 2)
+      return keypointColors[idx];
+    else if (currentAnnot.regions.keypoint?.points[idx].visible === 1)
+      return '#000000';
+    else
+      return '#ffffff';
+  };
+
   return (
     <div className={styles.listWrap}>
       {keypointArr.map((e, idx) => (
         <div key={e} className={styles.list} onClick={() => setCurKeypoint(idx)}>
-          <i className='fas fa-map-marker-alt'></i>
+          <div style={{ color: getMarkerColor(idx) }}>
+            <i className='fas fa-map-marker-alt'></i>
+          </div>
           <div className={styles.listTitle}>{e}</div>
 
           <div className={styles.listOptionList}>

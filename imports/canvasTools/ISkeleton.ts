@@ -10,7 +10,14 @@ import {
   IRegionData,
   RegionDataType
 } from './IRegionData';
-import { getAreaOfPolygon } from './IPolygon';
+
+export const keypointColors: string[] = [
+  '#e6194b', '#3cb44b', '#ffe119', '#4363d8',
+  '#f58231', '#911eb4', '#46f0f0', '#f032e6',
+  '#bcf60c', '#fabebe', '#008080', '#e6beff',
+  '#9a6324', '#fffac8', '#800000', '#aaffc3',
+  '#808000', '#ffd8b1', '#000075', '#808080'
+];
 
 export const appendKeypoint = (
   region: IRegionData | undefined,
@@ -226,10 +233,10 @@ export const drawKeypointOnCanvas = (
   region.points.forEach((point, idx) => {
     if (point.visible === 0)
       return;
-    if (point.visible === 1)
-      drawColor = getComplementaryColor(colorCode);
+    // if (point.visible === 1)
+    //   drawColor = getComplementaryColor(colorCode);
     else
-      drawColor = colorCode;
+      drawColor = keypointColors[idx];
     const vertex: IPoint = { x: point.x, y: point.y };
     const nextIdx = idx === region.points.length - 1 ? 0 : idx + 1;
     const nextVertex: IPoint = {

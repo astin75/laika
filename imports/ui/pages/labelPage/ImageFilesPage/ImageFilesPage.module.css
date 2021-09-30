@@ -49,6 +49,13 @@
   gap: 20px;
   border-bottom: 1px solid #616161;
 }
+
+.imageFilesName{
+  width: 70px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
 .imageFiles:hover{
   background-color: rgba(0, 227, 180);
 }

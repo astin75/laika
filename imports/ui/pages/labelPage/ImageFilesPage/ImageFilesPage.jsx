@@ -1,4 +1,4 @@
-import { Table } from '@mantine/core';
+import { Table, Tooltip } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 
 import styles from './ImageFilesPage.module.css';
@@ -54,7 +54,9 @@ export default function ImageFilesPage({ currentImagesInfo, currentImageInfo, se
                   backgroundColor: e.fileName == selectedImage ? `rgba(0, 227, 180)` : ''
                 }}
               >
-                <div>{e.fileName}</div>
+                <Tooltip label={e.fileName} width={"auto"}>
+                <div className={styles.imageFilesName}>{e.fileName}</div>
+                </Tooltip>
                 <div
                   className={styles.imageFileState}
                   style={{

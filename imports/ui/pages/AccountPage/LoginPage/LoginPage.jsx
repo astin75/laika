@@ -18,8 +18,6 @@ export default function LoginPage({ setIsThereAccount }) {
     let userProfile = userProfileCollection.find({ userName: userID }).fetch();
 
     if (userProfile.length < 1){
-      console.log(userProfile, 2)
-
       setErrID('아이디가 존재 하지 않습니다.')
       return
     }

@@ -1,11 +1,27 @@
 import { Button } from '@mantine/core'
 import { Meteor } from 'meteor/meteor'
-import React from 'react'
+import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom'
 
 import styles from './NavigationBar.module.css'
+import { useTracker } from "meteor/react-meteor-data";
+import { userProfileCollection } from "imports/db";
 
 export default function NavigationBar() {
+  const user = useTracker(() => Meteor.user());
+  const [IsThereId, setIsThereId] = useState('LogIn');
+
+  useEffect(() => {
+
+    setIsThereId('LogIn')
+    if (user){
+      setIsThereId(user.username)
+
+    }
+
+  }, [user])
+
+
   const buttonStyles = { root: { marginRight: 12 } }
   const logout = () => Meteor.logout()
   return (
@@ -36,7 +52,7 @@ export default function NavigationBar() {
           variant="gradient"
           gradient={{ from: 'teal', to: 'blue', deg: 20 }}
         >
-          Logout
+          {IsThereId}
         </Button>
         <Button
           className={styles.linkStyles}

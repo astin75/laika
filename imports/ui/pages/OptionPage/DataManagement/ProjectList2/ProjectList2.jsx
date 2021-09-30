@@ -70,7 +70,7 @@ export default function ProjectList2() {
       )
     );
     setSelectedProject(e);
-    console.log(percentage);
+
   };
 
   if (user && userList) {

@@ -97,8 +97,7 @@ export default function ProjectDetail({
     // 이미지 DB 리스트 link -> blob 으로 변경뒤 zip.file로 push
     if (gt.length > 1) {
       gt.forEach(function (gtValue, i) {
-        let filename = gtValue.ImgFileName + '.json';
-        let filename1 = gtValue.ImgFileName + '.jpg';
+        let filename = gtValue.ImgFileName.slice(0,-4) + '.json';
         let blob = new Blob([JSON.stringify(gtValue, null, 4)], { type: 'text/json' });
 
         // let webUrl = String(Images.findOne(rawImgs[i]._id).link());

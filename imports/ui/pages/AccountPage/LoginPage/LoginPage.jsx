@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Meteor } from 'meteor/meteor'
 import styles from './LoginPage.module.css'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from "react-router-dom";
+import { userProfileCollection } from "imports/db";
 
 import { TextInput, Button, PasswordInput, Image, Text, Highlight, Alert } from '@mantine/core'
 import { useForm } from '@mantine/hooks'
@@ -9,15 +10,27 @@ import { useForm } from '@mantine/hooks'
 export default function LoginPage({ setIsThereAccount }) {
   const [userID, setUserID] = useState('')
   const [userPW, setUserPW] = useState('')
+  const [errID, setErrID] = useState('')
   const [errPW, setErrPW] = useState('')
+  const history = useHistory()
 
   const loginProcess = () => {
+    let userProfile = userProfileCollection.find({ userName: userID }).fetch();
+
+    if (userProfile.length < 1){
+      console.log(userProfile, 2)
+
+      setErrID('아이디가 존재 하지 않습니다.')
+      return
+    }
     const handleError = (err) => {
       if (err) {
         setErrPW('비밀번호가 틀렸습니다.')
       } else {
         setErrPW('')
+        setErrID('')
         setIsThereAccount(true)
+        history.push("/projectListPage")
       }
     }
     Meteor.loginWithPassword(userID, userPW, handleError)
@@ -31,6 +44,7 @@ export default function LoginPage({ setIsThereAccount }) {
         </div>
 
         <TextInput
+          error={errID}
           placeholder="ID"
           description="아이디를 입력해주세요."
           onChange={(e) => {
@@ -49,11 +63,10 @@ export default function LoginPage({ setIsThereAccount }) {
         ></PasswordInput>
 
         <Button
-          component={Link}
           color="teal"
           className={styles.command}
           onClick={loginProcess}
-          to="/projectListPage"
+
         >
           로그인
         </Button>

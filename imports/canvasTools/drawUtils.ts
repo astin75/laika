@@ -75,6 +75,27 @@ export const drawText = (
   context.restore();
 };
 
+export const drawTextWithBackGround = (
+  x: number,
+  y: number,
+  text: string,
+  width: number,
+  context: CanvasRenderingContext2D,
+  colorCode = '#00070A',
+  bgColorCode = '#D4E6F1',
+  font = 'bold 16px Noto Sans KR',
+  height = 16
+) => {
+  context.save();
+  context.font = font;
+  context.fillStyle = bgColorCode;
+  context.globalAlpha = 1;
+  context.fillRect(x, y, width, height);
+  context.fillStyle = colorCode;
+  context.fillText(text, x, y + height);
+  context.restore();
+};
+
 export const drawPath = (
   points: IPoint[],
   context: CanvasRenderingContext2D,

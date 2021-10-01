@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { Chip, Chips } from '@mantine/core';
+import { ActionIcon } from '@mantine/core';
 import { selectionIdx } from 'imports/recoil/annotation';
 import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -11,9 +11,9 @@ export default function CurrentObjectOptions({ currentProjectInfo, mode, setMode
   const selection = useRecoilValue(selectionIdx);
   return (
     <div className={styles.currentObjectOptionsWrap}>
-      <Chips color="teal" variant="filled">
+
         {currentProjectInfo !== null && currentProjectInfo.bbox.length > 0 ? (
-          <Chip value={EditorMode.Rect}>
+        <ActionIcon variant={  mode === EditorMode.Rect ? 'outline' : false}>
             <Icon
               icon="bi:bounding-box-circles"
               style={{
@@ -25,12 +25,13 @@ export default function CurrentObjectOptions({ currentProjectInfo, mode, setMode
                 if (selection !== undefined) setMode(EditorMode.Rect);
               }}
             />
-          </Chip>
+        </ActionIcon>
+
         ) : (
           ''
         )}
         {currentProjectInfo !== null && currentProjectInfo.keypoint.length > 0 ? (
-          <Chip value={EditorMode.Skeleton}>
+          <ActionIcon variant={  mode === EditorMode.Rect ? 'outline' : false}>
             <Icon
               icon="mdi:source-branch-plus"
               style={{
@@ -42,12 +43,13 @@ export default function CurrentObjectOptions({ currentProjectInfo, mode, setMode
                 if (selection !== undefined) setMode(EditorMode.Skeleton);
               }}
             />
-          </Chip>
+          </ActionIcon>
+
         ) : (
           ''
         )}
         {currentProjectInfo !== null && currentProjectInfo.polygon === true ? (
-          <Chip value={EditorMode.Polygon}>
+          <ActionIcon variant={  mode === EditorMode.Rect ? 'outline' : false}>
             <Icon
               icon="bx:bx-shape-polygon"
               style={{
@@ -59,11 +61,12 @@ export default function CurrentObjectOptions({ currentProjectInfo, mode, setMode
                 if (selection !== undefined) setMode(EditorMode.Polygon);
               }}
             />
-          </Chip>
+          </ActionIcon>
+
         ) : (
           ''
         )}
-      </Chips>
+
     </div>
   );
 }

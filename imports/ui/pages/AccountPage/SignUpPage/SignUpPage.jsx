@@ -29,12 +29,26 @@ export default function SignUpPage({ setIsThereAccount }) {
         showNotification('중복된 아이디가 있습니다.! 🤥', 'red');
       } else {
         showNotification('환영합니다.! 🤥', 'teal');
-        let tempProjectInfo = {
-          userName: userID,
-          rank: 'admin',
-        };
-        setIsThereAccount(true);
-        userProfileCollection.insert(tempProjectInfo);
+        if (userID === 'admin')
+        {
+          let tempProjectInfo = {
+            userName: userID,
+            rank: 'admin',
+          };
+          setIsThereAccount(true);
+          userProfileCollection.insert(tempProjectInfo);
+        }
+        else{
+          let tempProjectInfo = {
+            userName: userID,
+            rank: 'worker',
+          };
+          setIsThereAccount(true);
+          userProfileCollection.insert(tempProjectInfo);
+
+        }
+
+
       }
     };
 

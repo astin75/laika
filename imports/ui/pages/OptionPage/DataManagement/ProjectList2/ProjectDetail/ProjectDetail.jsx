@@ -64,13 +64,14 @@ export default function ProjectDetail({
   }, [percentage]);
 
   const updateProjectDetail = () => {
-    if (value[0] === null || value[1] === null) {
-      alert('프로젝트 일정이 선택되지 않았습니다');
-      return;
-    } else if (value[0].length === 0 || value[1].length === 0) {
-      alert('프로젝트 일정이 선택되지 않았습니다');
-      return;
-    } else if (selectedUsers.length === 0) {
+    // if (value[0] === null || value[1] === null) {
+    //   alert('프로젝트 일정이 선택되지 않았습니다');
+    //   return;
+    // } else if (value[0].length === 0 || value[1].length === 0) {
+    //   alert('프로젝트 일정이 선택되지 않았습니다');
+    //   return;
+    // }
+    if (selectedUsers.length === 0) {
       alert('작업자를 지정하지 않았습니다');
       return;
     }

@@ -140,9 +140,13 @@ export default function ProjectUpload() {
       '#15aabf',
       '#40c057',
       '#82c91e',
-
-
     ];
+
+    let polyFlag = false
+    if (boxClassList.length > 0){
+      polyFlag = true
+    }
+
     let tempProjectInfo = {
       projectName: projectName[0].projectName,
       masterProjectName: projectName[0].masterProjectName,
@@ -153,7 +157,7 @@ export default function ProjectUpload() {
       bbox: boxClassList,
       keypoint: keyPointClassList,
       stateList: objectStateBox,
-      polygon: checkedPolygon,
+      polygon: polyFlag,
       objectId: checkedObjectIdFlag,
       color: colorHex.slice(0, boxClassList.length),
       totalFileSize: fileCount,

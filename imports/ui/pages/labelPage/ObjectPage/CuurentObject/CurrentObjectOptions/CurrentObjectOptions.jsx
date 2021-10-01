@@ -31,7 +31,7 @@ export default function CurrentObjectOptions({ currentProjectInfo, mode, setMode
           ''
         )}
         {currentProjectInfo !== null && currentProjectInfo.keypoint.length > 0 ? (
-          <ActionIcon variant={  mode === EditorMode.Rect ? 'outline' : false}>
+          <ActionIcon variant={  mode === EditorMode.Skeleton ? 'outline' : false}>
             <Icon
               icon="mdi:source-branch-plus"
               style={{
@@ -48,8 +48,8 @@ export default function CurrentObjectOptions({ currentProjectInfo, mode, setMode
         ) : (
           ''
         )}
-        {currentProjectInfo !== null && currentProjectInfo.polygon === true ? (
-          <ActionIcon variant={  mode === EditorMode.Rect ? 'outline' : false}>
+        {currentProjectInfo !== null && currentProjectInfo.bbox.length > 0 ? (
+          <ActionIcon variant={  mode === EditorMode.Polygon ? 'outline' : false}>
             <Icon
               icon="bx:bx-shape-polygon"
               style={{

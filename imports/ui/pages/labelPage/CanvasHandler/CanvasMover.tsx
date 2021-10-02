@@ -33,6 +33,8 @@ export default function CanvasMover({ frame, onWheel }: ICanvasHandlerProps) {
         break;
       case 'onRegion': {
         const nearestRect = findNearestRectRegion(mousePoint, annotations, view);
+        annotationDispatcher?.setSelectionAnnotation(selection, false);
+        annotationDispatcher?.setSelectionAnnotation(nearestRect, true);
         setSelection(nearestRect);
         break;
       }

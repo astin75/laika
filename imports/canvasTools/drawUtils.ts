@@ -79,7 +79,6 @@ export const drawTextWithBackGround = (
   x: number,
   y: number,
   text: string,
-  width: number,
   context: CanvasRenderingContext2D,
   colorCode = '#00070A',
   bgColorCode = '#D4E6F1',
@@ -90,7 +89,8 @@ export const drawTextWithBackGround = (
   context.font = font;
   context.fillStyle = bgColorCode;
   context.globalAlpha = 1;
-  context.fillRect(x, y, width, height);
+  const textBoxWidth = context.measureText(text).width;
+  context.fillRect(x, y, textBoxWidth, height);
   context.fillStyle = colorCode;
   context.fillText(text, x, y + height);
   context.restore();

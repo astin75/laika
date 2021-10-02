@@ -11,7 +11,7 @@ import {
   AnnotationDispatcher,
   annotationDispatcherState,
   createAnnotationDispatcher,
-  currentAnnotations, ISaveAnnotation,
+  currentAnnotations, ISaveAnnotation, keypointIdx,
   selectionIdx
 } from '../../../recoil/annotation';
 import _ from 'lodash';
@@ -33,6 +33,7 @@ export default function LabelingPage() {
   const [currentProjectInfo, setCurrentProjectInfo] = useState(null);
   const [currentImageInfo, setCurrentImageInfo] = useState(null);
   const prevImageInfo = useRef(undefined);
+  const [editorState, setEditorState] = useState<'ready' | 'loading'>('ready');
 
   useEffect(() => {
     if (projectList.length !== 0) {
@@ -47,19 +48,22 @@ export default function LabelingPage() {
   const [image, setImage] = useState<HTMLImageElement>(undefined);
   useEffect(() => {
     if (currentImageInfo) {
+      setEditorState('loading');
       // DB 로드
       const prevData = gtInfoCollection.findOne({ ImgFileId: currentImageInfo.fileId })?.annotations;
 
       const img = new Image();
       img.src = Images.findOne({ 'meta.fileId': currentImageInfo.fileId }).link();
-      imageInfoCollection.update({ _id: currentImageInfo._id }, { $set: { confirmFlag: 'working' } });
+      if (currentImageInfo.confirmFlag === 'ready')
+        imageInfoCollection.update({ _id: currentImageInfo._id }, { $set: { confirmFlag: 'working' } });
       img.onload = () => {
         setImage(img);
         if (prevData) {
           annotationDispatcher?.initFromData(prevData, currentProjectInfo);
-        }else{
+        } else {
           annotationDispatcher?.reset();
         }
+        setEditorState('ready')
       };
     }
   }, [currentImageInfo]);
@@ -157,14 +161,14 @@ export default function LabelingPage() {
         break;
     }
     // 파일 넘기기
-    if (e.key === 'a') {
+    if (e.key === 'a' && editorState === 'ready') {
       let curIdx = imageList.findIndex((e) => e._id === currentImageInfo._id);
       if (curIdx > 0) {
         curIdx -= 1;
         setCurrentImageInfo(imageList[curIdx]);
       }
     }
-    if (e.key === 'd') {
+    if (e.key === 'd' && editorState === 'ready') {
       let curIdx = imageList.findIndex((e) => e._id === currentImageInfo._id);
       if (curIdx < imageList.length - 1) {
         curIdx += 1;

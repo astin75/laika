@@ -40,7 +40,12 @@ export default function CurrentObjectInfor({ currentProjectInfo, setMode }) {
       ) : (
         ''
       )}
-      {currentProjectInfo?.stateList.map((stat) => (<StateInfor state={stat} key={stat.stateName} />))}
+      {currentProjectInfo?.stateList[0] ?
+        <StateInfor state={currentProjectInfo?.stateList[0]}
+                    key={currentProjectInfo?.stateList[0].stateName} enableKey /> : <></>}
+      {currentProjectInfo?.stateList[1] ?
+        <StateInfor state={currentProjectInfo?.stateList[1]}
+                    key={currentProjectInfo?.stateList[1].stateName} /> : <></>}
       {currentProjectInfo?.objectId ? <ObjectTrackingInfor setMode={setMode} /> : <></>}
     </div>
   );

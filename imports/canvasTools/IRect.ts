@@ -49,21 +49,12 @@ export const drawRectOnCanvas = (
   const keys = Object.keys(meta);
 
   keys.forEach((k) => {
-    //drawText(topLeft.x, topLeft.y - offset, meta[k], context, colorCode);
-    let textBoxWidth = meta[k].length * 9;
-    if (textBoxWidth < 25) {
-      textBoxWidth = 25;
-    }
-    drawTextWithBackGround(topLeft.x, topLeft.y - offset, meta[k], textBoxWidth, context);
+    drawTextWithBackGround(topLeft.x, topLeft.y - offset, String(meta[k]), context);
     offset -= 16;
   });
 
   if (name) {
-    let textBoxWidth = name.length * 9;
-    if (textBoxWidth < 25) {
-      textBoxWidth = 25;
-    }
-    drawTextWithBackGround(topLeft.x, topLeft.y - offset, name, textBoxWidth, context);
+    drawTextWithBackGround(topLeft.x, topLeft.y - offset, name, context);
   }
 
   if (region.highlightedVertex !== undefined) {

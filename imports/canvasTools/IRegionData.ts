@@ -3,15 +3,16 @@ import { ICanvasView } from '../recoil/canvas';
 import {
   getDistanceOfTwoPoints,
   IPoint,
-  transformCanvasPointToImagePoint,
+  transformCanvasPointToImagePoint
 } from './IPoint';
 import {
   drawRectOnCanvas,
   getTlBrPointOfRect,
   makeRectRegion,
-  updateRectRegion,
+  updateRectRegion
 } from './IRect';
 import { drawSkeletonOnCanvas } from './ISkeleton';
+import { IAnnotation } from '../recoil/annotation';
 
 export enum RegionDataType {
   Point = 'point',
@@ -78,44 +79,36 @@ export const isPointInRegion = (
   return xIn && yIn;
 };
 
-// export const findNearestRegion = (
-//   mousePosition: IPoint,
-//   regions: IRegionData[],
-//   view: ICanvasView,
-//   margin = 5,
-// ) => {
-//   const [transformedPosition] = transformCanvasPointToImagePoint(
-//     view,
-//     mousePosition,
-//   );
-//   const inRegionMask = regions.map(
-//     (region) =>
-//       region.visible && isPointInRegion(transformedPosition, region, margin),
-//   );
-//
-//   let minArea = Infinity;
-//   let nearestAnnotationIdx: number | undefined;
-//   inRegionMask.forEach((isIn, idx) => {
-//     if (!isIn) return;
-//     if (regions[idx].area < minArea) {
-//       minArea = regions[idx].area!;
-//       nearestAnnotationIdx = idx;
-//     }
-//   });
-//   let nearestPointIdx: number | undefined;
-//   if (nearestAnnotationIdx !== undefined) {
-//     const region = regions[nearestAnnotationIdx];
-//     let minDistance = margin;
-//     region.boundingPoints.forEach((point, idx) => {
-//       const distance = getDistanceOfTwoPoints(point, transformedPosition);
-//       if (distance < minDistance) {
-//         minDistance = distance;
-//         nearestPointIdx = idx;
-//       }
-//     });
-//   }
-//   return { nearestAnnotationIdx, nearestPointIdx };
-// };
+export const findNearestRectRegion = (
+  mousePosition: IPoint,
+  annotations: IAnnotation[],
+  view: ICanvasView,
+  margin = 5
+) => {
+  const [transformedPosition] = transformCanvasPointToImagePoint(
+    view,
+    mousePosition
+  );
+  const inRegionMask = annotations.map(
+    (annot) => {
+      const region = annot.regions.rect;
+      return region && region.visible && isPointInRegion(transformedPosition, region, margin);
+    }
+  );
+
+  let minArea = Infinity;
+  let nearestAnnotationIdx: number | undefined;
+  inRegionMask.forEach((isIn, idx) => {
+    if (!isIn) return;
+    const region = annotations[idx].regions.rect;
+    if (region.area < minArea) {
+      minArea = region.area;
+      nearestAnnotationIdx = idx;
+    }
+  });
+
+  return nearestAnnotationIdx;
+};
 
 // export const findNearestPoint = (
 //   mousePosition: IPoint,
@@ -248,7 +241,7 @@ export const getBoundingPointsOfRegion = (
     { x: x + width, y: y + height },
     { x: x + width / 2, y: y + height },
     { x, y: y + height },
-    { x, y: y + height / 2 },
+    { x, y: y + height / 2 }
   ];
 };
 
@@ -259,7 +252,7 @@ export const moveRegion = (
 ) => {
   const transformed: IPoint = {
     x: mouseOffset.x / view.scale,
-    y: mouseOffset.y / view.scale,
+    y: mouseOffset.y / view.scale
   };
   const updatedRegion = { ...region };
   updatedRegion.x += transformed.x;
@@ -272,17 +265,17 @@ export const moveRegion = (
     updatedRegion.y = view.frameSize.height - updatedRegion.height - 1;
   const offset: IPoint = {
     x: updatedRegion.x - region.x,
-    y: updatedRegion.y - region.y,
+    y: updatedRegion.y - region.y
   };
   updatedRegion.boundingPoints = region.boundingPoints.map((point) => ({
     x: point.x + offset.x,
-    y: point.y + offset.y,
+    y: point.y + offset.y
   }));
   updatedRegion.points = region.points?.map((point) => ({
     x: point.x + offset.x,
     y: point.y + offset.y,
     visible: point.visible,
-    alias: point.alias,
+    alias: point.alias
   }));
 
   return updatedRegion;
@@ -328,7 +321,7 @@ export const movePointOfRegion = (
     x: transformed.x,
     y: transformed.y,
     visible: 2,
-    alias: updatedRegion.points![pointIdx].alias,
+    alias: updatedRegion.points![pointIdx].alias
   };
   const [topLeft, bottomRight] = getTlBrPointOfRect(region);
   if (transformed.x < topLeft.x) topLeft.x = transformed.x;

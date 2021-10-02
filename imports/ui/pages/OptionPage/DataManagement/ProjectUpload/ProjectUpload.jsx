@@ -30,6 +30,8 @@ export default function ProjectUpload() {
   const [RawImgList, setRawImgList] = useState({ rawFile: [] });
   const [GroundTruthJson, setGroundTruthJson] = useState({ List: [] });
   const [fileCount, setFileCount] = useState(0);
+  const [jsonFileCount, setJsonFileCount] = useState(0);
+  const [WithGroundTruthFlag, setWithGroundTruthFlag] = useState(false);
 
   const [checkedPolygon, setCheckedPolygon] = useState(false);
   const [checkedObjectIdFlag, setCheckedObjectIdFlag] = useState(false);
@@ -108,12 +110,16 @@ export default function ProjectUpload() {
       showNotification('red', '이미지를 등록해주세요.! 🤥', true);
       return;
     }
+    if (jsonFileCount < 1) {
+      showNotification('red', 'JSON을 등록해주세요.! 🤥', true);
+      return;
+    }
+
     window.crypto.getRandomValues(RandValue);
     setProgress(0);
 
     let tempImgFileInfo = [...ImgFileInfo.imgInfo];
     let tempGroundTruthJson = [...GroundTruthJson.List];
-    // let percentage = 0;
     let imageIndex = 0;
 
     for (; imageIndex < fileCount; imageIndex++) {
@@ -121,6 +127,15 @@ export default function ProjectUpload() {
       tempGroundTruthJson[imageIndex].projectID = RandValue[0];
       tempGroundTruthJson[imageIndex].projectName = projectName[0].projectName;
       tempGroundTruthJson[imageIndex].masterProjectName = projectName[0].masterProjectName;
+      tempGroundTruthJson[imageIndex].ImgFileId = tempImgFileInfo[imageIndex].fileId;
+      tempGroundTruthJson[imageIndex].ImgFileName = tempImgFileInfo[imageIndex].fileName;
+
+      console.log(
+        tempGroundTruthJson[imageIndex].ImgFileName,
+        tempImgFileInfo[imageIndex].fileName
+      );
+      console.log(tempGroundTruthJson[imageIndex].ImgFileId, tempImgFileInfo[imageIndex].fileId);
+
       tempImgFileInfo[imageIndex].projectID = RandValue[0];
       tempImgFileInfo[imageIndex].projectName = projectName[0].projectName;
       tempImgFileInfo[imageIndex].masterProjectName = projectName[0].masterProjectName;
@@ -142,9 +157,9 @@ export default function ProjectUpload() {
       '#82c91e',
     ];
 
-    let polyFlag = false
-    if (boxClassList.length > 0){
-      polyFlag = true
+    let polyFlag = false;
+    if (boxClassList.length > 0) {
+      polyFlag = true;
     }
 
     let tempProjectInfo = {
@@ -242,7 +257,11 @@ export default function ProjectUpload() {
             GroundTruthJson={GroundTruthJson}
             setGroundTruthJson={setGroundTruthJson}
             fileCount={fileCount}
+            jsonFileCount={jsonFileCount}
+            setJsonFileCount={setJsonFileCount}
             setFileCount={setFileCount}
+            WithGroundTruthFlag={WithGroundTruthFlag}
+            setWithGroundTruthFlag={setWithGroundTruthFlag}
           />
 
           <div>

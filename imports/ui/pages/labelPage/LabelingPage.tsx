@@ -52,12 +52,13 @@ export default function LabelingPage() {
 
       const img = new Image();
       img.src = Images.findOne({ 'meta.fileId': currentImageInfo.fileId }).link();
-      imageInfoCollection.update({ _id: currentImageInfo._id }, { $set: { confirmFlag: 'working' } });
+      if (currentImageInfo.confirmFlag === 'ready')
+        imageInfoCollection.update({ _id: currentImageInfo._id }, { $set: { confirmFlag: 'working' } });
       img.onload = () => {
         setImage(img);
         if (prevData) {
           annotationDispatcher?.initFromData(prevData, currentProjectInfo);
-        }else{
+        } else {
           annotationDispatcher?.reset();
         }
       };

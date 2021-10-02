@@ -47,15 +47,15 @@ export default function AddImages(props) {
       ) {
         Filecount++;
         tempImgFileInfo.imgInfo.push({
-          ImgFileName: event.target.files[count].name,
-          ImgFileId: RandValue[count],
+          fileName: event.target.files[count].name,
+          fileId: RandValue[count],
           projectName: false,
           masterProjectName: false,
           projectID: false,
           confirmFlag: 'ready',
         });
-
         tempRawImgList.rawFile.push(event.target.files[count]);
+
         tempGroundTruthJson.List.push({
           projectName: false,
           masterProjectName: false,

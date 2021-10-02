@@ -128,14 +128,15 @@ export default function ProjectUpload() {
       tempGroundTruthJson[imageIndex].projectID = RandValue[0];
       tempGroundTruthJson[imageIndex].projectName = projectName[0].projectName;
       tempGroundTruthJson[imageIndex].masterProjectName = projectName[0].masterProjectName;
-      tempGroundTruthJson[imageIndex].ImgFileId = tempImgFileInfo[imageIndex].ImgFileId;
-      tempGroundTruthJson[imageIndex].ImgFileName = tempImgFileInfo[imageIndex].ImgFileName;
+      tempGroundTruthJson[imageIndex].ImgFileId = tempImgFileInfo[imageIndex].fileId;
+      tempGroundTruthJson[imageIndex].ImgFileName = tempImgFileInfo[imageIndex].fileName;
 
-      // console.log(
-      //   tempGroundTruthJson[imageIndex].ImgFileName,
-      //   tempImgFileInfo[imageIndex].ImgFileName
-      // );
-      // console.log(tempImgFileInfo[imageIndex]);
+      console.log(
+        tempGroundTruthJson[imageIndex].ImgFileName,
+        tempImgFileInfo[imageIndex].fileName
+      );
+      console.log(tempGroundTruthJson[imageIndex].ImgFileId, tempImgFileInfo[imageIndex].fileId);
+
       tempImgFileInfo[imageIndex].projectID = RandValue[0];
       tempImgFileInfo[imageIndex].projectName = projectName[0].projectName;
       tempImgFileInfo[imageIndex].masterProjectName = projectName[0].masterProjectName;

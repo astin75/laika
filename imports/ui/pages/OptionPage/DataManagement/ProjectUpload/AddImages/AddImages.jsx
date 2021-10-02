@@ -5,13 +5,33 @@ import React, { useState } from 'react';
 import styles from './AddImages.module.css';
 
 export default function AddImages(props) {
-  const [WithGroundTruthFlag, setWithGroundTruthFlag] = useState(false);
-
-  const [localJson, setLocalJson] = useState('');
   const switchStyles = {
-    label: { fontSize: 13 }
+    label: { fontSize: 13 },
   };
-  const onChange = (event) => {
+
+  const onJson = (event) => {
+    let tempGroundTruthJson = { List: [] };
+    let count = 0;
+    let Filecount = 0;
+
+    for (count = 0; count < event.target.files.length; count++) {
+      if (event.target.files[count].name.slice(-4) === 'json') {
+        Filecount++;
+        let reader = new FileReader();
+        reader.onload = function (event) {
+          let formatted = JSON.parse(event.target.result);
+          //let formatted = JSON.stringify(json, null, 2);
+
+          tempGroundTruthJson.List.push(formatted);
+        };
+        reader.readAsText(event.target.files[count]);
+        props.setJsonFileCount(Filecount);
+      }
+    }
+    props.setGroundTruthJson(tempGroundTruthJson);
+  };
+
+  const onImage = (event) => {
     let tempImgFileInfo = { imgInfo: [] };
     let tempRawImgList = { rawFile: [] };
     let tempGroundTruthJson = { List: [] };
@@ -19,77 +39,75 @@ export default function AddImages(props) {
     let Filecount = 0;
     let RandValue = new Uint32Array(event.target.files.length);
     window.crypto.getRandomValues(RandValue);
-    if (WithGroundTruthFlag) {
-      for (count = 0; count < event.target.files.length; count++) {
-        if (event.target.files[count].name.slice(-4) === 'json') {
-          // let fileUploaded = new FileReader();
-          // fileUploaded.readAsText(event.target.files[count].result);
-          // console.log(JSON.parse(fileUploaded));
-          let reader = new FileReader();
-          reader.onload = function(event) {
-            let json = JSON.parse(event.target.result);
+    for (count = 0; count < event.target.files.length; count++) {
+      if (
+        event.target.files[count].name.slice(-3) === 'jpg' ||
+        event.target.files[count].name.slice(-4) === 'jpeg' ||
+        event.target.files[count].name.slice(-3) === 'png'
+      ) {
+        Filecount++;
+        tempImgFileInfo.imgInfo.push({
+          ImgFileName: event.target.files[count].name,
+          ImgFileId: RandValue[count],
+          projectName: false,
+          masterProjectName: false,
+          projectID: false,
+          confirmFlag: 'ready',
+        });
 
-            let formatted = JSON.stringify(json, null, 2);
-            console.log(formatted);
-
-            setLocalJson(formatted);
-          };
-          reader.readAsText(event.target.files[count]);
-          console.log(localJson, 2);
-        }
-      }
-    } else {
-      for (count = 0; count < event.target.files.length; count++) {
-        if (
-          event.target.files[count].name.slice(-3) === 'jpg' ||
-          event.target.files[count].name.slice(-4) === 'jpeg' ||
-          event.target.files[count].name.slice(-3) === 'png'
-        ) {
-          Filecount++;
-          tempImgFileInfo.imgInfo.push({
-            fileName: event.target.files[count].name,
-            fileId: RandValue[count],
-            projectName: false,
-            masterProjectName: false,
-            projectID: false,
-            confirmFlag: 'ready'
-          });
-
-          tempRawImgList.rawFile.push(event.target.files[count]);
-          tempGroundTruthJson.List.push({
-            projectName: false,
-            masterProjectName: false,
-            projectID: false,
-            annotations: [],
-            ImgFileId: RandValue[count],
-            ImgFileName: event.target.files[count].name
-          });
-        }
+        tempRawImgList.rawFile.push(event.target.files[count]);
+        tempGroundTruthJson.List.push({
+          projectName: false,
+          masterProjectName: false,
+          projectID: false,
+          annotations: [],
+          ImgFileId: RandValue[count],
+          ImgFileName: event.target.files[count].name,
+        });
       }
     }
-    props.setImgFileInfo(tempImgFileInfo);
-    props.setRawImgList(tempRawImgList);
-    props.setGroundTruthJson(tempGroundTruthJson);
-    props.setFileCount(Filecount);
+    if (props.WithGroundTruthFlag) {
+      props.setImgFileInfo(tempImgFileInfo);
+      props.setRawImgList(tempRawImgList);
+      props.setFileCount(Filecount);
+    } else {
+      props.setImgFileInfo(tempImgFileInfo);
+      props.setRawImgList(tempRawImgList);
+      props.setGroundTruthJson(tempGroundTruthJson);
+      props.setFileCount(Filecount);
+      props.setJsonFileCount(Filecount);
+    }
   };
 
   return (
-    <Grid style={{ margin: '14px 0' }}>
-      <Col span={3}>
-        <Switch
-          disabled={false}
-          label='Annotations'
-          styles={switchStyles}
-          checked={WithGroundTruthFlag}
-          onChange={(event) => setWithGroundTruthFlag(event.currentTarget.checked)}
-        ></Switch>
-      </Col>
-      <Col span={3} className={clsx(styles.fileUpload, 'form-group col-md-4')}>
-        <input type='file' webkitdirectory='' className='custom-file-input' onChange={onChange} />
-        <label className={clsx(styles.fileLabel, 'custom-file-label')}>
-          파일 : {props.fileCount} 개
-        </label>
-      </Col>
-    </Grid>
+    <>
+      <Grid style={{ margin: '14px 0' }}>
+        <Col span={3} className={clsx(styles.fileUpload, 'form-group col-md-4')}>
+          <input type="file" webkitdirectory="" className="custom-file-input" onChange={onImage} />
+          <label className={clsx(styles.fileLabel, 'custom-file-label')}>
+            Image 파일 : {props.fileCount} 개
+          </label>
+        </Col>
+      </Grid>
+      <Grid style={{ margin: '14px 0' }}>
+        <Col span={3}>
+          <Switch
+            disabled={false}
+            label="Annotations"
+            styles={switchStyles}
+            checked={props.WithGroundTruthFlag}
+            onChange={(event) => props.setWithGroundTruthFlag(event.currentTarget.checked)}
+          ></Switch>
+        </Col>
+        {props.WithGroundTruthFlag && (
+          <Col span={3} className={clsx(styles.fileUpload, 'form-group col-md-4')}>
+            <input type="file" webkitdirectory="" className="custom-file-input" onChange={onJson} />
+            <label className={clsx(styles.fileLabel, 'custom-file-label')}>
+              json 파일 : {props.jsonFileCount} 개
+            </label>
+          </Col>
+        )}
+      </Grid>
+    </>
   );
 }

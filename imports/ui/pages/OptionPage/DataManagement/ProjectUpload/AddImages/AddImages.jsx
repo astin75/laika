@@ -1,12 +1,22 @@
 import { Button, Col, Grid, Switch, TextInput } from '@mantine/core';
 import clsx from 'clsx';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styles from './AddImages.module.css';
 
 export default function AddImages(props) {
   const switchStyles = {
-    label: { fontSize: 13 }
+    label: { fontSize: 13 },
+  };
+  const onAnnoTataions = (e) => {
+    if (e === true) {
+      props.setJsonFileCount(0);
+      props.setGroundTruthJson({ List: [] });
+      props.setWithGroundTruthFlag(true);
+      console.log('json');
+    } else {
+      props.setWithGroundTruthFlag(false);
+    }
   };
 
   const onJson = (event) => {
@@ -18,7 +28,7 @@ export default function AddImages(props) {
       if (event.target.files[count].name.slice(-4) === 'json') {
         Filecount++;
         let reader = new FileReader();
-        reader.onload = function(event) {
+        reader.onload = function (event) {
           let formatted = JSON.parse(event.target.result);
           //let formatted = JSON.stringify(json, null, 2);
 
@@ -29,6 +39,7 @@ export default function AddImages(props) {
       }
     }
     props.setGroundTruthJson(tempGroundTruthJson);
+    console.log(tempGroundTruthJson);
   };
 
   const onImage = (event) => {
@@ -52,7 +63,7 @@ export default function AddImages(props) {
           projectName: false,
           masterProjectName: false,
           projectID: false,
-          confirmFlag: 'ready'
+          confirmFlag: 'ready',
         });
         tempRawImgList.rawFile.push(event.target.files[count]);
 
@@ -62,7 +73,7 @@ export default function AddImages(props) {
           projectID: false,
           annotations: [],
           ImgFileId: RandValue[count],
-          ImgFileName: event.target.files[count].name
+          ImgFileName: event.target.files[count].name,
         });
       }
     }
@@ -79,16 +90,11 @@ export default function AddImages(props) {
     // }
   };
 
-  useEffect(() => {
-    props.setJsonFileCount(0);
-    props.setGroundTruthJson({ List: [] });
-  }, [props.WithGroundTruthFlag]);
-
   return (
     <>
       <Grid style={{ margin: '14px 0' }}>
         <Col span={3} className={clsx(styles.fileUpload, 'form-group col-md-4')}>
-          <input type='file' webkitdirectory='' className='custom-file-input' onChange={onImage} />
+          <input type="file" webkitdirectory="" className="custom-file-input" onChange={onImage} />
           <label className={clsx(styles.fileLabel, 'custom-file-label')}>
             Image 파일 : {props.fileCount} 개
           </label>
@@ -98,15 +104,15 @@ export default function AddImages(props) {
         <Col span={3}>
           <Switch
             disabled={false}
-            label='Annotations'
+            label="Annotations"
             styles={switchStyles}
             checked={props.WithGroundTruthFlag}
-            onChange={(event) => props.setWithGroundTruthFlag(event.currentTarget.checked)}
+            onChange={(event) => onAnnoTataions(event.currentTarget.checked)}
           ></Switch>
         </Col>
         {props.WithGroundTruthFlag && (
           <Col span={3} className={clsx(styles.fileUpload, 'form-group col-md-4')}>
-            <input type='file' webkitdirectory='' className='custom-file-input' onChange={onJson} />
+            <input type="file" webkitdirectory="" className="custom-file-input" onChange={onJson} />
             <label className={clsx(styles.fileLabel, 'custom-file-label')}>
               json 파일 : {props.jsonFileCount} 개
             </label>

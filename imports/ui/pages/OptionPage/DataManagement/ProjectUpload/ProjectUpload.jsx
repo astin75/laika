@@ -120,7 +120,6 @@ export default function ProjectUpload() {
 
     let tempImgFileInfo = [...ImgFileInfo.imgInfo];
     let tempGroundTruthJson = [...GroundTruthJson.List];
-    // let percentage = 0;
     let imageIndex = 0;
 
     for (; imageIndex < fileCount; imageIndex++) {

@@ -3,11 +3,12 @@ import styles from './ObjectOptions.module.css';
 
 import { Icon } from '@iconify/react';
 import { imageInfoCollection } from 'imports/db/collections';
-import { useRecoilValue } from 'recoil';
-import { annotationDispatcherState } from 'imports/recoil/annotation';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { annotationDispatcherState, keypointIdx } from 'imports/recoil/annotation';
 
 function AddObject({ currentImageInfo, currentProjectInfo }) {
   const annotationDispatcher = useRecoilValue(annotationDispatcherState);
+  const [curKeypoint, setCurKeypoint] = useRecoilState(keypointIdx);
 
   const addObjectFunc = () => {
     // 현재 이미지를 선택해야만 object를 추가할수 있음
@@ -16,6 +17,7 @@ function AddObject({ currentImageInfo, currentProjectInfo }) {
       return;
     }
     annotationDispatcher?.insert(currentProjectInfo.keypoint.length > 0, currentProjectInfo);
+    setCurKeypoint(0);
   };
 
   const keyDownHandler = (e) => {

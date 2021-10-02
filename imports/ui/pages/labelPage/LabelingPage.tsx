@@ -11,7 +11,7 @@ import {
   AnnotationDispatcher,
   annotationDispatcherState,
   createAnnotationDispatcher,
-  currentAnnotations, ISaveAnnotation,
+  currentAnnotations, ISaveAnnotation, keypointIdx,
   selectionIdx
 } from '../../../recoil/annotation';
 import _ from 'lodash';

@@ -66,17 +66,17 @@ export default function AddImages(props) {
         });
       }
     }
-    if (props.WithGroundTruthFlag) {
-      props.setImgFileInfo(tempImgFileInfo);
-      props.setRawImgList(tempRawImgList);
-      props.setFileCount(Filecount);
-    } else {
+    // if (props.WithGroundTruthFlag) {
+    //   props.setImgFileInfo(tempImgFileInfo);
+    //   props.setRawImgList(tempRawImgList);
+    //   props.setFileCount(Filecount);
+    // } else {
       props.setImgFileInfo(tempImgFileInfo);
       props.setRawImgList(tempRawImgList);
       props.setGroundTruthJson(tempGroundTruthJson);
       props.setFileCount(Filecount);
       props.setJsonFileCount(Filecount);
-    }
+    // }
   };
 
   return (

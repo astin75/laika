@@ -69,7 +69,11 @@ export default function Canvas({
       // annotation draw
       annotations.forEach(async (annot) => {
         if (annot.regions.rect) {
-          drawRectOnCanvas(annot.regions.rect, context, view, annot.color, annot.className, annot.meta);
+          let col = annot.color;
+          if (annot.selected)
+            // mse target color
+            col = '#0AEBDD';
+          drawRectOnCanvas(annot.regions.rect, context, view, col, annot.className, annot.meta);
         }
 
         if (annot.regions.polygon)

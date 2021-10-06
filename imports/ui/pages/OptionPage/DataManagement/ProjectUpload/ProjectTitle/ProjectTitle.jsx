@@ -5,12 +5,11 @@ import React, { createRef, useEffect, useRef, useState } from 'react';
 
 import styles from './ProjectTitle.module.css';
 
-export default function ProjectTitle({ projectName, setProjectName, setGlobalError }) {
+export default function ProjectTitle({ projectName, setProjectName, setGlobalError, isMaster, setIsMaster, tempMasterName, setTempMasterName }) {
   const projectList = useTracker(() => projectCollection.find({}).fetch());
   const [DBFlag, setDBFlag] = useState(true);
   const [tempProjectList, setTempProjectList] = useState([]);
-  const [tempMasterName, setTempMasterName] = useState('');
-  const [isMaster, setIsMaster] = useState(true);
+
   const [errName, setErrName] = useState('');
   const switchStyles = {
     label: { fontSize: 13 },
@@ -22,6 +21,15 @@ export default function ProjectTitle({ projectName, setProjectName, setGlobalErr
       setDBFlag(true);
     }
   };
+
+  const loadMatserProject = (e) => {
+
+    if(isMaster){
+      let masterProject = projectCollection.findOne({ projectName:e });
+      setTempMasterName(masterProject)
+
+    }
+  }
 
   const putName = (e) => {
     if (e.target.value.length < 4) {
@@ -37,12 +45,25 @@ export default function ProjectTitle({ projectName, setProjectName, setGlobalErr
     }
 
     setErrName('');
-    setProjectName([
-      {
-        masterProjectName: tempMasterName,
-        projectName: e.target.value,
-      },
-    ]);
+    if(isMaster){
+      setProjectName([
+        {
+          masterProjectName: tempMasterName.projectName,
+          projectName: e.target.value,
+        },
+      ]);
+
+    }
+    else{
+      setProjectName([
+        {
+          masterProjectName: '',
+          projectName: e.target.value,
+        },
+      ]);
+
+    }
+
 
     setGlobalError(false);
   };
@@ -79,11 +100,11 @@ export default function ProjectTitle({ projectName, setProjectName, setGlobalErr
         ></Switch>
       </Col>
       <Col span={3}>
-        {!isMaster && (
+        {isMaster && (
           <Select
             className={styles.masterSelect}
             data={tempProjectList}
-            onChange={(event) => setTempMasterName(event)}
+            onChange={(event) => loadMatserProject(event)}
           />
         )}
       </Col>

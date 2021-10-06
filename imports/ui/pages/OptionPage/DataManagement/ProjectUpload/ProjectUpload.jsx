@@ -1,6 +1,6 @@
 import { Button, Col, Grid, Overlay, Progress, Switch } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
-import { imageInfoCollection } from 'imports/db/collections';
+import { imageInfoCollection, userProfileCollection } from "imports/db/collections";
 import { gtInfoCollection } from 'imports/db/collections';
 import { projectCollection } from 'imports/db/collections';
 import Images from 'imports/db/files';
@@ -17,11 +17,14 @@ import KeypointConfig from './KeypointConfig/KeypointConfig';
 import ProjectTitle from './ProjectTitle/ProjectTitle';
 // @ts-ignore
 import styles from './ProjectUpload.module.css';
+import { useTracker } from "meteor/react-meteor-data";
 
 const CHUNK_SIZE = 500;
 
 export default function ProjectUpload() {
   const [projectName, setProjectName] = useState([{ masterProjectName: true, projectName: '' }]);
+  const [isMaster, setIsMaster] = useState(false);
+  const [tempMasterName, setTempMasterName] = useState('');
   const [boxClassList, setBoxClassList] = useState([]);
   const [keyPointClassList, setKeyPointClassList] = useState([]);
   const [objectStateBox, setObjectStateBox] = useState([]);
@@ -130,11 +133,11 @@ export default function ProjectUpload() {
       tempGroundTruthJson[imageIndex].ImgFileId = tempImgFileInfo[imageIndex].fileId;
       tempGroundTruthJson[imageIndex].ImgFileName = tempImgFileInfo[imageIndex].fileName;
 
-      console.log(
-        tempGroundTruthJson[imageIndex].ImgFileName,
-        tempImgFileInfo[imageIndex].fileName
-      );
-      console.log(tempGroundTruthJson[imageIndex].ImgFileId, tempImgFileInfo[imageIndex].fileId);
+      // console.log(
+      //   tempGroundTruthJson[imageIndex].ImgFileName,
+      //   tempImgFileInfo[imageIndex].fileName
+      // );
+      // console.log(tempGroundTruthJson[imageIndex].ImgFileId, tempImgFileInfo[imageIndex].fileId);
 
       tempImgFileInfo[imageIndex].projectID = RandValue[0];
       tempImgFileInfo[imageIndex].projectName = projectName[0].projectName;
@@ -162,24 +165,49 @@ export default function ProjectUpload() {
       polyFlag = true;
     }
 
-    let tempProjectInfo = {
-      projectName: projectName[0].projectName,
-      masterProjectName: projectName[0].masterProjectName,
-      startDate: '',
-      endDate: '',
-      workers: [],
-      projectId: RandValue[0],
-      bbox: boxClassList,
-      keypoint: keyPointClassList,
-      stateList: objectStateBox,
-      polygon: polyFlag,
-      objectId: checkedObjectIdFlag,
-      color: colorHex.slice(0, boxClassList.length),
-      totalFileSize: fileCount,
-      totalUnConfirmSize: 0,
-    };
+    if(isMaster){
+      let tempProjectInfo = {
+        projectName: projectName[0].projectName,
+        masterProjectName: tempMasterName.projectName,
+        startDate: '',
+        endDate: '',
+        workers: [],
+        projectId: RandValue[0],
+        bbox: tempMasterName.bbox,
+        keypoint: tempMasterName.keypoint,
+        stateList: tempMasterName.stateList,
+        polygon: tempMasterName.polygon,
+        objectId: tempMasterName.objectId,
+        color: tempMasterName.color,
+        totalFileSize: fileCount,
+        totalUnConfirmSize: 0,
+      };
+      projectCollection.insert(tempProjectInfo);
+    }
+    else{
+      let tempProjectInfo = {
+        projectName: projectName[0].projectName,
+        masterProjectName: projectName[0].masterProjectName,
+        startDate: '',
+        endDate: '',
+        workers: [],
+        projectId: RandValue[0],
+        bbox: boxClassList,
+        keypoint: keyPointClassList,
+        stateList: objectStateBox,
+        polygon: polyFlag,
+        objectId: checkedObjectIdFlag,
+        color: colorHex.slice(0, boxClassList.length),
+        totalFileSize: fileCount,
+        totalUnConfirmSize: 0,
+      };
+      projectCollection.insert(tempProjectInfo);
 
-    projectCollection.insert(tempProjectInfo);
+
+    }
+
+
+
     setStartUpload(true);
   };
 
@@ -222,6 +250,10 @@ export default function ProjectUpload() {
             ProjectName={projectName}
             setProjectName={setProjectName}
             setGlobalError={setGlobalError}
+            isMaster = {isMaster}
+            setIsMaster={setIsMaster}
+            tempMasterName ={tempMasterName}
+            setTempMasterName={setTempMasterName}
           />
           <BoundingBoxConfig boxClassList={boxClassList} setBoxClassList={setBoxClassList} />
           <KeypointConfig

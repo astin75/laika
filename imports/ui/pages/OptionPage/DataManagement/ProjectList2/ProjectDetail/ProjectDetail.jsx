@@ -79,9 +79,12 @@ export default function ProjectDetail({
     projectCollection.update(
       { _id: selectedProject._id },
       {
+        // $set: {
+        //   startDate: `${value[0].getFullYear()}-${value[0].getMonth()}-${value[0].getDate()}`,
+        //   endDate: `${value[1].getFullYear()}-${value[1].getMonth()}-${value[1].getDate()}`,
+        //   workers: selectedUsers,
+        // },
         $set: {
-          startDate: `${value[0].getFullYear()}-${value[0].getMonth()}-${value[0].getDate()}`,
-          endDate: `${value[1].getFullYear()}-${value[1].getMonth()}-${value[1].getDate()}`,
           workers: selectedUsers,
         },
       }

@@ -11,6 +11,7 @@ export default function CurrentObjectOptions({ currentProjectInfo }) {
 
   return (
     <div className={styles.currentObjectOptionsWrap}>
+      {console.log(currentProjectInfo)}
 
       {currentProjectInfo !== null && currentProjectInfo.bbox.length > 0 ? (
         <Icon

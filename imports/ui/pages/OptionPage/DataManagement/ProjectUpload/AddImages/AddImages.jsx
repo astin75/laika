@@ -13,7 +13,7 @@ export default function AddImages(props) {
       props.setJsonFileCount(0);
       props.setGroundTruthJson({ List: [] });
       props.setWithGroundTruthFlag(true);
-      console.log('json');
+
     } else {
       props.setWithGroundTruthFlag(false);
     }
@@ -39,7 +39,7 @@ export default function AddImages(props) {
       }
     }
     props.setGroundTruthJson(tempGroundTruthJson);
-    console.log(tempGroundTruthJson);
+
   };
 
   const onImage = (event) => {
@@ -103,7 +103,7 @@ export default function AddImages(props) {
       <Grid style={{ margin: '14px 0' }}>
         <Col span={3}>
           <Switch
-            disabled={false}
+            disabled={props.fileCount > 0 ? false : true}
             label="Annotations"
             styles={switchStyles}
             checked={props.WithGroundTruthFlag}

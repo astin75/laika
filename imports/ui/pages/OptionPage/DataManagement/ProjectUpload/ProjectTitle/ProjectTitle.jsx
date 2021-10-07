@@ -26,6 +26,7 @@ export default function ProjectTitle({ projectName, setProjectName, setGlobalErr
 
     if(isMaster){
       let masterProject = projectCollection.findOne({ projectName:e });
+
       setTempMasterName(masterProject)
 
     }

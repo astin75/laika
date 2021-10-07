@@ -34,6 +34,8 @@ export default function ProjectList2() {
   const [projectInfoImage, setProjectInfoImage] = useState(false);
 
   const [percentage, setPercentage] = useState(0);
+  const [confirmFileCount, setConfirmFileCount] = useState(0);
+
 
   const projectInfoPicture = (projectName) => {
     let prjectInfo = projectCollection.find({ projectName: projectName }).fetch();
@@ -69,6 +71,7 @@ export default function ProjectList2() {
           100
       )
     );
+    setConfirmFileCount(confirmCount)
     setSelectedProject(e);
 
   };
@@ -157,6 +160,7 @@ export default function ProjectList2() {
           projectInfoImage={projectInfoImage}
           setProjectInfoImage={setProjectInfoImage}
           percentage={percentage}
+          confirmFileCount={confirmFileCount}
         />
       </main>
     </>

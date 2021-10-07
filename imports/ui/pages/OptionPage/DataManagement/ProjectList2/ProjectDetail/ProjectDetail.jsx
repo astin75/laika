@@ -33,14 +33,15 @@ const useConfirm = (message = '', onConfirm, onCancel) => {
 };
 
 export default function ProjectDetail({
-  selectedProject,
-  setSelectedProject,
-  toggleCurrentProjectDetail,
-  setToggleCurrentProjectDetail,
-  setIsLoading,
-  projectInfoImage,
-  setProjectInfoImage,
-  percentage,
+selectedProject,
+setSelectedProject,
+toggleCurrentProjectDetail,
+setToggleCurrentProjectDetail,
+setIsLoading,
+projectInfoImage,
+setProjectInfoImage,
+confirmFileCount,
+percentage
 }) {
   // console.log(selectedProject);
   const user = useTracker(() => Meteor.users.find({}).fetch());
@@ -49,6 +50,7 @@ export default function ProjectDetail({
   const userList = useTracker(() => userProfileCollection.find({}).fetch());
 
   const [projectProgres, setProjectProgress] = useState(0);
+  const [detailConfirmCount, setDetailConfirmCount] = useState(0);
 
   const userData = [];
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -62,6 +64,10 @@ export default function ProjectDetail({
   useEffect(() => {
     if (projectProgres !== percentage) setProjectProgress(percentage);
   }, [percentage]);
+
+  useEffect(() => {
+    if (detailConfirmCount !== confirmFileCount) setDetailConfirmCount(confirmFileCount);
+  }, [confirmFileCount]);
 
   const updateProjectDetail = () => {
     // if (value[0] === null || value[1] === null) {
@@ -251,7 +257,7 @@ export default function ProjectDetail({
           <div className={styles.projectDetails}>
             <div className={styles.detailTitle}>
               진행 상황 &nbsp;
-              {projectProgres}% ( {selectedProject.totalUnConfirmSize} /{' '}
+              {projectProgres}% ( {detailConfirmCount} /{' '}
               {selectedProject.totalFileSize})
             </div>
             <Progress value={projectProgres} />
